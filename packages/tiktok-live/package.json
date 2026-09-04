@@ -1,0 +1,18 @@
+{
+  "name": "@aep/tiktok-live",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Atlas Entertainment Platform - TikTok Live Integration Engine",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@aep/types": "workspace:*",
+    "@aep/game-engines": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

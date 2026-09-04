@@ -1,0 +1,14 @@
+{
+  "name": "@aep/types",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Atlas Entertainment Platform - Shared Types & Interfaces",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

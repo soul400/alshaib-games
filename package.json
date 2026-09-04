@@ -1,0 +1,16 @@
+{
+  "name": "alshaib-games",
+  "version": "1.0.0",
+  "private": true,
+  "description": "منصة الشايب للألعاب التفاعلية للبث المباشر (AL-SHAIB Interactive Games Platform)",
+  "scripts": {
+    "dev": "pnpm --filter @aep/studio dev",
+    "build": "pnpm --filter @aep/studio build",
+    "start": "pnpm --filter @aep/studio start",
+    "lint": "pnpm --filter @aep/studio lint"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}

@@ -1,0 +1,19 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Next.js Build Output
+.next
+out
+dist
+build
+
+# Environment Variables
+.env*.local
+.env
+
+# Logs & Cache
+*.log
+.turbo
+.DS_Store
+Thumbs.db

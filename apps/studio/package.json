@@ -1,0 +1,37 @@
+{
+  "name": "@aep/studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Atlas Entertainment Platform - Broadcast Studio & Host Desk",
+  "scripts": {
+    "dev": "next dev --port 3020",
+    "build": "next build",
+    "start": "next start --port 3020",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aep/audio-visual-fx": "workspace:*",
+    "@aep/content-library": "workspace:*",
+    "@aep/game-engines": "workspace:*",
+    "@aep/tiktok-live": "workspace:*",
+    "@aep/types": "workspace:*",
+    "framer-motion": "^12.0.0",
+    "lucide-react": "^0.460.0",
+    "next": "^15.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tiktok-live-connector": "^2.4.3",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.4.5"
+  }
+}
