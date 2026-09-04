@@ -13,6 +13,8 @@ import { Heart, X, Gift } from 'lucide-react';
  * - Enlarged, ultra-crisp scan-ready design for mobile & TV stream viewers
  */
 
+import { authManager } from '../../utils/authManager';
+
 // ══════════════════════════════════════════════════════════════
 // LAYER 3: Top Banner — "ادعم البث" slide-down announcement
 // ══════════════════════════════════════════════════════════════
@@ -55,8 +57,28 @@ export function DonationQRBadge() {
   const [showBanner, setShowBanner] = useState(false);
   const bannerShownRef = useRef(false);
 
-  // Load enabled state from localStorage safely
+  const [activeDonation, setActiveDonation] = useState({
+    title: 'رابط الدعم 💎',
+    qrUrl: '/donation-qr.png',
+    url: ''
+  });
+
+  const loadDonationInfo = () => {
+    const { user, settings } = authManager.getActiveDonation();
+    const qrUrl = settings.qrImageUrl || (settings.url 
+      ? `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(settings.url)}`
+      : '/donation-qr.png');
+    setActiveDonation({
+      title: settings.title || `رابط دعم ${user.displayName} 💎`,
+      qrUrl,
+      url: settings.url
+    });
+  };
+
+  // Load enabled state from localStorage safely and subscribe to donation changes
   useEffect(() => {
+    loadDonationInfo();
+
     if (typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('aep_donation_qr_enabled');
@@ -64,6 +86,14 @@ export function DonationQRBadge() {
       } catch (e) {
         console.warn('localStorage not available:', e);
       }
+
+      const handler = () => loadDonationInfo();
+      window.addEventListener('aep:donation-change', handler);
+      window.addEventListener('aep:auth-change', handler);
+      return () => {
+        window.removeEventListener('aep:donation-change', handler);
+        window.removeEventListener('aep:auth-change', handler);
+      };
     }
   }, []);
 
@@ -188,20 +218,22 @@ export function DonationQRBadge() {
               isPulsing ? 'ring-3 ring-amber-400 ring-offset-2 ring-offset-[#0E0F1E]' : ''
             }`}>
               <img
-                src="/donation-qr.png"
-                alt="QR رابط الدعم"
+                src={activeDonation.qrUrl}
+                alt={activeDonation.title}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/donation-qr.png';
+                }}
                 className="w-full h-full object-contain filter contrast-125"
                 draggable={false}
               />
             </div>
 
             {/* Label & Glow Badge */}
-            <div className="flex items-center justify-center gap-2 w-full px-3 py-1.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-yellow-500/25 to-amber-500/20 border border-amber-400/50 shadow-sm">
-              <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400 animate-pulse" />
-              <span className="text-xs font-black text-amber-300 font-mono tracking-wide">
-                رابط الدعم
+            <div className="flex items-center justify-center gap-1.5 w-full px-2.5 py-1.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-yellow-500/25 to-amber-500/20 border border-amber-400/50 shadow-sm text-center">
+              <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400 animate-pulse shrink-0" />
+              <span className="text-[11px] font-black text-amber-300 font-mono tracking-tight truncate">
+                {activeDonation.title}
               </span>
-              <span className="text-xs">💎</span>
             </div>
           </div>
         </div>

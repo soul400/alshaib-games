@@ -4,6 +4,7 @@ import { TopHeaderLiveBar } from '../components/layout/TopHeaderLiveBar';
 import { AppSidebar } from '../components/layout/AppSidebar';
 import { DonationQRBadge } from '../components/layout/DonationQRBadge';
 import { ClientErrorGuard } from '../components/layout/ClientErrorGuard';
+import { AuthGuard } from '../components/auth/AuthGuard';
 
 export const metadata = {
   title: 'الشايب للترفيه - AL-SHAIB ENTERTAINMENT',
@@ -56,22 +57,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Global Client Error Interceptor */}
         <ClientErrorGuard />
 
-        {/* Compact Command Sidebar (72px) */}
-        <AppSidebar />
+        {/* VIP Broadcast Auth Guard */}
+        <AuthGuard>
+          {/* Compact Command Sidebar (72px) */}
+          <AppSidebar />
 
-        {/* Main Command & Stage Area */}
-        <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-          {/* Top Header Live Command Bar */}
-          <TopHeaderLiveBar />
+          {/* Main Command & Stage Area */}
+          <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+            {/* Top Header Live Command Bar */}
+            <TopHeaderLiveBar />
 
-          {/* Main Stage View Area */}
-          <main className="flex-1 w-full p-4 sm:p-6 lg:p-8">
-            {children}
-          </main>
-        </div>
+            {/* Main Stage View Area */}
+            <main className="flex-1 w-full p-4 sm:p-6 lg:p-8">
+              {children}
+            </main>
+          </div>
 
-        {/* Floating Broadcast Donation QR Badge */}
-        <DonationQRBadge />
+          {/* Floating Broadcast Donation QR Badge */}
+          <DonationQRBadge />
+        </AuthGuard>
       </body>
     </html>
   );
