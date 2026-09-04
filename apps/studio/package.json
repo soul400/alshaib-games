@@ -5,7 +5,7 @@
   "description": "Atlas Entertainment Platform - Broadcast Studio & Host Desk",
   "scripts": {
     "dev": "next dev --port 3020",
-    "build": "next build",
+    "build": "next build && node postbuild.js",
     "start": "next start --port 3020",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
