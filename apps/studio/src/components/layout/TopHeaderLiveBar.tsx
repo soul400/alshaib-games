@@ -14,22 +14,30 @@ export function TopHeaderLiveBar() {
   const [hasMounted, setHasMounted] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [activeDonationUser, setActiveDonationUser] = useState<string>('shayeb');
+  const [activeChannel, setActiveChannel] = useState<string>('soul80813');
+  const [isConnecting, setIsConnecting] = useState(false);
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
     setCurrentUser(authManager.getCurrentUser());
     setActiveDonationUser(authManager.getActiveDonationUser());
+    setActiveChannel(authManager.getTikTokChannel());
 
     const handleAuth = () => {
       setCurrentUser(authManager.getCurrentUser());
       setActiveDonationUser(authManager.getActiveDonationUser());
+      setActiveChannel(authManager.getTikTokChannel());
     };
+
     window.addEventListener('aep:auth-change', handleAuth);
     window.addEventListener('aep:donation-change', handleAuth);
+    window.addEventListener('aep:tiktok-channel-change', handleAuth);
+
     return () => {
       window.removeEventListener('aep:auth-change', handleAuth);
       window.removeEventListener('aep:donation-change', handleAuth);
+      window.removeEventListener('aep:tiktok-channel-change', handleAuth);
     };
   }, []);
 
@@ -46,6 +54,21 @@ export function TopHeaderLiveBar() {
     }
   }, [tiktokEngine]);
 
+  const handleReconnect = async () => {
+    if (!tiktokEngine) return;
+    setIsConnecting(true);
+    const target = authManager.getTikTokChannel();
+    try {
+      tiktokEngine.disconnect();
+      const st = await tiktokEngine.connect(target);
+      setRoomStatus(st);
+    } catch (e) {
+      console.warn('Reconnect error:', e);
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
   const isLive = Boolean(roomStatus?.isOnline);
   const totalViewers = hasMounted ? (roomStatus?.viewerCount || 0) : 0;
   const totalComments = hasMounted ? liveComments.length : 0;
@@ -53,7 +76,7 @@ export function TopHeaderLiveBar() {
 
   return (
     <>
-      <header className="w-full bg-[#08090C] border-b border-[#1F2433] px-4 sm:px-5 py-2.5 sticky top-0 z-30 flex items-center justify-between gap-4 select-none flex-wrap">
+      <header className="w-full bg-[#08090C] border-b border-[#1F2433] px-3 sm:px-5 py-2 sticky top-0 z-30 flex items-center justify-between gap-3 select-none flex-wrap">
         
         {/* LEFT / TITLE: BREADCRUMB COMMAND */}
         <div className="flex items-center gap-3">
@@ -64,57 +87,50 @@ export function TopHeaderLiveBar() {
           </Link>
         </div>
 
-        {/* CENTER & RIGHT: LIVE STATUS & DIRECT CONTROLS */}
-        <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
-          {isLive ? (
-            // ON-AIR LIVE COMMAND METRICS
-            <div className="flex items-center gap-3 sm:gap-4 bg-[#12141C] border border-[#EF4444]/30 px-3.5 py-1.5 rounded-xl shadow-[0_0_20px_rgba(239,68,68,0.15)]">
-              <div className="flex items-center gap-1.5 font-mono text-xs font-black text-[#EF4444]">
+        {/* CENTER & RIGHT: TIKTOK LIVE CONNECTION & DIRECT CONTROLS */}
+        <div className="flex items-center gap-2.5 sm:gap-3.5 flex-wrap">
+          
+          {/* 🔴 TIKTOK LIVE RECONNECT & STATUS CONTROLLER */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#111320] border border-[#252A42] text-xs">
+            <div className="flex items-center gap-1.5 font-mono font-bold">
+              <span className={`w-2.5 h-2.5 rounded-full ${
+                isLive ? 'bg-emerald-400 animate-ping' : isConnecting ? 'bg-amber-400 animate-pulse' : 'bg-rose-500'
+              }`} />
+              <span className="text-slate-200 text-xs font-black">@{activeChannel}</span>
+              <span className={`text-[10px] px-1.5 py-0.5 rounded font-black ${
+                isLive ? 'bg-emerald-500/20 text-emerald-300' : isConnecting ? 'bg-amber-500/20 text-amber-300' : 'bg-rose-500/20 text-rose-300'
+              }`}>
+                {isLive ? 'أونلاين 🟢' : isConnecting ? 'جاري الاتصال...' : 'أوفلاين 🔴'}
+              </span>
+            </div>
+
+            {/* 🔄 Reconnect Button */}
+            <button
+              onClick={handleReconnect}
+              disabled={isConnecting}
+              className="px-2.5 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-[11px] font-black transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50"
+              title="إعادة الاتصال بالبث المباشر فوراً"
+            >
+              <RotateCcw className={`w-3 h-3 ${isConnecting ? 'animate-spin' : ''}`} />
+              <span>{isConnecting ? 'اتصال...' : 'إعادة الاتصال 🔄'}</span>
+            </button>
+          </div>
+
+          {/* ON-AIR METRICS IF ONLINE */}
+          {isLive && (
+            <div className="flex items-center gap-3 bg-[#12141C] border border-[#EF4444]/30 px-3 py-1 rounded-xl shadow-[0_0_20px_rgba(239,68,68,0.15)]">
+              <div className="flex items-center gap-1 font-mono text-xs font-black text-[#EF4444]">
                 <span className="w-2 h-2 rounded-full bg-[#EF4444] animate-ping" />
                 <span>● ON-AIR</span>
               </div>
-
-              <div className="h-4 w-[1px] bg-[#232736]" />
-
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-300 font-mono">
+              <div className="flex items-center gap-1 text-xs font-bold text-slate-300 font-mono">
                 <Users className="w-3.5 h-3.5 text-slate-400" />
                 <span className="text-white">{totalViewers}</span>
-                <span className="text-[10px] text-slate-500 hidden sm:inline">مشاهد</span>
               </div>
-
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-300 font-mono">
+              <div className="flex items-center gap-1 text-xs font-bold text-slate-300 font-mono">
                 <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
                 <span className="text-white">{totalComments}</span>
-                <span className="text-[10px] text-slate-500 hidden sm:inline">تعليق</span>
               </div>
-
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#D6A84F] font-mono">
-                <Trophy className="w-3.5 h-3.5 text-[#D6A84F]" />
-                <span>+{totalPoints}</span>
-              </div>
-
-              <Link
-                href="/host-desk"
-                className="px-2.5 py-1 rounded-lg bg-[#EF4444] hover:bg-red-600 text-white text-[11px] font-black transition-all flex items-center gap-1"
-              >
-                <span>غرفة التحكم</span>
-              </Link>
-            </div>
-          ) : (
-            // OFFLINE READY STATE
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-xs font-bold text-slate-400">
-                <span className="w-2 h-2 rounded-full bg-slate-500" />
-                <span className="hidden sm:inline">أوفلاين (جاهز للبث)</span>
-              </div>
-
-              <Link
-                href="/tiktok-live"
-                className="px-3.5 py-1.5 rounded-xl bg-[#D6A84F] hover:bg-[#E5BE6C] text-[#08090C] text-xs font-black flex items-center gap-1.5 transition-all shadow-[0_2px_10px_rgba(214,168,79,0.2)]"
-              >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>بدء بث</span>
-              </Link>
             </div>
           )}
 
@@ -143,7 +159,7 @@ export function TopHeaderLiveBar() {
               <button
                 onClick={() => authManager.logout()}
                 className="text-slate-400 hover:text-rose-400 p-1 transition-colors cursor-pointer"
-                title="تسجيل الخروج"
+                title="تسجيل الخروج والتبديل"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>

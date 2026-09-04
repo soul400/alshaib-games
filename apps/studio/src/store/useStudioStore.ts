@@ -248,9 +248,7 @@ function initGlobalEngineOnce() {
     }));
   });
 
-  const targetChannel = localStorage.getItem('aep_tiktok_channel') || 'soul80813';
-  engine.connect(targetChannel).catch(() => {});
-
+  // TikTok Live connection is on-demand / user-controlled to prevent auto-connecting when stream is offline
   ensureGlobalTimerRunning();
 }
 

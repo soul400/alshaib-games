@@ -102,7 +102,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
           {/* Quick Account Preset Buttons */}
           <div className="flex flex-col gap-2">
-            <span className="text-[11px] font-bold text-slate-400">اختر الحساب السريع:</span>
+            <span className="text-[11px] font-bold text-slate-400">اختر الحساب للدخول:</span>
             <div className="grid grid-cols-3 gap-2">
               
               <button
@@ -114,9 +114,9 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                     : 'bg-[#181A30] border-white/5 hover:border-amber-400/40'
                 }`}
               >
-                <span className="text-lg">🎙️</span>
+                <span className="text-xl">🎙️</span>
                 <span className="text-xs font-black text-white">الشايب</span>
-                <span className="text-[9px] font-mono text-amber-300">shayeb</span>
+                <span className="text-[9px] font-mono text-amber-300 font-bold">@soul80813</span>
               </button>
 
               <button
@@ -128,9 +128,9 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                     : 'bg-[#181A30] border-white/5 hover:border-rose-400/40'
                 }`}
               >
-                <span className="text-lg">🌸</span>
+                <span className="text-xl">🌸</span>
                 <span className="text-xs font-black text-white">آشلي</span>
-                <span className="text-[9px] font-mono text-rose-300">ashley</span>
+                <span className="text-[9px] font-mono text-rose-300 font-bold">@prrru5</span>
               </button>
 
               <button
@@ -142,9 +142,9 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                     : 'bg-[#181A30] border-white/5 hover:border-cyan-400/40'
                 }`}
               >
-                <span className="text-lg">⚙️</span>
+                <span className="text-xl">⚙️</span>
                 <span className="text-xs font-black text-white">الإدارة</span>
-                <span className="text-[9px] font-mono text-cyan-300">admin</span>
+                <span className="text-[9px] font-mono text-cyan-300 font-bold">تحكم كامل</span>
               </button>
 
             </div>

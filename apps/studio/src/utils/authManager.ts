@@ -1,6 +1,6 @@
 /**
- * 🔐 Auth & Account Support Link Manager
- * Handles login, session state, and per-account donation links.
+ * 🔐 Auth & Account Support Link & TikTok Live Manager
+ * Handles login, session state, TikTok channels (soul80813 / prrru5), and per-account donation links.
  */
 
 export interface UserProfile {
@@ -8,6 +8,7 @@ export interface UserProfile {
   displayName: string;
   avatar: string;
   role: 'host' | 'admin';
+  tiktokChannel: string;
   defaultDonationUrl: string;
 }
 
@@ -25,6 +26,7 @@ export const VALID_USERS: Record<string, { password: string; profile: UserProfil
       displayName: 'الشايب (Shayeb)',
       avatar: '/alshaib-streamer.jpg',
       role: 'host',
+      tiktokChannel: 'soul80813',
       defaultDonationUrl: 'https://tip.live/shayeb'
     }
   },
@@ -35,6 +37,7 @@ export const VALID_USERS: Record<string, { password: string; profile: UserProfil
       displayName: 'آشلي (Ashley)',
       avatar: '/hunter-character.png',
       role: 'host',
+      tiktokChannel: 'prrru5',
       defaultDonationUrl: 'https://tip.live/ashley'
     }
   },
@@ -45,12 +48,14 @@ export const VALID_USERS: Record<string, { password: string; profile: UserProfil
       displayName: 'الإدارة (Admin)',
       avatar: '/alshaib-logo.png',
       role: 'admin',
+      tiktokChannel: 'soul80813',
       defaultDonationUrl: 'https://tip.live/admin'
     }
   }
 };
 
 const AUTH_STORAGE_KEY = 'aep_auth_user';
+const SESSION_ACTIVE_KEY = 'aep_session_active';
 const DONATION_STORAGE_KEY = 'aep_donation_links';
 const ACTIVE_DONATION_KEY = 'aep_active_donation_user';
 
@@ -68,12 +73,20 @@ export const authManager = {
     }
 
     if (typeof window !== 'undefined') {
+      // Require explicit session per browser window
+      sessionStorage.setItem(SESSION_ACTIVE_KEY, 'true');
+      sessionStorage.setItem(AUTH_STORAGE_KEY, cleanUser);
       localStorage.setItem(AUTH_STORAGE_KEY, cleanUser);
-      // Set active donation account to logged-in user if not set
-      if (!localStorage.getItem(ACTIVE_DONATION_KEY)) {
-        localStorage.setItem(ACTIVE_DONATION_KEY, cleanUser);
-      }
+
+      // Automatically configure the stream channel for this account
+      localStorage.setItem('aep_tiktok_channel', account.profile.tiktokChannel);
+
+      // Set active donation account to logged-in user
+      localStorage.setItem(ACTIVE_DONATION_KEY, cleanUser);
+
       window.dispatchEvent(new Event('aep:auth-change'));
+      window.dispatchEvent(new Event('aep:tiktok-channel-change'));
+      window.dispatchEvent(new Event('aep:donation-change'));
     }
 
     return { success: true, user: account.profile };
@@ -81,6 +94,8 @@ export const authManager = {
 
   logout() {
     if (typeof window !== 'undefined') {
+      sessionStorage.removeItem(SESSION_ACTIVE_KEY);
+      sessionStorage.removeItem(AUTH_STORAGE_KEY);
       localStorage.removeItem(AUTH_STORAGE_KEY);
       window.dispatchEvent(new Event('aep:auth-change'));
     }
@@ -88,7 +103,14 @@ export const authManager = {
 
   getCurrentUser(): UserProfile | null {
     if (typeof window === 'undefined') return null;
-    const saved = localStorage.getItem(AUTH_STORAGE_KEY);
+    
+    // Only return logged-in user if active in current browser session
+    const isSessionActive = sessionStorage.getItem(SESSION_ACTIVE_KEY);
+    if (!isSessionActive) {
+      return null;
+    }
+
+    const saved = sessionStorage.getItem(AUTH_STORAGE_KEY) || localStorage.getItem(AUTH_STORAGE_KEY);
     if (saved && VALID_USERS[saved]) {
       return VALID_USERS[saved].profile;
     }
@@ -97,6 +119,16 @@ export const authManager = {
 
   isAuthenticated(): boolean {
     return this.getCurrentUser() !== null;
+  },
+
+  getTikTokChannel(): string {
+    const user = this.getCurrentUser();
+    if (user) return user.tiktokChannel;
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('aep_tiktok_channel');
+      if (saved) return saved;
+    }
+    return 'soul80813';
   },
 
   // 💰 Donation link management per account
