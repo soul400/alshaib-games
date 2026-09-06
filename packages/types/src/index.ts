@@ -16,7 +16,8 @@ export type EngineType =
   | 'react'
   | 'memory-match'
   | 'capitals'
-  | 'bus-tayyibin';
+  | 'bus-tayyibin'
+  | 'squid-game';
 
 export type ImageTransformStyle =
   | 'normal'
@@ -64,7 +65,10 @@ export type SoundEffectType =
   | 'card_flip'
   | 'card_match'
   | 'card_miss'
-  | 'round_complete';
+  | 'round_complete'
+  | 'doll_turn'
+  | 'danger_reveal'
+  | 'elimination_laser';
 
 export type VisualEffectType =
   | 'confetti'
@@ -1025,4 +1029,75 @@ export interface BusQuestion extends BaseQuestion {
   engineType: 'bus-tayyibin';
   config: BusGameConfig;
 }
+
+// ══════════════════════════════════════════════════════════════
+// 🦑 لعبة «الحبار» (SQUID SURVIVAL) — LIVE BROADCAST GAME TYPES
+// ══════════════════════════════════════════════════════════════
+
+export type SquidGamePhase =
+  | 'IDLE'               // قبل البداية
+  | 'LOBBY'              // تسجيل اللاعبين عبر كلمة "العب" في الشات
+  | 'ROUND_START'        // إعلان بداية الجولة
+  | 'CHOOSING'           // عد تنازلي للاختيار (1-5) في الشات
+  | 'LOCKING'            // إغلاق الاختيارات وجاري التحليل
+  | 'DOLL_MOVEMENT'      // حركة والتفات الدمية
+  | 'DANGER_REVEAL'      // كشف رقم الخطر
+  | 'RESULT_REVEAL'      // ظهور نتائج اللاعبين (إقصاء أو تقدم)
+  | 'ROUND_END'          // ملخص الجولة واستعداد للجولة التالية
+  | 'GAME_OVER';         // شاشة تتويج الفائز النهائي
+
+export type SquidPlayerStatus =
+  | 'ACTIVE'             // نشط داخل اللعبة
+  | 'CHOOSING'           // بانتظار إرسال رقمه
+  | 'LOCKED'             // تم اعتماد اختياره
+  | 'SAFE'               // آمن في هذه الجولة
+  | 'ADVANCED'           // تقدم بخطوات إضافية
+  | 'DANGER'             // سقط في رقم الخطر
+  | 'ELIMINATED'         // تم إقصاؤه نهائياً
+  | 'FINISHED';          // وصل لخط النهاية وفاز
+
+export interface SquidPlayer {
+  id: string;
+  userId: string;
+  username: string;
+  displayName: string;
+  avatarUrl: string;
+  currentStep: number;
+  targetSteps: number;
+  lastChoice: number | null; // 1 to 5
+  status: SquidPlayerStatus;
+  isAlive: boolean;
+  eliminatedAtRound?: number;
+  joinedAt: number;
+  roundsSurvived: number;
+}
+
+export type SquidRiskLevel = 'easy' | 'normal' | 'hard' | 'extreme';
+export type SquidWinMode = 'first_to_finish' | 'last_survivor';
+
+export interface SquidGameConfig {
+  winningSteps: number;            // 5, 8, 10, 15, 20
+  choiceDurationSeconds: number;   // 5, 10, 15, 20, 30
+  riskLevel: SquidRiskLevel;
+  winMode: SquidWinMode;
+  allowJoinMidGame: boolean;
+  resultDisplayDurationSeconds: number;
+  soundEnabled: boolean;
+}
+
+export interface SquidRoundInfo {
+  roundNumber: number;
+  dangerNumber: number | null;
+  startedAt: number;
+  choiceDeadline: number;
+  resolvedAt?: number;
+  eliminatedCount: number;
+  advancedCount: number;
+}
+
+export interface SquidGameQuestion extends BaseQuestion {
+  engineType: 'squid-game';
+  config: SquidGameConfig;
+}
+
 

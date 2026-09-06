@@ -546,6 +546,75 @@ export class SoundFXManager {
           break;
         }
 
+        case 'doll_turn': {
+          // Eerie mechanical doll turn + low resonance scan
+          const osc1 = this.audioCtx.createOscillator();
+          const osc2 = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc1.type = 'sawtooth';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(260, now);
+          osc1.frequency.linearRampToValueAtTime(520, now + 0.4);
+          osc2.frequency.setValueAtTime(130, now);
+          osc2.frequency.linearRampToValueAtTime(260, now + 0.4);
+          gain.gain.setValueAtTime(volume * 0.7, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(this.audioCtx.destination);
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.5);
+          osc2.stop(now + 0.5);
+          break;
+        }
+
+        case 'danger_reveal': {
+          // Shocking dramatic reveal chord with sub-bass drop
+          const bass = this.audioCtx.createOscillator();
+          const bassGain = this.audioCtx.createGain();
+          bass.type = 'sawtooth';
+          bass.frequency.setValueAtTime(150, now);
+          bass.frequency.exponentialRampToValueAtTime(45, now + 0.6);
+          bassGain.gain.setValueAtTime(volume * 0.9, now);
+          bassGain.gain.exponentialRampToValueAtTime(0.01, now + 0.7);
+          bass.connect(bassGain);
+          bassGain.connect(this.audioCtx.destination);
+          bass.start(now);
+          bass.stop(now + 0.7);
+
+          [784, 988, 1175].forEach((freq) => {
+            if (!this.audioCtx) return;
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now);
+            gain.gain.setValueAtTime(volume * 0.5, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.4);
+          });
+          break;
+        }
+
+        case 'elimination_laser': {
+          // Sharp zapping red elimination laser discharge
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(1800, now);
+          osc.frequency.exponentialRampToValueAtTime(120, now + 0.25);
+          gain.gain.setValueAtTime(volume * 0.8, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+          osc.connect(gain);
+          gain.connect(this.audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.25);
+          break;
+        }
+
         case 'reveal_question':
         case 'box_open':
         case 'wheel_spin':

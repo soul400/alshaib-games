@@ -7,7 +7,7 @@ import {
   Play, Sparkles, Trophy, Users, Flame, Clock, 
   ArrowLeft, Plus, Gamepad2, Layers, Brain, Flag, 
   HelpCircle, Shuffle, Grid, Smile, Image as ImageIcon, 
-  Video, Volume2, Binary, Crosshair, Armchair, Bomb, Zap, Bus
+  Video, Volume2, Binary, Crosshair, Armchair, Bomb, Zap, Bus, Skull
 } from 'lucide-react';
 
 export default function CategorizedGamesCommandCenter() {
@@ -22,16 +22,28 @@ export default function CategorizedGamesCommandCenter() {
   // 1. ألعاب البث التفاعلية والأكشن
   const interactiveGames = [
     {
+      id: 'squid-game',
+      title: 'SQUID SURVIVAL',
+      arabicTitle: 'لعبة «الحبار» 🦑',
+      tagline: 'تحدي خطوات ونجاة تفاعلي للبث المباشر — اختر 1-5 في الشات وتجنب رقم الخطر مع الدمية',
+      badge: 'جديد وحصري 🦑',
+      badgeColor: 'bg-[#F43F5E]/20 text-[#F43F5E] border-[#F43F5E]/40',
+      accentColor: '#F43F5E',
+      icon: Skull,
+      image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=85',
+      isHero: true
+    },
+    {
       id: 'bus-tayyibin',
       title: 'BUS AL-TAYYIBIN',
       arabicTitle: 'باص الطيبين 🚌',
       tagline: 'ولد • بنت • حيوان • نبات • جماد • بلاد — التعليقات هي ورقة الإجابة مع كلمة «تم»',
-      badge: 'جديد ومباشر 🚌',
+      badge: 'مباشر 🚌',
       badgeColor: 'bg-[#10B981]/20 text-[#10B981] border-[#10B981]/40',
       accentColor: '#10B981',
       icon: Bus,
       image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=85',
-      isHero: true
+      isHero: false
     },
     {
       id: 'memory-match',

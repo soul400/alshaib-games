@@ -1823,4 +1823,10 @@ function validateMemoryPair(a: number, b: number, rawComment: string): ParsedMem
 // ══════════════════════════════════════════════════════════════
 export * from './busTayyibinEngine';
 
+// ══════════════════════════════════════════════════════════════
+// 🦑 EXPORT SQUID SURVIVAL ENGINE
+// ══════════════════════════════════════════════════════════════
+export * from './squidGameEngine';
+
+
 

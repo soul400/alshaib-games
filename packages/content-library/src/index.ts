@@ -1,5 +1,12 @@
 import { AnyQuestion, BaseQuestion, EngineType, ImportReport } from '@aep/types';
-import { normalizeAnswer, generateVaultQuestion, generateBombPassQuestion, generateReactQuestion, generateMusicalChairsQuestion } from '@aep/game-engines';
+import { 
+  normalizeAnswer, 
+  generateVaultQuestion, 
+  generateBombPassQuestion, 
+  generateReactQuestion, 
+  generateMusicalChairsQuestion,
+  generateSquidQuestion
+} from '@aep/game-engines';
 import { WORLD_FLAGS_QUESTIONS } from './flags-data';
 import { ALPHABET_QUESTION_BANK, AlphabetBankQuestion } from './alphabet-data';
 import { WHAT_DO_THEY_SAY_BANK, generateWhatDoTheySayQuestion } from './what-do-they-say-data';
@@ -17,6 +24,7 @@ export {
   generateMemoryCardsForRound,
   generateCapitalsQuestion,
   generateCapitalsRoundQuestions,
+  generateSquidQuestion,
   isCapitalAnswerCorrect,
   normalizeCapitalAnswer,
   NATIONAL_DAY_96_BANK,
@@ -45,6 +53,18 @@ export interface GameEngineSectionInfo {
  * Detailed Metadata for the Game Engine Sections
  */
 export const GAME_ENGINE_SECTIONS: GameEngineSectionInfo[] = [
+  {
+    id: 'squid-game',
+    title: 'لعبة «الحبار» 🦑',
+    titleEn: 'Squid Survival Live Action',
+    description: 'تحدي خطوات ونجاة تفاعلي للبث المباشر: اختر رقمك (1-5) في الشات، تجنب رقم الخطر مع حركة الدمية وكن أول الواصلين لخط النهاية!',
+    icon: 'Skull',
+    category: 'بقاء وأكشن',
+    questionsCount: 1,
+    avgPoints: 500,
+    recommendedDifficulty: 'hard',
+    badgeColor: 'from-pink-600 via-purple-600 to-rose-600'
+  },
   {
     id: 'bus-tayyibin',
     title: 'باص الطيبين 🚌',
@@ -507,6 +527,9 @@ export const SAMPLE_QUESTIONS: AnyQuestion[] = [
 ];
 
 export function getQuestionsByEngine(engineType: EngineType): AnyQuestion[] {
+  if (engineType === 'squid-game') {
+    return [generateSquidQuestion()];
+  }
   if (engineType === 'bus-tayyibin') {
     return [
       {

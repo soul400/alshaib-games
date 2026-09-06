@@ -16,6 +16,7 @@ import { WhatDoTheySayView } from '../engines/WhatDoTheySayView';
 import { MemoryMatchView } from '../engines/MemoryMatchView';
 import { CapitalsEngineView } from '../engines/CapitalsEngineView';
 import { BusTayyibinView } from '../engines/BusTayyibinView';
+import { SquidGameView } from '../engines/SquidGameView';
 import { getImageStyleCSS } from '@aep/game-engines';
 import { Clock, HelpCircle, Flame, Eye, Radio, ArrowLeft, Sparkles } from 'lucide-react';
 
@@ -67,6 +68,8 @@ export function StageArena({
         return <SymbolPuzzleView question={currentQuestion as any} isAnswerRevealed={isAnswerRevealed} />;
       case 'character':
         return <CharacterEngineView question={currentQuestion as any} isAnswerRevealed={isAnswerRevealed} />;
+      case 'squid-game':
+        return <SquidGameView question={currentQuestion as any} isAnswerRevealed={isAnswerRevealed} />;
       case 'hunter-roulette':
         return <HunterRouletteView question={currentQuestion as any} isAnswerRevealed={isAnswerRevealed} />;
       default:
@@ -79,7 +82,15 @@ export function StageArena({
   const uploadedVid = (currentQuestion as any).videoUrl;
   const uploadedAud = (currentQuestion as any).audioUrl;
 
-  // 🚌 Bus Al-Tayyibin has its own standalone TV Game Show stage
+  // 🦑 Squid Survival & 🚌 Bus Al-Tayyibin have their own standalone TV Game Show stages
+  if (currentQuestion.engineType === 'squid-game') {
+    return (
+      <div className="w-full">
+        <SquidGameView question={currentQuestion as any} isAnswerRevealed={isAnswerRevealed} />
+      </div>
+    );
+  }
+
   if (currentQuestion.engineType === 'bus-tayyibin') {
     return (
       <div className="w-full">

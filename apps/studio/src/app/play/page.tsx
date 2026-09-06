@@ -11,6 +11,7 @@ import { VaultGameView } from '../../components/engines/VaultGameView';
 import { BombPassView } from '../../components/engines/BombPassView';
 import { ReactGameView } from '../../components/engines/ReactGameView';
 import { MemoryMatchView } from '../../components/engines/MemoryMatchView';
+import { SquidGameView } from '../../components/engines/SquidGameView';
 import { LeaderboardOverlay } from '../../components/studio/LeaderboardOverlay';
 import { WinnerAnnouncementModal } from '../../components/studio/WinnerAnnouncementModal';
 import { GAME_ENGINE_SECTIONS } from '@aep/content-library';
@@ -64,6 +65,21 @@ function PlayArenaContent() {
       if (footer) footer.style.display = '';
     };
   }, []);
+
+  // ══════════════════════════════════════════════════════════════
+  // DEDICATED LIVE ACTION ENGINE: 🦑 SQUID SURVIVAL (لعبة الحبار)
+  // Renders as a dedicated 100vw/100vh standalone AAA live broadcast experience!
+  // ══════════════════════════════════════════════════════════════
+  if (explicitEngineParam === 'squid-game' || (!explicitEngineParam && (activeEngineType === 'squid-game' || currentQuestion?.engineType === 'squid-game'))) {
+    return (
+      <div className="w-full min-h-screen bg-[#07080C] flex flex-col select-none">
+        {/* Fullscreen Dedicated Squid Game View */}
+        <div className="flex-1 w-full">
+          <SquidGameView question={currentQuestion as any} />
+        </div>
+      </div>
+    );
+  }
 
   // ══════════════════════════════════════════════════════════════
   // DEDICATED LIVE ACTION ENGINE: 🧠 MEMORY MATCH LIVE (لعبة الذاكرة التفاعلية)
