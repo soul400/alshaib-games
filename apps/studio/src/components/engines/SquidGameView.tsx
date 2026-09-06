@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { 
@@ -34,6 +34,7 @@ interface Props {
 export function SquidGameView({ question: propQuestion }: Props) {
   const { liveComments, tiktokEngine } = useStudioStore();
 
+  // 1. CONFIGURATION & STATE INITIALIZATION
   const [config, setConfig] = useState<SquidGameConfig>(() => ({
     ...DEFAULT_SQUID_CONFIG,
     ...(propQuestion?.config || {})
@@ -45,15 +46,20 @@ export function SquidGameView({ question: propQuestion }: Props) {
   const [dangerNumber, setDangerNumber] = useState<number | null>(null);
   const [winner, setWinner] = useState<SquidPlayer | null>(null);
 
+  // Time & Clocks
   const [timeRemainingSeconds, setTimeRemainingSeconds] = useState<number>(config.choiceDurationSeconds);
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [cameraShake, setCameraShake] = useState<boolean>(false);
 
+  // Activity Log Ticker (Live events feed)
   const [activityLogs, setActivityLogs] = useState<{ id: string; text: string; time: string; icon: string }[]>([]);
+
+  // Host Drawer & Audio
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'ALIVE' | 'ELIMINATED'>('ALIVE');
 
+  // Tracking and deduplication
   const registeredUserIdsRef = useRef<Set<string>>(new Set());
   const processedCommentIdsRef = useRef<Set<string>>(new Set());
   const roundTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -61,20 +67,24 @@ export function SquidGameView({ question: propQuestion }: Props) {
   const phaseRef = useRef<SquidGamePhase>(phase);
   phaseRef.current = phase;
 
+  // Sound helper with mute toggle
   const playSound = useCallback((type: any, vol: number = 0.8) => {
     if (!isMuted && config.soundEnabled) {
       soundFX.play(type, vol);
     }
   }, [isMuted, config.soundEnabled]);
 
-  const addLog = useCallback((text: string, icon: string = 'ðŸ¦‘') => {
+  // Add activity log
+  const addLog = useCallback((text: string, icon: string = '🦑') => {
     const time = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     setActivityLogs(prev => [{ id: `${Date.now()}-${Math.random()}`, text, time, icon }, ...prev.slice(0, 6)]);
   }, []);
 
+  // 2. COMPUTED METRICS & SELECTORS
   const alivePlayers = useMemo(() => players.filter(p => p.isAlive), [players]);
   const eliminatedPlayers = useMemo(() => players.filter(p => !p.isAlive), [players]);
 
+  // Distribution of choices (1-5) in the current round
   const choiceStats = useMemo(() => {
     const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     alivePlayers.forEach(p => {
@@ -89,6 +99,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
     return Object.values(choiceStats).reduce((a, b) => a + b, 0);
   }, [choiceStats]);
 
+  // 3. REGISTRATION & COMMENT PROCESSOR
   const processComment = useCallback((c: any) => {
     if (!c) return;
     const cid = String(c.id || `${c.userId}-${c.createTime || Date.now()}`);
@@ -98,7 +109,8 @@ export function SquidGameView({ question: propQuestion }: Props) {
     const rawText = (c.comment || c.commentText || '').trim();
     const uid = String(c.userId || c.username || `user-${Date.now()}`).toLowerCase();
 
-    const isRegisterKeyword = rawText.includes('Ø§Ù„Ø¹Ø¨') || rawText.includes('Ù„Ø¹Ø¨') || rawText.includes('Ø´Ø§Ø±Ùƒ') || rawText.toLowerCase().includes('play');
+    // 1. REGISTRATION PHASE or Mid-Game Join (word: "العب" / "شارك")
+    const isRegisterKeyword = rawText.includes('العب') || rawText.includes('لعب') || rawText.includes('شارك') || rawText.toLowerCase().includes('play');
     
     if (isRegisterKeyword && (phaseRef.current === 'LOBBY' || (config.allowJoinMidGame && phaseRef.current !== 'LOCKING' && phaseRef.current !== 'DOLL_MOVEMENT' && phaseRef.current !== 'DANGER_REVEAL'))) {
       if (!registeredUserIdsRef.current.has(uid)) {
@@ -107,7 +119,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
           id: `p-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
           userId: uid,
           username: c.username || `@user_${Math.floor(Math.random() * 900 + 100)}`,
-          displayName: c.displayName || c.authorName || c.username || 'Ù…ØªØ³Ø§Ø¨Ù‚ Ø§Ù„Ø­Ø¨Ø§Ø±',
+          displayName: c.displayName || c.authorName || c.username || 'متسابق الحبار',
           avatarUrl: c.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${uid}`,
           currentStep: 0,
           targetSteps: config.winningSteps,
@@ -119,11 +131,12 @@ export function SquidGameView({ question: propQuestion }: Props) {
         };
         setPlayers(prev => [...prev, newPlayer]);
         playSound('score_update', 0.5);
-        addLog(`Ø§Ù†Ø¶Ù… Ø§Ù„Ù…ØªØ³Ø§Ø¨Ù‚ [${newPlayer.displayName}] Ù„Ù„Ù…Ø¶Ù…Ø§Ø±!`, 'ðŸ‘¤');
+        addLog(`انضم المتسابق [${newPlayer.displayName}] للمضمار!`, '👤');
       }
       return;
     }
 
+    // 2. CHOOSING PHASE: Accept 1 to 5 from alive registered players ONLY
     if (phaseRef.current === 'CHOOSING') {
       const choice = parseSquidChoice(rawText);
       if (choice !== null) {
@@ -145,7 +158,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
             playSound('lock_click', 0.4);
             const p = prevPlayers.find(pl => pl.userId === uid);
             if (p) {
-              addLog(`${p.displayName} Ø§Ø®ØªØ§Ø± Ø§Ù„Ø±Ù‚Ù… [ ${choice} ]`, 'ðŸŽ¯');
+              addLog(`${p.displayName} اختار الرقم [ ${choice} ]`, '🎯');
             }
           }
           return updated;
@@ -154,6 +167,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
     }
   }, [config.allowJoinMidGame, config.winningSteps, playSound, addLog]);
 
+  // Subscribe to comments
   useEffect(() => {
     liveComments.forEach(c => processComment(c));
     if (tiktokEngine) {
@@ -165,16 +179,19 @@ export function SquidGameView({ question: propQuestion }: Props) {
     }
   }, [liveComments, tiktokEngine, processComment]);
 
+  // 4. GAME LIFECYCLE & STATE MACHINE
   const clearAllTimers = useCallback(() => {
     if (roundTimerRef.current) clearInterval(roundTimerRef.current);
     if (phaseTimeoutRef.current) clearTimeout(phaseTimeoutRef.current);
   }, []);
 
+  // START ROUND
   const startNextRound = useCallback(() => {
     clearAllTimers();
     setDangerNumber(null);
     setCameraShake(false);
 
+    // Reset lastChoice for all alive players
     setPlayers(prev => prev.map(p => ({
       ...p,
       lastChoice: null,
@@ -183,8 +200,9 @@ export function SquidGameView({ question: propQuestion }: Props) {
 
     setPhase('ROUND_START');
     playSound('round_start', 0.9);
-    addLog(`ðŸš¨ Ø¨Ø¯Ø£Øª Ø§Ù„Ø¬ÙˆÙ„Ø© [${roundNumber}]! Ø§Ø³ØªØ¹Ø¯ÙˆØ§ Ù„Ù„Ø§Ø®ØªÙŠØ§Ø±`, 'ðŸ”¥');
+    addLog(`🚨 بدأت الجولة [${roundNumber}]! استعدوا للاختيار`, '🔥');
 
+    // Transition to CHOOSING after 2.5s intro
     phaseTimeoutRef.current = setTimeout(() => {
       setPhase('CHOOSING');
       setTimeRemainingSeconds(config.choiceDurationSeconds);
@@ -192,6 +210,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
     }, 2500);
   }, [clearAllTimers, roundNumber, config.choiceDurationSeconds, playSound, addLog]);
 
+  // CHOOSING COUNTDOWN TICKER
   useEffect(() => {
     if (phase !== 'CHOOSING' || isPaused) return;
 
@@ -216,15 +235,16 @@ export function SquidGameView({ question: propQuestion }: Props) {
     };
   }, [phase, isPaused, playSound]);
 
+  // LOCK CHOICES -> DOLL MOVEMENT
   const handleLockChoices = useCallback(() => {
     setPhase('LOCKING');
     playSound('time_up', 0.9);
-    addLog('â›” Ø§Ù†ØªÙ‡Ù‰ ÙˆÙ‚Øª Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±! Ø¬Ø§Ø±ÙŠ ØªØ­Ù„ÙŠÙ„ Ø§Ø®ØªÙŠØ§Ø±Ø§Øª Ø§Ù„Ù…ØªØ³Ø§Ø¨Ù‚ÙŠÙ†...', 'ðŸ”’');
+    addLog('⛔ انتهى وقت الاختيار! جاري تحليل اختيارات المتسابقين...', '🔒');
 
     phaseTimeoutRef.current = setTimeout(() => {
       setPhase('DOLL_MOVEMENT');
       playSound('doll_turn', 1.0);
-      addLog('ðŸ‘€ Ø§Ù„Ø¯Ù…ÙŠØ© ØªÙ„ØªÙØª Ù†Ø­Ùˆ Ø§Ù„Ù…Ø¶Ù…Ø§Ø± Ù„Ù„Ù…Ø³Ø­ Ø§Ù„Ø´Ø§Ù…Ù„...', 'ðŸ¤–');
+      addLog('👀 الدمية تلتفت نحو المضمار للمسح الشامل...', '🤖');
 
       phaseTimeoutRef.current = setTimeout(() => {
         handleRevealDanger();
@@ -232,6 +252,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
     }, 2000);
   }, [playSound, addLog]);
 
+  // REVEAL DANGER & RESOLVE ROUND
   const handleRevealDanger = useCallback(() => {
     const currentChoices = players.filter(p => p.isAlive).map(p => p.lastChoice);
     const danger = determineSquidDangerNumber(roundNumber, config.riskLevel, currentChoices);
@@ -242,7 +263,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
     setTimeout(() => setCameraShake(false), 800);
 
     playSound('danger_reveal', 1.0);
-    addLog(`âš ï¸ Ø±Ù‚Ù… Ø§Ù„Ø®Ø·Ø± Ø§Ù„Ù…Ø¹Ù„Ù† Ù‡Ùˆ [ ${danger} ]!`, 'âš¡');
+    addLog(`⚠️ رقم الخطر المعلن هو [ ${danger} ]!`, '⚡');
 
     phaseTimeoutRef.current = setTimeout(() => {
       setPhase('RESULT_REVEAL');
@@ -255,6 +276,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
         const updated = prevPlayers.map(p => {
           if (!p.isAlive) return p;
 
+          // Case A: Player picked the danger number -> ELIMINATED!
           if (p.lastChoice === danger) {
             elimCount++;
             return {
@@ -265,6 +287,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
             };
           }
 
+          // Case B: Player didn't choose anything -> Safe but NO advance
           if (p.lastChoice === null) {
             return {
               ...p,
@@ -273,6 +296,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
             };
           }
 
+          // Case C: Player picked safe number -> ADVANCE by steps
           advCount++;
           const nextStep = p.currentStep + p.lastChoice;
           const isFinisher = nextStep >= config.winningSteps;
@@ -299,12 +323,13 @@ export function SquidGameView({ question: propQuestion }: Props) {
 
       if (elimCount > 0) {
         playSound('elimination_laser', 0.9);
-        addLog(`â˜ ï¸ ØªÙ… Ø¥Ù‚ØµØ§Ø¡ ${elimCount} Ù„Ø§Ø¹Ø¨ÙŠÙ† Ù„Ø§Ø®ØªÙŠØ§Ø±Ù‡Ù… Ø±Ù‚Ù… Ø§Ù„Ø®Ø·Ø±!`, 'ðŸ’¥');
+        addLog(`☠️ تم إقصاء ${elimCount} لاعبين لاختيارهم رقم الخطر!`, '💥');
       } else {
         playSound('correct_answer', 0.8);
-        addLog(`ðŸŸ¢ Ù†Ø¬Ø§ Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù…ØªØ³Ø§Ø¨Ù‚ÙŠÙ† ÙÙŠ Ù‡Ø°Ù‡ Ø§Ù„Ø¬ÙˆÙ„Ø© Ø¯ÙˆÙ† Ø£ÙŠ Ø¥Ù‚ØµØ§Ø¡!`, 'ðŸ›¡ï¸');
+        addLog('🟢 نجا جميع المتسابقين في هذه الجولة دون أي إقصاء!', '🛡️');
       }
 
+      // Check Win Condition after results display duration
       phaseTimeoutRef.current = setTimeout(() => {
         handleWinCheck(foundWinner);
       }, config.resultDisplayDurationSeconds * 1000);
@@ -312,6 +337,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
     }, 2000);
   }, [players, roundNumber, config.riskLevel, config.winningSteps, config.resultDisplayDurationSeconds, playSound, addLog]);
 
+  // WIN CHECK
   const handleWinCheck = useCallback((firstFinisher: SquidPlayer | null) => {
     if (config.winMode === 'first_to_finish' && firstFinisher) {
       declareWinner(firstFinisher);
@@ -332,7 +358,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
       }
       if (stillAlive.length === 0) {
         setPhase('ROUND_END');
-        addLog('Ø§Ù†ØªÙ‡Øª Ø§Ù„Ø¬ÙˆÙ„Ø© Ù…Ø¹ Ø¥Ù‚ØµØ§Ø¡ Ø§Ù„Ø¬Ù…ÙŠØ¹!', 'âš ï¸');
+        addLog('انتهت الجولة مع إقصاء الجميع!', '⚠️');
         return;
       }
     }
@@ -340,26 +366,27 @@ export function SquidGameView({ question: propQuestion }: Props) {
     if (stillAlive.length === 0) {
       setPhase('GAME_OVER');
       playSound('wrong_answer', 1.0);
-      addLog('ðŸ’€ Ø³Ù‚Ø· Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† ÙÙŠ Ø§Ù„ÙØ®! Ù„Ø§ ÙŠÙˆØ¬Ø¯ ÙØ§Ø¦Ø²', 'â˜ ï¸');
+      addLog('💀 سقط جميع اللاعبين في الفخ! لا يوجد فائز', '☠️');
       return;
     }
 
     setPhase('ROUND_END');
     setRoundNumber(r => r + 1);
-    addLog(`ðŸŽ‰ Ø§ÙƒØªÙ…Ù„Øª Ø§Ù„Ø¬ÙˆÙ„Ø©! Ø§Ù„Ø§Ø³ØªØ¹Ø¯Ø§Ø¯ Ù„Ù„Ø¬ÙˆÙ„Ø© Ø§Ù„ØªØ§Ù„ÙŠØ©...`, 'â³');
+    addLog('🎉 اكتملت الجولة! الاستعداد للجولة التالية...', '⏳');
 
     phaseTimeoutRef.current = setTimeout(() => {
       startNextRound();
     }, 3000);
   }, [config.winMode, config.winningSteps, players, playSound, addLog, startNextRound]);
 
+  // DECLARE WINNER
   const declareWinner = useCallback((winningPlayer: SquidPlayer) => {
     setWinner(winningPlayer);
     setPhase('GAME_OVER');
     playSound('winner_announcement', 1.0);
     triggerVisualEffect('confetti');
     triggerVisualEffect('fireworks');
-    addLog(`ðŸ† Ø¨Ø·Ù„ Ø§Ù„Ø­Ø¨Ø§Ø±: [${winningPlayer.displayName}] ÙØ§Ø² Ø¨Ø§Ù„Ø³Ø¨Ø§Ù‚!`, 'ðŸ‘‘');
+    addLog(`🏆 بطل الحبار: [${winningPlayer.displayName}] فاز بالسباق!`, '👑');
 
     if (tiktokEngine && winningPlayer.userId) {
       try {
@@ -376,6 +403,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
     }
   }, [playSound, addLog, tiktokEngine]);
 
+  // RESET GAME
   const handleResetGame = useCallback(() => {
     clearAllTimers();
     setPhase('LOBBY');
@@ -397,17 +425,19 @@ export function SquidGameView({ question: propQuestion }: Props) {
     })));
 
     playSound('round_transition', 0.8);
-    addLog('ðŸ”„ ØªÙ… Ø¥Ø¹Ø§Ø¯Ø© ØªÙ‡ÙŠØ¦Ø© Ø§Ù„Ù„Ø¹Ø¨Ø© Ø¨Ø§Ù„ÙƒØ§Ù…Ù„ ÙˆØ§Ø³ØªØ¹Ø¯Ø§Ø¯ Ø§Ù„Ù„ÙˆØ¨ÙŠ', 'ðŸ”„');
+    addLog('🔄 تم إعادة تهيئة اللعبة بالكامل واستعداد اللوبي', '🔄');
   }, [clearAllTimers, config.choiceDurationSeconds, playSound, addLog]);
 
+  // DEMO MODE: ADD MOCK PLAYERS
   const handleAddMockPlayers = useCallback((count: number = 10) => {
     const mockList = generateMockSquidPlayers(count, config.winningSteps);
     mockList.forEach(p => registeredUserIdsRef.current.add(p.userId));
     setPlayers(prev => [...prev, ...mockList]);
     playSound('score_update', 0.6);
-    addLog(`ðŸ¤– ØªÙ… ØªÙˆÙ„ÙŠØ¯ [${count}] Ù…ØªØ³Ø§Ø¨Ù‚ ØªØ¬Ø±ÙŠØ¨ÙŠ (Demo Mode)`, 'ðŸ§ª');
+    addLog(`🤖 تم توليد [${count}] متسابق تجريبي (Demo Mode)`, '🧪');
   }, [config.winningSteps, playSound, addLog]);
 
+  // DEMO MODE: SIMULATE CHOICES FOR ALIVE PLAYERS
   const handleSimulateChoices = useCallback(() => {
     if (phase !== 'CHOOSING') return;
     setPlayers(prev => prev.map(p => {
@@ -427,9 +457,10 @@ export function SquidGameView({ question: propQuestion }: Props) {
       };
     }));
     playSound('lock_click', 0.6);
-    addLog('âš¡ ØªÙ… Ù…Ø­Ø§ÙƒØ§Ø© Ø§Ø®ØªÙŠØ§Ø±Ø§Øª Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† Ø¢Ù„ÙŠØ§Ù‹ ÙÙŠ Ø§Ù„Ø´Ø§Øª', 'ðŸŽ²');
+    addLog('⚡ تم محاكاة اختيارات جميع اللاعبين آلياً في الشات', '🎲');
   }, [phase, playSound, addLog]);
 
+  // PROGRESS TILES COMPONENT
   const renderProgressTiles = (current: number, target: number) => {
     const tiles = [];
     for (let i = 1; i <= target; i++) {
@@ -449,11 +480,13 @@ export function SquidGameView({ question: propQuestion }: Props) {
   };
 
   return (
-    <div className={`w-full min-h-screen bg-[#07080C] text-white flex flex-col justify-between overflow-hidden relative select-none font-sans ${cameraShake ? 'animate-bounce' : ''}`}>
+    <div dir="rtl" className={`w-full min-h-screen bg-[#07080C] text-white flex flex-col justify-between overflow-hidden relative select-none font-sans ${cameraShake ? 'animate-bounce' : ''}`}>
       
-      {/* AMBIENT BACKGROUND */}
+      {/* ── AMBIENT ATMOSPHERIC BACKGROUND ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,25,40,0.6)_0%,rgba(7,8,12,0.95)_75%,rgba(5,6,9,1)_100%)]" />
+        
+        {/* Survival Grid Floor */}
         <div 
           className="absolute inset-x-0 bottom-0 h-[380px] opacity-15"
           style={{
@@ -463,10 +496,12 @@ export function SquidGameView({ question: propQuestion }: Props) {
             transformOrigin: 'bottom'
           }}
         />
+
+        {/* Ambient Neon Glow Spheres */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-b from-[#F43F5E]/10 to-transparent blur-3xl pointer-events-none" />
       </div>
 
-      {/* TOP BROADCAST BAR */}
+      {/* ── TOP BROADCAST BAR ── */}
       <header className="relative z-20 w-full px-4 sm:px-8 py-3 flex items-center justify-between border-b border-[#1A1E2D] bg-[#0A0D15]/80 backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#F43F5E] to-[#9333EA] p-0.5 shadow-[0_0_20px_rgba(244,63,94,0.4)] flex items-center justify-center">
@@ -477,14 +512,14 @@ export function SquidGameView({ question: propQuestion }: Props) {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-base sm:text-lg font-black tracking-wide text-white drop-shadow-md">
-                Ø§Ù„Ø­Ø¨Ø§Ø±
+                الحبار
               </h1>
               <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-[#F43F5E]/20 text-[#F43F5E] border border-[#F43F5E]/30">
                 SQUID SURVIVAL
               </span>
             </div>
             <p className="text-[11px] text-slate-400 font-medium">
-              AL-SHAIB ENTERTAINMENT â€¢ ØªØ­Ø¯ÙŠ Ø®Ø·ÙˆØ§Øª ÙˆÙ†Ø¬Ø§Ø©
+              AL-SHAIB ENTERTAINMENT • تحدي خطوات ونجاة
             </p>
           </div>
         </div>
@@ -492,7 +527,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
         <div className="flex items-center gap-2 sm:gap-4">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#121622] border border-[#22283A] text-xs font-black">
             <Flame className="w-4 h-4 text-[#F43F5E] animate-pulse" />
-            <span>Ø§Ù„Ø¬ÙˆÙ„Ø© {roundNumber}</span>
+            <span>الجولة {roundNumber}</span>
           </div>
 
           <div className="flex items-center gap-1.5 bg-[#121622] border border-[#22283A] rounded-xl p-1 text-xs font-bold">
@@ -505,7 +540,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
               }`}
             >
               <span className="w-2 h-2 rounded-full bg-[#10B981]" />
-              <span>Ø§Ù„Ù†Ø§Ø¬ÙˆÙ†: {alivePlayers.length}</span>
+              <span>الناجون: {alivePlayers.length}</span>
             </button>
             <button
               onClick={() => setActiveTab('ELIMINATED')}
@@ -516,7 +551,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
               }`}
             >
               <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
-              <span>Ø§Ù„Ù…Ù‚ØµÙŠÙˆÙ†: {eliminatedPlayers.length}</span>
+              <span>المقصيون: {eliminatedPlayers.length}</span>
             </button>
           </div>
 
@@ -528,7 +563,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
                   ? 'bg-[#1F2433] border-[#363E56] text-slate-400' 
                   : 'bg-[#161B29] border-[#2B344C] text-[#F43F5E]'
               }`}
-              title={isMuted ? 'ØªØ´ØºÙŠÙ„ Ø§Ù„ØµÙˆØª' : 'ÙƒØªÙ… Ø§Ù„ØµÙˆØª'}
+              title={isMuted ? 'تشغيل الصوت' : 'كتم الصوت'}
             >
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </button>
@@ -536,7 +571,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
             <button
               onClick={() => setIsSettingsOpen(s => !s)}
               className="p-2 rounded-xl bg-[#161B29] border border-[#2B344C] text-slate-300 hover:text-white hover:border-[#F43F5E] transition-all"
-              title="Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ù‡ÙˆØ³Øª"
+              title="إعدادات الهوست"
             >
               <Settings className="w-4 h-4" />
             </button>
@@ -544,16 +579,16 @@ export function SquidGameView({ question: propQuestion }: Props) {
         </div>
       </header>
 
-      {/* MAIN ARENA WORKSPACE */}
+      {/* ── MAIN BROADCAST WORKSPACE ── */}
       <main className="relative z-10 flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col lg:flex-row items-center gap-6 justify-between">
         
-        {/* PARTICIPANTS & PROGRESS TRACK PANEL */}
+        {/* ── PARTICIPANTS & PROGRESS TRACK PANEL ── */}
         <section className="w-full lg:w-[360px] h-[280px] lg:h-[620px] rounded-3xl bg-[#0C0F19]/90 border border-[#1F2437] backdrop-blur-2xl flex flex-col overflow-hidden shadow-2xl shrink-0 order-2 lg:order-1">
           <div className="px-5 py-3.5 border-b border-[#1A1F30] flex items-center justify-between bg-[#0F1321]">
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4 text-[#F43F5E]" />
               <h2 className="text-xs font-black tracking-wider uppercase text-slate-200">
-                {activeTab === 'ALIVE' ? 'Ø§Ù„Ù…Ø´Ø§Ø±ÙƒÙˆÙ† ÙÙŠ Ø§Ù„Ù…Ø¶Ù…Ø§Ø±' : 'Ø³Ø¬Ù„ Ø§Ù„Ù…Ù‚ØµÙŠÙŠÙ†'}
+                {activeTab === 'ALIVE' ? 'المشاركون في المضمار' : 'سجل المقصيين'}
               </h2>
             </div>
             <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#1B2133] text-slate-300 border border-[#2D364F]">
@@ -566,8 +601,8 @@ export function SquidGameView({ question: propQuestion }: Props) {
               alivePlayers.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-500">
                   <Skull className="w-10 h-10 mb-2 stroke-[1.5] text-slate-600" />
-                  <p className="text-xs font-bold">Ù„Ø§ ÙŠÙˆØ¬Ø¯ Ù…Ø´Ø§Ø±ÙƒÙˆÙ† Ø­Ø§Ù„ÙŠØ§Ù‹</p>
-                  <p className="text-[11px] text-slate-600 mt-1">Ø§ÙƒØªØ¨ Â«Ø§Ù„Ø¹Ø¨Â» ÙÙŠ Ø§Ù„Ø´Ø§Øª Ù„Ù„Ø§Ù†Ø¶Ù…Ø§Ù…</p>
+                  <p className="text-xs font-bold">لا يوجد مشاركون حالياً</p>
+                  <p className="text-[11px] text-slate-600 mt-1">اكتب «العب» في الشات للانضمام</p>
                 </div>
               ) : (
                 alivePlayers.map((player) => (
@@ -601,12 +636,12 @@ export function SquidGameView({ question: propQuestion }: Props) {
                       <div className="flex items-center gap-2 shrink-0">
                         {player.lastChoice !== null ? (
                           <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-gradient-to-r from-[#F43F5E] to-[#E11D48] text-white font-black text-xs font-mono shadow-[0_0_12px_rgba(244,63,94,0.4)]">
-                            <span>Ø§Ø®ØªÙŠØ§Ø±Ù‡:</span>
+                            <span>اختياره:</span>
                             <span className="text-sm font-extrabold">{player.lastChoice}</span>
                           </div>
                         ) : (
                           <span className="text-[10px] font-bold text-slate-500 bg-[#161B2A] px-2 py-1 rounded-lg border border-[#252D42]">
-                            Ø¨Ø§Ù†ØªØ¸Ø§Ø± Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±
+                            بانتظار الاختيار
                           </span>
                         )}
                       </div>
@@ -625,7 +660,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
               eliminatedPlayers.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-500">
                   <ShieldAlert className="w-10 h-10 mb-2 stroke-[1.5] text-slate-600" />
-                  <p className="text-xs font-bold">Ù„Ù… ÙŠØªÙ… Ø¥Ù‚ØµØ§Ø¡ Ø£ÙŠ Ù„Ø§Ø¹Ø¨ Ø­ØªÙ‰ Ø§Ù„Ø¢Ù†!</p>
+                  <p className="text-xs font-bold">لم يتم إقصاء أي لاعب حتى الآن!</p>
                 </div>
               ) : (
                 eliminatedPlayers.map((player) => (
@@ -640,19 +675,19 @@ export function SquidGameView({ question: propQuestion }: Props) {
                           alt={player.displayName}
                           className="w-8 h-8 rounded-xl object-cover grayscale border border-red-900/50"
                         />
-                        <span className="absolute -bottom-1 -right-1 text-xs">â˜ ï¸</span>
+                        <span className="absolute -bottom-1 -right-1 text-xs">☠️</span>
                       </div>
                       <div>
                         <p className="text-xs font-bold text-slate-300 line-through">
                           {player.displayName}
                         </p>
                         <p className="text-[10px] text-red-400">
-                          Ø£ÙÙ‚ØµÙŠ ÙÙŠ Ø§Ù„Ø¬ÙˆÙ„Ø© {player.eliminatedAtRound || 1}
+                          أُقصي في الجولة {player.eliminatedAtRound || 1}
                         </p>
                       </div>
                     </div>
                     <span className="text-[11px] font-mono text-slate-500">
-                      ÙˆØµÙ„: {player.currentStep} Ø®Ø·ÙˆØ§Øª
+                      وصل: {player.currentStep} خطوات
                     </span>
                   </div>
                 ))
@@ -661,7 +696,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
           </div>
         </section>
 
-        {/* CENTER STAGE ARENA */}
+        {/* ── CENTER STAGE ARENA ── */}
         <section className="flex-1 w-full flex flex-col items-center justify-center my-auto order-1 lg:order-2">
           
           {phase === 'LOBBY' && (
@@ -673,16 +708,16 @@ export function SquidGameView({ question: propQuestion }: Props) {
               </div>
 
               <h2 className="text-3xl sm:text-4xl font-black text-white mb-2 tracking-tight">
-                Ù„Ø¹Ø¨Ø© Â«Ø§Ù„Ø­Ø¨Ø§Ø±Â»
+                لعبة «الحبار»
               </h2>
               <p className="text-sm font-semibold text-slate-300 mb-6 max-w-md">
-                ØªØ­Ø¯ÙŠ Ø®Ø·ÙˆØ§Øª ÙˆÙ†Ø¬Ø§Ø© ØªÙØ§Ø¹Ù„ÙŠ Ù…Ø¨Ø§Ø´Ø± Ø£Ù…Ø§Ù… Ø§Ù„Ø¬Ù…Ù‡ÙˆØ±. Ø§Ø®ØªØ± Ø±Ù‚Ù…Ùƒ Ù…Ù† 1 Ø¥Ù„Ù‰ 5 ÙˆØªØ¬Ù†Ø¨ Ø±Ù‚Ù… Ø§Ù„Ø®Ø·Ø± Ù„Ù„ÙˆØµÙˆÙ„ Ù„Ù„Ù†Ù‡Ø§ÙŠØ©!
+                تحدي خطوات ونجاة تفاعلي مباشر أمام الجمهور. اختر رقمك من 1 إلى 5 وتجنب رقم الخطر للوصول للنهاية!
               </p>
 
               <div className="w-full p-4 rounded-2xl bg-[#141929] border border-[#2B3550] mb-6 flex items-center justify-center gap-3">
                 <Radio className="w-5 h-5 text-[#F43F5E] animate-ping" />
                 <span className="text-base sm:text-lg font-black text-white">
-                  Ø§ÙƒØªØ¨ <span className="text-[#F43F5E] underline decoration-2 underline-offset-4">Â«Ø§Ù„Ø¹Ø¨Â»</span> ÙÙŠ Ø§Ù„Ø´Ø§Øª Ù„Ù„Ø¯Ø®ÙˆÙ„
+                  اكتب <span className="text-[#F43F5E] underline decoration-2 underline-offset-4">«العب»</span> في الشات للدخول
                 </span>
               </div>
 
@@ -697,7 +732,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
                   }`}
                 >
                   <Play className="w-5 h-5 fill-current" />
-                  <span>Ø¨Ø¯Ø¡ Ø§Ù„Ù„Ø¹Ø¨Ø© ({players.length} Ù…Ø´Ø§Ø±Ùƒ)</span>
+                  <span>بدء اللعبة ({players.length} مشارك)</span>
                 </button>
 
                 <button
@@ -705,7 +740,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
                   className="px-4 py-3.5 rounded-2xl bg-[#141928] border border-[#26304A] hover:border-[#F43F5E] text-slate-300 text-xs font-bold flex items-center gap-1.5 transition-all"
                 >
                   <UserPlus className="w-4 h-4 text-[#F43F5E]" />
-                  <span>+10 ØªØ¬Ø±ÙŠØ¨ÙŠ (Demo)</span>
+                  <span>+10 تجريبي (Demo)</span>
                 </button>
               </div>
             </div>
@@ -752,7 +787,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
                       ? 'bg-[#EF4444] text-white border-red-400 animate-pulse'
                       : 'bg-[#161B2B] text-slate-400 border-[#2F3952]'
                   }`}>
-                    {phase === 'DOLL_MOVEMENT' ? 'ðŸ‘€ Ù…Ø³Ø­ ÙƒØ§Ø´Ù' : phase === 'DANGER_REVEAL' ? 'âš ï¸ ØªØ­Ø¯ÙŠØ¯ Ø§Ù„Ø®Ø·Ø±' : 'Ø§Ù„Ø¯Ù…ÙŠØ© ØªØ±Ø§Ù‚Ø¨ Ø§Ù„Ø®Ù„Ù'}
+                    {phase === 'DOLL_MOVEMENT' ? '👀 مسح كاشف' : phase === 'DANGER_REVEAL' ? '⚠️ تحديد الخطر' : 'الدمية تراقب الخلف'}
                   </span>
                 </div>
               </div>
@@ -761,13 +796,13 @@ export function SquidGameView({ question: propQuestion }: Props) {
               {phase === 'DANGER_REVEAL' && dangerNumber !== null && (
                 <div className="w-full max-w-lg mb-6 p-6 rounded-3xl bg-gradient-to-r from-[#7F1D1D] via-[#991B1B] to-[#7F1D1D] border-2 border-red-500 text-center shadow-[0_0_60px_rgba(239,68,68,0.7)] animate-bounce">
                   <p className="text-xs font-black uppercase tracking-widest text-red-200 mb-1">
-                    âš ï¸ Ø±Ù‚Ù… Ø§Ù„Ø®Ø·Ø± ÙÙŠ Ù‡Ø°Ù‡ Ø§Ù„Ø¬ÙˆÙ„Ø© âš ï¸
+                    ⚠️ رقم الخطر في هذه الجولة ⚠️
                   </p>
                   <div className="text-7xl font-black font-mono text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
                     {dangerNumber}
                   </div>
                   <p className="text-sm font-bold text-red-100 mt-2">
-                    ÙƒÙ„ Ù…Ù† Ø§Ø®ØªØ§Ø± Ø§Ù„Ø±Ù‚Ù… [{dangerNumber}] ÙŠØªÙ… Ø¥Ù‚ØµØ§Ø¤Ù‡ ÙÙˆØ±Ø§Ù‹!
+                    كل من اختار الرقم [{dangerNumber}] يتم إقصاؤه فوراً!
                   </p>
                 </div>
               )}
@@ -777,7 +812,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
                 <div className="w-full max-w-2xl flex flex-col items-center">
                   <div className="text-center mb-4">
                     <p className="text-sm sm:text-base font-black text-slate-300 mb-1">
-                      Ø§ÙƒØªØ¨ Ø±Ù‚Ù…Ùƒ Ù…Ù† <span className="text-[#F43F5E]">1 Ø¥Ù„Ù‰ 5</span> ÙÙŠ Ø§Ù„Ø´Ø§Øª
+                      اكتب رقمك من <span className="text-[#F43F5E]">1 إلى 5</span> في الشات
                     </p>
                     <div className="text-5xl sm:text-6xl font-black font-mono tracking-tight text-white drop-shadow-[0_0_25px_rgba(244,63,94,0.4)]">
                       00:{String(timeRemainingSeconds).padStart(2, '0')}
@@ -786,11 +821,11 @@ export function SquidGameView({ question: propQuestion }: Props) {
 
                   <div className="w-full grid grid-cols-5 gap-2 sm:gap-3 mb-4">
                     {[
-                      { num: 1, label: 'Ø£Ù…Ø§Ù† ÙØ§Ø¦Ù‚', steps: '+1 Ø®Ø·ÙˆØ©', risk: 'Ù…Ù†Ø®ÙØ¶ Ø¬Ø¯Ø§Ù‹', color: 'border-emerald-500/40 from-emerald-950/40' },
-                      { num: 2, label: 'Ø­Ø°Ø±', steps: '+2 Ø®Ø·ÙˆØ§Øª', risk: 'Ù…Ù†Ø®ÙØ¶', color: 'border-teal-500/40 from-teal-950/40' },
-                      { num: 3, label: 'Ù…ØªÙˆØ§Ø²Ù†', steps: '+3 Ø®Ø·ÙˆØ§Øª', risk: 'Ù…ØªÙˆØ³Ø·', color: 'border-blue-500/40 from-blue-950/40' },
-                      { num: 4, label: 'Ù…Ø®Ø§Ø·Ø±Ø©', steps: '+4 Ø®Ø·ÙˆØ§Øª', risk: 'Ù…Ø±ØªÙØ¹', color: 'border-amber-500/40 from-amber-950/40' },
-                      { num: 5, label: 'Ù…Ø®Ø§Ø·Ø±Ø© Ù‚ØµÙˆÙ‰', steps: '+5 Ø®Ø·ÙˆØ§Øª', risk: 'Ù…Ø±ØªÙØ¹ Ø¬Ø¯Ø§Ù‹', color: 'border-rose-500/40 from-rose-950/40' }
+                      { num: 1, label: 'أمان فائق', steps: '+1 خطوة', risk: 'منخفض جداً', color: 'border-emerald-500/40 from-emerald-950/40' },
+                      { num: 2, label: 'حذر', steps: '+2 خطوات', risk: 'منخفض', color: 'border-teal-500/40 from-teal-950/40' },
+                      { num: 3, label: 'متوازن', steps: '+3 خطوات', risk: 'متوسط', color: 'border-blue-500/40 from-blue-950/40' },
+                      { num: 4, label: 'مخاطرة', steps: '+4 خطوات', risk: 'مرتفع', color: 'border-amber-500/40 from-amber-950/40' },
+                      { num: 5, label: 'مخاطرة قصوى', steps: '+5 خطوات', risk: 'مرتفع جداً', color: 'border-rose-500/40 from-rose-950/40' }
                     ].map((item) => {
                       const count = choiceStats[item.num] || 0;
                       const percentage = totalChosenCount > 0 ? Math.round((count / totalChosenCount) * 100) : 0;
@@ -814,7 +849,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
 
                           <div className="w-full pt-2 border-t border-white/10 flex flex-col items-center">
                             <span className="text-[11px] font-mono font-bold text-white">
-                              {count} Ù„Ø§Ø¹Ø¨
+                              {count} لاعب
                             </span>
                             <span className="text-[9px] text-slate-400 font-mono">
                               ({percentage}%)
@@ -831,14 +866,14 @@ export function SquidGameView({ question: propQuestion }: Props) {
                       className="px-4 py-2 rounded-xl bg-[#151928] border border-[#27324A] hover:border-[#F43F5E] text-slate-300 text-xs font-bold flex items-center gap-1.5 transition-all shadow-md"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-[#F43F5E]" />
-                      <span>Ù…Ø­Ø§ÙƒØ§Ø© Ø§Ø®ØªÙŠØ§Ø±Ø§Øª Ø§Ù„Ø´Ø§Øª (Demo)</span>
+                      <span>محاكاة اختيارات الشات (Demo)</span>
                     </button>
                     <button
                       onClick={handleLockChoices}
                       className="px-4 py-2 rounded-xl bg-[#F43F5E]/20 border border-[#F43F5E]/40 text-[#F43F5E] hover:bg-[#F43F5E]/30 text-xs font-bold flex items-center gap-1.5 transition-all"
                     >
                       <Clock className="w-3.5 h-3.5" />
-                      <span>Ø¥ØºÙ„Ø§Ù‚ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª ÙÙˆØ±Ø§Ù‹</span>
+                      <span>إغلاق الاختيارات فوراً</span>
                     </button>
                   </div>
                 </div>
@@ -851,10 +886,10 @@ export function SquidGameView({ question: propQuestion }: Props) {
                     <RefreshCw className="w-5 h-5" />
                   </div>
                   <h3 className="text-lg font-black text-white mb-1">
-                    Ø£ØºÙ„Ù‚Øª Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±Ø§Øª
+                    أغلقت الاختيارات
                   </h3>
                   <p className="text-xs text-slate-300">
-                    Ø¬Ø§Ø±ÙŠ ÙØ­Øµ ÙˆØªØ«Ø¨ÙŠØª Ø§Ø®ØªÙŠØ§Ø±Ø§Øª {totalChosenCount} Ù…ØªØ³Ø§Ø¨Ù‚ÙŠÙ†...
+                    جاري فحص وتثبيت اختيارات {totalChosenCount} متسابقين...
                   </p>
                 </div>
               )}
@@ -863,24 +898,24 @@ export function SquidGameView({ question: propQuestion }: Props) {
               {phase === 'RESULT_REVEAL' && (
                 <div className="w-full max-w-xl p-6 rounded-3xl bg-[#0D111D]/95 border border-[#232B40] text-center shadow-2xl backdrop-blur-2xl">
                   <h3 className="text-xl font-black text-white mb-2">
-                    Ù†ØªØ§Ø¦Ø¬ Ø§Ù„Ø¬ÙˆÙ„Ø© {roundNumber}
+                    نتائج الجولة {roundNumber}
                   </h3>
                   <div className="grid grid-cols-2 gap-4 my-4">
                     <div className="p-4 rounded-2xl bg-[#0F1E19] border border-[#10B981]/40">
-                      <p className="text-xs font-bold text-emerald-400 mb-1">ðŸŸ¢ Ø§Ù„Ù†Ø§Ø¬ÙˆÙ† ÙˆØ§Ù„Ù…ØªÙ‚Ø¯Ù…ÙˆÙ†</p>
+                      <p className="text-xs font-bold text-emerald-400 mb-1">🟢 الناجون والمتقدمون</p>
                       <p className="text-3xl font-black font-mono text-emerald-300">
                         {alivePlayers.length}
                       </p>
                     </div>
                     <div className="p-4 rounded-2xl bg-[#210D12] border border-[#EF4444]/40">
-                      <p className="text-xs font-bold text-rose-400 mb-1">ðŸ”´ Ø§Ù„Ù…Ù‚ØµÙŠÙˆÙ† ÙÙŠ Ø§Ù„Ø®Ø·Ø±</p>
+                      <p className="text-xs font-bold text-rose-400 mb-1">🔴 المقصيون في الخطر</p>
                       <p className="text-3xl font-black font-mono text-rose-300">
                         {eliminatedPlayers.filter(p => p.eliminatedAtRound === roundNumber).length}
                       </p>
                     </div>
                   </div>
                   <p className="text-xs font-semibold text-slate-400">
-                    Ø¬Ø§Ø±ÙŠ ÙØ­Øµ Ø®Ø· Ø§Ù„Ù†Ù‡Ø§ÙŠØ© ÙˆØ§Ù„ØªØ¬Ù‡ÙŠØ² Ù„Ù„Ø¬ÙˆÙ„Ø© Ø§Ù„Ù‚Ø§Ø¯Ù…Ø©...
+                    جاري فحص خط النهاية والتجهيز للجولة القادمة...
                   </p>
                 </div>
               )}
@@ -903,10 +938,10 @@ export function SquidGameView({ question: propQuestion }: Props) {
               {winner ? (
                 <>
                   <h2 className="text-3xl sm:text-4xl font-black text-white mb-1">
-                    Ø§Ù„ÙØ§Ø¦Ø² Ø¨Ø§Ù„Ù„Ø¹Ø¨Ø©: {winner.displayName}
+                    الفائز باللعبة: {winner.displayName}
                   </h2>
                   <p className="text-sm text-slate-300 font-medium mb-6">
-                    ÙˆØµÙ„ Ø¥Ù„Ù‰ Ø®Ø· Ø§Ù„Ù†Ù‡Ø§ÙŠØ© ({winner.currentStep} / {config.winningSteps} Ø®Ø·ÙˆØ§Øª) ÙˆÙ†Ø¬Ø§ Ù…Ù† ÙƒØ§ÙØ© Ø§Ù„Ø¬ÙˆÙ„Ø§Øª Ø¨Ù†Ø¬Ø§Ø­!
+                    وصل إلى خط النهاية ({winner.currentStep} / {config.winningSteps} خطوات) ونجا من كافة الجولات بنجاح!
                   </p>
                   
                   <div className="flex items-center justify-center gap-4 mb-8">
@@ -918,17 +953,17 @@ export function SquidGameView({ question: propQuestion }: Props) {
                     <div className="text-right">
                       <p className="text-base font-black text-white">{winner.displayName}</p>
                       <p className="text-xs font-mono text-slate-400">{winner.username}</p>
-                      <p className="text-xs font-bold text-[#D6A84F] mt-1">+1000 Ù†Ù‚Ø·Ø© ÙÙˆØ² ÙÙŠ Ù„ÙˆØ­Ø© Ø§Ù„ØµØ¯Ø§Ø±Ø©</p>
+                      <p className="text-xs font-bold text-[#D6A84F] mt-1">+1000 نقطة فوز في لوحة الصدارة</p>
                     </div>
                   </div>
                 </>
               ) : (
                 <div className="my-6">
                   <h2 className="text-2xl font-black text-white mb-2">
-                    Ø§Ù†ØªÙ‡Øª Ø§Ù„Ù„Ø¹Ø¨Ø© Ø¯ÙˆÙ† Ø£ÙŠ ÙØ§Ø¦Ø²!
+                    انتهت اللعبة دون أي فائز!
                   </h2>
                   <p className="text-xs text-slate-400">
-                    ØªÙ… Ø¥Ù‚ØµØ§Ø¡ Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù…Ø´Ø§Ø±ÙƒÙŠÙ† ÙÙŠ Ø±Ù‚Ù… Ø§Ù„Ø®Ø·Ø± Ø§Ù„Ø£Ø®ÙŠØ±.
+                    تم إقصاء جميع المشاركين في رقم الخطر الأخير.
                   </p>
                 </div>
               )}
@@ -939,7 +974,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
                   className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#D6A84F] to-[#E5BE6C] text-[#08090C] font-black text-sm flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 transition-all"
                 >
                   <RotateCcw className="w-4 h-4 stroke-[2.5]" />
-                  <span>Ø¨Ø¯Ø¡ Ù„Ø¹Ø¨Ø© Ø¬Ø¯ÙŠØ¯Ø©</span>
+                  <span>بدء لعبة جديدة</span>
                 </button>
               </div>
             </div>
@@ -951,7 +986,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
       <footer className="relative z-20 w-full px-4 sm:px-8 py-2.5 border-t border-[#181D2C] bg-[#0A0D15]/90 flex items-center justify-between text-xs">
         <div className="flex items-center gap-2 text-slate-400 overflow-hidden">
           <Activity className="w-4 h-4 text-[#F43F5E] shrink-0 animate-pulse" />
-          <span className="font-bold text-slate-300 shrink-0">Ø¢Ø®Ø± Ø§Ù„ØªÙØ§Ø¹Ù„Ø§Øª:</span>
+          <span className="font-bold text-slate-300 shrink-0">آخر التفاعلات:</span>
           <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap text-slate-400 text-[11px]">
             {activityLogs.length > 0 ? (
               activityLogs.slice(0, 3).map(log => (
@@ -962,7 +997,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
                 </span>
               ))
             ) : (
-              <span className="text-slate-500">Ø¨Ø§Ù†ØªØ¸Ø§Ø± ØªÙØ§Ø¹Ù„ ÙˆØªØ¹Ù„ÙŠÙ‚Ø§Øª Ø§Ù„Ø¬Ù…Ù‡ÙˆØ± ÙÙŠ Ø§Ù„Ø´Ø§Øª...</span>
+              <span className="text-slate-500">بانتظار تفاعل وتعليقات الجمهور في الشات...</span>
             )}
           </div>
         </div>
@@ -973,7 +1008,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
             className="px-3 py-1 rounded-xl bg-[#141826] border border-[#232A3E] text-slate-300 hover:text-white font-bold text-xs flex items-center gap-1.5 transition-all"
           >
             {isPaused ? <Play className="w-3.5 h-3.5 text-emerald-400" /> : <Pause className="w-3.5 h-3.5 text-amber-400" />}
-            <span>{isPaused ? 'Ø§Ø³ØªØ¦Ù†Ø§Ù' : 'Ø¥ÙŠÙ‚Ø§Ù Ù…Ø¤Ù‚Øª'}</span>
+            <span>{isPaused ? 'استئناف' : 'إيقاف مؤقت'}</span>
           </button>
         </div>
       </footer>
@@ -985,19 +1020,19 @@ export function SquidGameView({ question: propQuestion }: Props) {
             <div className="flex items-center justify-between border-b border-[#1E253A] pb-3 mb-4">
               <h3 className="text-base font-black text-white flex items-center gap-2">
                 <Settings className="w-4 h-4 text-[#F43F5E]" />
-                <span>Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ù„Ø¹Ø¨Ø© Ø§Ù„Ø­Ø¨Ø§Ø± (Host Controls)</span>
+                <span>إعدادات لعبة الحبار (Host Controls)</span>
               </h3>
               <button
                 onClick={() => setIsSettingsOpen(false)}
                 className="w-7 h-7 rounded-xl bg-[#181E30] text-slate-400 hover:text-white flex items-center justify-center text-sm font-bold"
               >
-                âœ•
+                ✕
               </button>
             </div>
 
             <div className="space-y-4 text-xs font-semibold text-slate-300">
               <div>
-                <label className="block mb-1.5 text-slate-400">Ø®Ø·ÙˆØ§Øª Ø§Ù„ÙÙˆØ² Ù„Ø®Ø· Ø§Ù„Ù†Ù‡Ø§ÙŠØ©:</label>
+                <label className="block mb-1.5 text-slate-400">خطوات الفوز لخط النهاية:</label>
                 <div className="grid grid-cols-5 gap-2">
                   {[5, 8, 10, 15, 20].map(s => (
                     <button
@@ -1009,14 +1044,14 @@ export function SquidGameView({ question: propQuestion }: Props) {
                           : 'bg-[#141928] border-[#252E44] text-slate-300'
                       }`}
                     >
-                      {s} Ø®Ø·ÙˆØ§Øª
+                      {s} خطوات
                     </button>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label className="block mb-1.5 text-slate-400">Ù…Ø¯Ø© ÙˆÙ‚Øª Ø§Ù„Ø§Ø®ØªÙŠØ§Ø± (Ø«ÙˆØ§Ù†Ù):</label>
+                <label className="block mb-1.5 text-slate-400">مدة وقت الاختيار (ثوانٍ):</label>
                 <div className="grid grid-cols-5 gap-2">
                   {[5, 10, 15, 20, 30].map(d => (
                     <button
@@ -1028,18 +1063,18 @@ export function SquidGameView({ question: propQuestion }: Props) {
                           : 'bg-[#141928] border-[#252E44] text-slate-300'
                       }`}
                     >
-                      {d} Ø«
+                      {d} ث
                     </button>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label className="block mb-1.5 text-slate-400">ÙˆØ¶Ø¹ Ø§Ù„ÙÙˆØ²:</label>
+                <label className="block mb-1.5 text-slate-400">وضع الفوز:</label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { id: 'first_to_finish', label: 'Ø£ÙˆÙ„ ÙˆØ§ØµÙ„ Ù„Ù„Ù†Ù‡Ø§ÙŠØ© ðŸ' },
-                    { id: 'last_survivor', label: 'Ø¢Ø®Ø± Ù†Ø§Ø¬Ù Ø¹Ù„Ù‰ Ù‚ÙŠØ¯ Ø§Ù„Ø­ÙŠØ§Ø© ðŸ‘‘' }
+                    { id: 'first_to_finish', label: 'أول واصل للنهاية 🏁' },
+                    { id: 'last_survivor', label: 'آخر ناجٍ على قيد الحياة 👑' }
                   ].map(m => (
                     <button
                       key={m.id}
@@ -1057,12 +1092,12 @@ export function SquidGameView({ question: propQuestion }: Props) {
               </div>
 
               <div>
-                <label className="block mb-1.5 text-slate-400">Ù…Ø³ØªÙˆÙ‰ Ø§Ù„Ù…Ø®Ø§Ø·Ø±Ø© Ù„Ù„Ø®Ø·Ø±:</label>
+                <label className="block mb-1.5 text-slate-400">مستوى المخاطرة للخطر:</label>
                 <div className="grid grid-cols-4 gap-2">
                   {[
-                    { id: 'easy', label: 'Ø³Ù‡Ù„' },
-                    { id: 'normal', label: 'Ø¹Ø§Ø¯ÙŠ' },
-                    { id: 'hard', label: 'ØµØ¹Ø¨' },
+                    { id: 'easy', label: 'سهل' },
+                    { id: 'normal', label: 'عادي' },
+                    { id: 'hard', label: 'صعب' },
                     { id: 'extreme', label: 'Extreme' }
                   ].map(r => (
                     <button
@@ -1081,7 +1116,7 @@ export function SquidGameView({ question: propQuestion }: Props) {
               </div>
 
               <div className="flex items-center justify-between p-3 rounded-2xl bg-[#141928] border border-[#232C42]">
-                <span>Ø§Ù„Ø³Ù…Ø§Ø­ Ø¨Ø¯Ø®ÙˆÙ„ Ù„Ø§Ø¹Ø¨ÙŠÙ† Ø¬Ø¯Ø¯ Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„Ù„Ø¹Ø¨Ø©:</span>
+                <span>السماح بدخول لاعبين جدد أثناء اللعبة:</span>
                 <input
                   type="checkbox"
                   checked={config.allowJoinMidGame}
@@ -1096,13 +1131,13 @@ export function SquidGameView({ question: propQuestion }: Props) {
                 onClick={handleResetGame}
                 className="px-4 py-2 rounded-xl bg-red-950/40 border border-red-800/60 text-red-300 font-bold hover:bg-red-900/60 transition-all"
               >
-                Ø¥Ø¹Ø§Ø¯Ø© Ø¶Ø¨Ø· Ø§Ù„Ù„Ø¹Ø¨Ø©
+                إعادة ضبط اللعبة
               </button>
               <button
                 onClick={() => setIsSettingsOpen(false)}
                 className="px-6 py-2 rounded-xl bg-[#F43F5E] hover:bg-[#E11D48] text-white font-black transition-all"
               >
-                Ø­ÙØ¸ ÙˆØ¥ØºÙ„Ø§Ù‚
+                حفظ وإغلاق
               </button>
             </div>
           </div>
