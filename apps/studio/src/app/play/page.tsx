@@ -12,6 +12,7 @@ import { BombPassView } from '../../components/engines/BombPassView';
 import { ReactGameView } from '../../components/engines/ReactGameView';
 import { MemoryMatchView } from '../../components/engines/MemoryMatchView';
 import { SquidGameView } from '../../components/engines/SquidGameView';
+import { ViewerRaceView } from '../../components/engines/ViewerRaceView';
 import { LeaderboardOverlay } from '../../components/studio/LeaderboardOverlay';
 import { WinnerAnnouncementModal } from '../../components/studio/WinnerAnnouncementModal';
 import { GAME_ENGINE_SECTIONS } from '@aep/content-library';
@@ -65,6 +66,21 @@ function PlayArenaContent() {
       if (footer) footer.style.display = '';
     };
   }, []);
+
+  // ══════════════════════════════════════════════════════════════
+  // DEDICATED LIVE ACTION ENGINE: 🏇 VIEWER RACE GRAND PRIX (سباق المشاهدين)
+  // Renders as a dedicated 100vw/100vh standalone AAA live broadcast experience!
+  // ══════════════════════════════════════════════════════════════
+  if (explicitEngineParam === 'viewer-race' || (!explicitEngineParam && (activeEngineType === 'viewer-race' || currentQuestion?.engineType === 'viewer-race'))) {
+    return (
+      <div className="w-full min-h-screen bg-[#07080C] flex flex-col select-none">
+        {/* Fullscreen Dedicated Viewer Race View */}
+        <div className="flex-1 w-full">
+          <ViewerRaceView question={currentQuestion as any} />
+        </div>
+      </div>
+    );
+  }
 
   // ══════════════════════════════════════════════════════════════
   // DEDICATED LIVE ACTION ENGINE: 🦑 SQUID SURVIVAL (لعبة الحبار)
@@ -275,17 +291,17 @@ function PlayArenaContent() {
   return (
     <div className="flex flex-col gap-6 w-full pb-8">
       {/* Top Sovereign Gold Broadcast Command Strip Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 sm:p-5 rounded-3xl bg-[#0F1117] border border-[#232736] shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4 sm:p-5 rounded-3xl glass-broadcast-panel shadow-[0_20px_50px_rgba(0,0,0,0.85)]">
         <div className="flex items-center gap-3">
-          <Link href="/" className="px-3.5 py-2.5 rounded-2xl bg-[#161922] text-[#D6A84F] border border-[#232736] hover:bg-[#1C202F] transition-all flex items-center gap-2 text-xs font-black">
+          <Link href="/" className="px-3.5 py-2.5 rounded-2xl bg-[#161922] text-[#D6A84F] border border-white/10 hover:bg-[#1C202F] transition-all flex items-center gap-2 text-xs font-black shadow-sm">
             <Home className="w-4 h-4" />
             <span className="hidden sm:inline">الصفحة الرئيسية</span>
           </Link>
           <div className="flex items-center gap-2">
-            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
+            <h2 className="text-xl sm:text-2xl font-black font-display text-white tracking-tight flex items-center gap-2">
               {activeEngineInfo.title}
             </h2>
-            <span className="px-3 py-1 rounded-full text-[10px] font-black bg-[#D6A84F]/20 text-[#D6A84F] border border-[#D6A84F]/40 font-mono uppercase">
+            <span className="px-3 py-1 rounded-full text-[10px] font-black bg-[#D6A84F]/15 text-[#D6A84F] border border-[#D6A84F]/40 font-mono uppercase shadow-sm">
               {activeEngineInfo.category}
             </span>
           </div>
@@ -296,7 +312,7 @@ function PlayArenaContent() {
           {!controlState.isPlaying ? (
             <button
               onClick={startRound}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-[#D6A84F] to-[#B38734] text-slate-950 font-black text-xs flex items-center gap-2 shadow-[0_8px_30px_rgba(214,168,79,0.4)] hover:scale-105 transition-all cursor-pointer"
+              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-[#D6A84F] via-[#E5BE6C] to-[#B38734] text-slate-950 font-black text-xs flex items-center gap-2 shadow-[0_8px_30px_rgba(214,168,79,0.45)] hover:scale-105 transition-all cursor-pointer"
             >
               <Play className="w-4 h-4 fill-current ml-0.5" />
               <span>بدء اللعبة</span>
@@ -352,14 +368,14 @@ function PlayArenaContent() {
         {/* Side Panel: Leaderboard Top 5 + Correct Answers Feed */}
         <div className="lg:col-span-1 flex flex-col gap-6">
 
-          {/* Mini Leaderboard - Top 5 (Matching 2026 Broadcast Design) */}
-          <div className="p-5 rounded-3xl bg-[#0F1117] border border-[#232736] flex flex-col gap-3 shadow-xl">
-            <div className="flex items-center justify-between border-b border-[#232736] pb-3">
+          {/* Mini Leaderboard - Top 5 (Matching Broadcast TV Design) */}
+          <div className="p-5 rounded-3xl glass-broadcast-panel flex flex-col gap-3 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
                 <Crown className="w-5 h-5 text-[#D6A84F]" />
-                <h3 className="font-black text-sm text-white font-mono uppercase tracking-wider">لوحة الصدارة</h3>
+                <h3 className="font-black text-sm font-display text-white tracking-wider">لوحة الصدارة المباشرة</h3>
               </div>
-              <span className="text-[10px] text-[#D6A84F] font-bold bg-[#D6A84F]/10 px-2 py-0.5 rounded-full font-mono border border-[#D6A84F]/30">LIVE</span>
+              <span className="text-[10px] text-[#D6A84F] font-bold bg-[#D6A84F]/15 px-2.5 py-0.5 rounded-full font-mono border border-[#D6A84F]/30 shadow-sm">LIVE</span>
             </div>
 
             {top5.length === 0 ? (
@@ -374,8 +390,8 @@ function PlayArenaContent() {
                     key={player.userId || player.username || `player-${idx}`}
                     className={`flex items-center gap-3 p-3 rounded-2xl text-xs transition-all ${
                       idx === 0
-                        ? 'bg-gradient-to-r from-[#161922] to-[#1A1E2C] border-2 border-[#D6A84F] shadow-[0_0_20px_rgba(214,168,79,0.3)]'
-                        : 'bg-[#161922] border border-[#232736] hover:border-white/20'
+                        ? 'bg-gradient-to-r from-[#1E1B10] to-[#12141C] border border-[#D6A84F] shadow-[0_0_20px_rgba(214,168,79,0.25)] scale-[1.01]'
+                        : 'bg-[#161922] border border-white/5 hover:border-white/20'
                     }`}
                   >
                     <span className={`font-black text-base min-w-[24px] text-center ${
@@ -386,12 +402,12 @@ function PlayArenaContent() {
                     <img
                       src={player.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80'}
                       alt={player.displayName}
-                      className="w-8 h-8 rounded-full border border-[#D6A84F]/40 object-cover shrink-0"
+                      className="w-9 h-9 rounded-full border border-[#D6A84F]/40 object-cover shrink-0 shadow-sm"
                     />
                     <div className="flex-1 min-w-0">
                       <span className="font-bold text-white truncate block text-xs">{player.displayName || player.username}</span>
                     </div>
-                    <span className="font-mono font-black text-[#D6A84F] text-sm">{player.score} ★</span>
+                    <span className="font-mono font-black text-[#D6A84F] text-sm">+{player.score} <span className="text-[10px] text-slate-400 font-normal">نقطة</span></span>
                   </div>
                 ))}
               </div>
@@ -399,14 +415,14 @@ function PlayArenaContent() {
           </div>
 
           {/* Correct Answers Feed */}
-          <div className="p-5 rounded-3xl bg-[#0F1117] border border-[#232736] flex-1 min-h-[220px] max-h-[360px] flex flex-col shadow-xl">
-            <div className="flex items-center justify-between border-b border-[#232736] pb-3 mb-3">
+          <div className="p-5 rounded-3xl glass-broadcast-panel flex-1 min-h-[220px] max-h-[360px] flex flex-col shadow-2xl">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
               <div className="flex items-center gap-2">
                 <Check className="w-5 h-5 text-emerald-400" />
-                <h3 className="font-black text-sm text-white font-mono uppercase tracking-wider">الإجابات الصحيحة</h3>
+                <h3 className="font-black text-sm font-display text-white tracking-wider">الإجابات الصحيحة</h3>
               </div>
               {correctAnswersThisQuestion.length > 0 && (
-                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold border border-emerald-400/30 font-mono">
+                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold border border-emerald-400/30 font-mono shadow-sm">
                   {correctAnswersThisQuestion.length}
                 </span>
               )}
@@ -420,7 +436,7 @@ function PlayArenaContent() {
                 </div>
               ) : (
                 correctAnswersThisQuestion.map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-2.5 rounded-xl bg-[#161922] border border-[#232736] text-xs">
+                  <div key={index} className="flex items-center justify-between p-2.5 rounded-xl bg-[#161922] border border-white/5 text-xs">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-xs font-bold text-emerald-400">#{item.rank}</span>
                       <span className="font-bold text-white truncate max-w-[100px]">{item.playerName}</span>

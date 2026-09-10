@@ -22,6 +22,18 @@ export default function CategorizedGamesCommandCenter() {
   // 1. ألعاب البث التفاعلية والأكشن
   const interactiveGames = [
     {
+      id: 'viewer-race',
+      title: 'VIEWER RACE GRAND PRIX',
+      arabicTitle: 'سباق المشاهدين 🏇',
+      tagline: 'سباق خيول جماهيري ملحمي — اكتب «العب» في الشات لدخول الخيل، والمشاهدون يعززون سرعتك بتعليقات الدعم والتكبيس',
+      badge: 'جديد وحصري 🏇',
+      badgeColor: 'bg-amber-500/20 text-amber-400 border-amber-500/40',
+      accentColor: '#F59E0B',
+      icon: Trophy,
+      image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=85',
+      isHero: true
+    },
+    {
       id: 'squid-game',
       title: 'SQUID SURVIVAL',
       arabicTitle: 'لعبة «الحبار» 🦑',

@@ -17,6 +17,7 @@ import { MemoryMatchView } from '../engines/MemoryMatchView';
 import { CapitalsEngineView } from '../engines/CapitalsEngineView';
 import { BusTayyibinView } from '../engines/BusTayyibinView';
 import { SquidGameView } from '../engines/SquidGameView';
+import { ViewerRaceView } from '../engines/ViewerRaceView';
 import { getImageStyleCSS } from '@aep/game-engines';
 import { Clock, HelpCircle, Flame, Eye, Radio, ArrowLeft, Sparkles } from 'lucide-react';
 
@@ -70,6 +71,8 @@ export function StageArena({
         return <CharacterEngineView question={currentQuestion as any} isAnswerRevealed={isAnswerRevealed} />;
       case 'squid-game':
         return <SquidGameView question={currentQuestion as any} isAnswerRevealed={isAnswerRevealed} />;
+      case 'viewer-race':
+        return <ViewerRaceView question={currentQuestion as any} isAnswerRevealed={isAnswerRevealed} />;
       case 'hunter-roulette':
         return <HunterRouletteView question={currentQuestion as any} isAnswerRevealed={isAnswerRevealed} />;
       default:
@@ -82,7 +85,15 @@ export function StageArena({
   const uploadedVid = (currentQuestion as any).videoUrl;
   const uploadedAud = (currentQuestion as any).audioUrl;
 
-  // 🦑 Squid Survival & 🚌 Bus Al-Tayyibin have their own standalone TV Game Show stages
+  // 🏇 Viewer Race, 🦑 Squid Survival & 🚌 Bus Al-Tayyibin have their own standalone TV Game Show stages
+  if (currentQuestion.engineType === 'viewer-race') {
+    return (
+      <div className="w-full">
+        <ViewerRaceView question={currentQuestion as any} isAnswerRevealed={isAnswerRevealed} />
+      </div>
+    );
+  }
+
   if (currentQuestion.engineType === 'squid-game') {
     return (
       <div className="w-full">
@@ -100,24 +111,25 @@ export function StageArena({
   }
 
   return (
-    <div className="w-full flex flex-col items-center justify-between p-5 sm:p-7 rounded-3xl bg-[#0F1117] relative overflow-hidden border border-[#232736] shadow-2xl h-full min-h-[500px]">
-      {/* Top Bar Header Badge Area */}
-      <div className="w-full flex items-center justify-between border-b border-[#1F2433] pb-3 z-10">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#161922] border border-[#282E40] text-[#D6A84F] font-bold text-[11px] font-mono">
+    <div className="w-full flex flex-col items-center justify-between p-5 sm:p-7 rounded-3xl glass-broadcast-panel relative overflow-hidden shadow-2xl h-full min-h-[520px]">
+      {/* Top Bar Header Badge Area with Broadcast Ticker Accent */}
+      <div className="w-full flex items-center justify-between border-b border-white/10 pb-3 z-10 flex-wrap gap-2">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#161922] border border-[#D6A84F]/40 text-[#D6A84F] font-black text-[11px] font-mono shadow-sm">
             <Clock className="w-3.5 h-3.5 text-[#D6A84F]" />
             <span>ROUND 1</span>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#161922] border border-[#282E40] text-slate-300 font-bold text-[11px]">
+          <div className="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#161922] border border-white/15 text-slate-200 font-bold text-[11px]">
             <HelpCircle className="w-3.5 h-3.5 text-[#D6A84F]" />
-            <span>{currentRound?.title || 'مسابقة البث المباشر'}</span>
+            <span>{currentRound?.title || 'مسابقة البث المباشر التفاعلية'}</span>
           </div>
         </div>
 
-        {/* Live Broadcast Indicator */}
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EF4444]/20 border border-[#EF4444]/40 text-[#EF4444] text-[11px] font-black font-mono">
-          <Radio className="w-3.5 h-3.5 animate-pulse" />
+        {/* Live Broadcast Indicator with Pulsing TV Dot */}
+        <div className="flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#EF4444]/15 border border-[#EF4444]/40 text-[#EF4444] text-[11px] font-black font-mono shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+          <span className="w-2 h-2 rounded-full bg-[#EF4444] animate-ping" />
+          <Radio className="w-3.5 h-3.5" />
           <span>● LIVE BROADCAST</span>
         </div>
       </div>
@@ -135,12 +147,17 @@ export function StageArena({
           </div>
         ) : (
           <>
-            {/* Large Prominent AAA Esports Question Banner */}
-            <div className="w-full max-w-4xl p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#0C1226]/95 via-[#080D1F]/95 to-[#0C1226]/95 border border-purple-500/40 shadow-[0_15px_40px_rgba(0,0,0,0.8)] text-center relative overflow-hidden backdrop-blur-2xl">
-              <span className="px-3 py-1 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 mb-3 inline-block font-mono uppercase">
-                QUESTION #{currentQuestion.id || '1'}
-              </span>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-snug tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+            {/* Large Prominent AAA Esports Question Banner with Studio Spotlight Accent */}
+            <div className="w-full max-w-4xl p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#0C1226]/95 via-[#080D1F]/98 to-[#0C1226]/95 border border-[#7C3AED]/40 shadow-[0_20px_60px_rgba(0,0,0,0.85)] text-center relative overflow-hidden backdrop-blur-2xl">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <span className="px-3.5 py-1 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 font-mono tracking-wider uppercase">
+                  QUESTION #{currentQuestion.id || '1'}
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-400/30 font-mono">
+                  +{currentQuestion.points || 100} PTS
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-display text-white leading-snug tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
                 {currentQuestion.title}
               </h2>
             </div>
@@ -202,18 +219,18 @@ export function StageArena({
                 const displayTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
                 const isLow = timeRemainingSeconds <= 5;
                 const isMid = timeRemainingSeconds <= 10 && !isLow;
-                const ringColor = isLow ? '#FF3B5C' : isMid ? '#F5B942' : '#00D9FF';
-                const glowColor = isLow ? 'rgba(255,59,92,0.6)' : isMid ? 'rgba(245,185,66,0.5)' : 'rgba(0,217,255,0.5)';
-                const textColor = isLow ? 'text-rose-400' : isMid ? 'text-amber-300' : 'text-white';
+                const ringColor = isLow ? '#EF4444' : isMid ? '#F59E0B' : '#06B6D4';
+                const glowColor = isLow ? 'rgba(239,68,68,0.7)' : isMid ? 'rgba(245,158,11,0.6)' : 'rgba(6,182,212,0.5)';
+                const textColor = isLow ? 'text-rose-400' : isMid ? 'text-amber-300' : 'text-cyan-300';
 
                 return (
                   <div className={`relative w-40 h-40 shrink-0 flex items-center justify-center ${isLow && isTimerRunning ? 'animate-pulse' : ''}`}>
                     {/* Outer Glow Ring */}
                     <div
-                      className="absolute inset-0 rounded-full"
+                      className="absolute inset-0 rounded-full pointer-events-none"
                       style={{
-                        boxShadow: `0 0 30px ${glowColor}, inset 0 0 20px ${glowColor}`,
-                        transition: 'box-shadow 0.5s ease'
+                        boxShadow: `0 0 35px ${glowColor}, inset 0 0 25px ${glowColor}`,
+                        transition: 'box-shadow 0.4s ease'
                       }}
                     />
 
@@ -228,7 +245,7 @@ export function StageArena({
                       <circle
                         cx="60" cy="60" r="54"
                         fill="none"
-                        stroke="rgba(139,92,246,0.15)"
+                        stroke="rgba(124,58,237,0.15)"
                         strokeWidth="7"
                       />
                       <circle
@@ -240,19 +257,19 @@ export function StageArena({
                         strokeDasharray={circumference}
                         strokeDashoffset={offset}
                         transform="rotate(-90 60 60)"
-                        style={{ transition: 'stroke-dashoffset 1s linear, stroke 0.5s ease' }}
+                        style={{ transition: 'stroke-dashoffset 1s linear, stroke 0.4s ease' }}
                       />
                     </svg>
 
                     {/* Inner Dark Circle */}
                     <div className="absolute inset-3 rounded-full bg-gradient-to-b from-[#0F152C] via-[#090C1D] to-[#050714] flex flex-col items-center justify-center border border-white/10 shadow-inner">
                       <span className={`text-3xl font-black font-mono tracking-wider ${textColor}`}
-                        style={{ textShadow: `0 0 16px ${glowColor}`, transition: 'color 0.5s ease' }}
+                        style={{ textShadow: `0 0 16px ${glowColor}`, transition: 'color 0.4s ease' }}
                       >
                         {displayTime}
                       </span>
                       <span className="text-[8px] text-slate-400 font-bold font-mono mt-0.5 tracking-widest uppercase">
-                        {isTimerRunning ? 'IN PROGRESS' : timeRemainingSeconds === 0 ? 'TIME UP' : 'PAUSED'}
+                        {isTimerRunning ? 'LIVE COUNTDOWN' : timeRemainingSeconds === 0 ? 'TIME OUT' : 'PAUSED'}
                       </span>
                     </div>
                   </div>

@@ -18,6 +18,7 @@ import {
 } from '@aep/game-engines';
 import { soundFX, triggerVisualEffect } from '@aep/audio-visual-fx';
 import { useStudioStore } from '../../store/useStudioStore';
+import { Squid3DScene } from './Squid3DScene';
 import { 
   Skull, Trophy, Users, Clock, Play, Pause, RotateCcw, 
   Settings, AlertTriangle, Sparkles, Volume2, VolumeX, 
@@ -696,289 +697,274 @@ export function SquidGameView({ question: propQuestion }: Props) {
           </div>
         </section>
 
-        {/* ── CENTER STAGE ARENA ── */}
-        <section className="flex-1 w-full flex flex-col items-center justify-center my-auto order-1 lg:order-2">
+        {/* ── CENTER STAGE ARENA (3D CINEMATIC WebGL) ── */}
+        <section className="flex-1 w-full min-h-[560px] lg:min-h-[620px] h-full rounded-3xl border border-[#1F253A] overflow-hidden relative shadow-2xl flex flex-col items-center justify-center order-1 lg:order-2 bg-[#06080E]">
           
-          {phase === 'LOBBY' && (
-            <div className="w-full max-w-xl text-center flex flex-col items-center p-8 rounded-3xl bg-[#0D101C]/90 border border-[#232A40] shadow-2xl backdrop-blur-2xl">
-              <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-[#F43F5E] via-[#EC4899] to-[#8B5CF6] p-1 mb-5 shadow-[0_0_35px_rgba(244,63,94,0.4)] animate-pulse">
-                <div className="w-full h-full bg-[#090B12] rounded-[22px] flex items-center justify-center">
-                  <Skull className="w-10 h-10 text-[#F43F5E]" />
-                </div>
-              </div>
+          {/* 3D WebGL Scene */}
+          <div className="absolute inset-0 z-0">
+            <Squid3DScene
+              phase={phase}
+              dangerNumber={dangerNumber}
+              players={players}
+              config={config}
+              cameraShake={cameraShake}
+              winner={winner}
+              roundNumber={roundNumber}
+            />
+          </div>
 
-              <h2 className="text-3xl sm:text-4xl font-black text-white mb-2 tracking-tight">
-                لعبة «الحبار»
-              </h2>
-              <p className="text-sm font-semibold text-slate-300 mb-6 max-w-md">
-                تحدي خطوات ونجاة تفاعلي مباشر أمام الجمهور. اختر رقمك من 1 إلى 5 وتجنب رقم الخطر للوصول للنهاية!
-              </p>
-
-              <div className="w-full p-4 rounded-2xl bg-[#141929] border border-[#2B3550] mb-6 flex items-center justify-center gap-3">
-                <Radio className="w-5 h-5 text-[#F43F5E] animate-ping" />
-                <span className="text-base sm:text-lg font-black text-white">
-                  اكتب <span className="text-[#F43F5E] underline decoration-2 underline-offset-4">«العب»</span> في الشات للدخول
-                </span>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={startNextRound}
-                  disabled={players.length === 0}
-                  className={`px-8 py-3.5 rounded-2xl font-black text-base flex items-center gap-2 transition-all shadow-xl ${
-                    players.length > 0
-                      ? 'bg-gradient-to-r from-[#F43F5E] to-[#E11D48] text-white hover:scale-105 active:scale-95 shadow-[0_4px_25px_rgba(244,63,94,0.4)]'
-                      : 'bg-[#181D2D] text-slate-500 border border-[#2A334B] cursor-not-allowed'
-                  }`}
-                >
-                  <Play className="w-5 h-5 fill-current" />
-                  <span>بدء اللعبة ({players.length} مشارك)</span>
-                </button>
-
-                <button
-                  onClick={() => handleAddMockPlayers(10)}
-                  className="px-4 py-3.5 rounded-2xl bg-[#141928] border border-[#26304A] hover:border-[#F43F5E] text-slate-300 text-xs font-bold flex items-center gap-1.5 transition-all"
-                >
-                  <UserPlus className="w-4 h-4 text-[#F43F5E]" />
-                  <span>+10 تجريبي (Demo)</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {phase !== 'LOBBY' && phase !== 'GAME_OVER' && (
-            <div className="w-full flex flex-col items-center">
-              
-              {/* SURVEILLANCE DOLL MASCOT */}
-              <div className="relative w-44 h-44 sm:w-56 sm:h-56 mb-4 flex items-center justify-center">
-                {(phase === 'DOLL_MOVEMENT' || phase === 'DANGER_REVEAL') && (
-                  <div className="absolute inset-0 rounded-full border-2 border-[#EF4444]/60 animate-ping pointer-events-none" />
-                )}
-
-                <div 
-                  className={`w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-gradient-to-b from-[#1E2337] via-[#141724] to-[#0A0D15] border-4 p-2 shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col items-center justify-center transition-all duration-700 relative ${
-                    phase === 'DOLL_MOVEMENT' || phase === 'DANGER_REVEAL'
-                      ? 'border-[#EF4444] shadow-[0_0_40px_rgba(239,68,68,0.5)] rotate-0 scale-105'
-                      : 'border-[#38415C] rotate-180 scale-100 opacity-90'
-                  }`}
-                >
-                  <div className="w-full h-full rounded-full bg-[#0D101C] flex flex-col items-center justify-center relative overflow-hidden">
-                    <div className="flex items-center gap-6 mb-2">
-                      <div 
-                        className={`w-5 h-5 rounded-full transition-all duration-300 ${
-                          phase === 'DOLL_MOVEMENT' || phase === 'DANGER_REVEAL'
-                            ? 'bg-[#EF4444] shadow-[0_0_15px_#EF4444] animate-pulse'
-                            : 'bg-[#10B981] shadow-[0_0_10px_#10B981]'
-                        }`} 
-                      />
-                      <div 
-                        className={`w-5 h-5 rounded-full transition-all duration-300 ${
-                          phase === 'DOLL_MOVEMENT' || phase === 'DANGER_REVEAL'
-                            ? 'bg-[#EF4444] shadow-[0_0_15px_#EF4444] animate-pulse'
-                            : 'bg-[#10B981] shadow-[0_0_10px_#10B981]'
-                        }`} 
-                      />
-                    </div>
-                    <Crosshair className={`w-8 h-8 ${phase === 'DANGER_REVEAL' ? 'text-[#EF4444] animate-spin' : 'text-slate-600'}`} />
+          {/* BROADCAST HUD OVERLAYS */}
+          <div className="relative z-10 w-full h-full p-4 sm:p-6 flex flex-col items-center justify-between pointer-events-none">
+            
+            {/* Top Overlay Banner (Danger Reveal, Doll Movement, Locking) */}
+            <div className="w-full flex flex-col items-center pointer-events-auto">
+              {phase === 'DOLL_MOVEMENT' && (
+                <div className="px-5 py-2 rounded-2xl bg-black/80 border border-red-500/60 backdrop-blur-md text-center shadow-[0_0_30px_rgba(239,68,68,0.5)] animate-pulse mb-3">
+                  <div className="flex items-center gap-2 text-rose-400 text-xs font-black uppercase tracking-wider">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+                    <span>👀 الدمية تستدير وتفحص المتسابقين بالرادار...</span>
                   </div>
-
-                  <span className={`absolute -bottom-2.5 px-3 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase border shadow-md ${
-                    phase === 'DOLL_MOVEMENT' || phase === 'DANGER_REVEAL'
-                      ? 'bg-[#EF4444] text-white border-red-400 animate-pulse'
-                      : 'bg-[#161B2B] text-slate-400 border-[#2F3952]'
-                  }`}>
-                    {phase === 'DOLL_MOVEMENT' ? '👀 مسح كاشف' : phase === 'DANGER_REVEAL' ? '⚠️ تحديد الخطر' : 'الدمية تراقب الخلف'}
-                  </span>
-                </div>
-              </div>
-
-              {/* DANGER REVEAL BANNER */}
-              {phase === 'DANGER_REVEAL' && dangerNumber !== null && (
-                <div className="w-full max-w-lg mb-6 p-6 rounded-3xl bg-gradient-to-r from-[#7F1D1D] via-[#991B1B] to-[#7F1D1D] border-2 border-red-500 text-center shadow-[0_0_60px_rgba(239,68,68,0.7)] animate-bounce">
-                  <p className="text-xs font-black uppercase tracking-widest text-red-200 mb-1">
-                    ⚠️ رقم الخطر في هذه الجولة ⚠️
-                  </p>
-                  <div className="text-7xl font-black font-mono text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
-                    {dangerNumber}
-                  </div>
-                  <p className="text-sm font-bold text-red-100 mt-2">
-                    كل من اختار الرقم [{dangerNumber}] يتم إقصاؤه فوراً!
-                  </p>
                 </div>
               )}
 
-              {/* CHOOSING PHASE COUNTDOWN & OPTIONS */}
-              {phase === 'CHOOSING' && (
-                <div className="w-full max-w-2xl flex flex-col items-center">
-                  <div className="text-center mb-4">
-                    <p className="text-sm sm:text-base font-black text-slate-300 mb-1">
-                      اكتب رقمك من <span className="text-[#F43F5E]">1 إلى 5</span> في الشات
-                    </p>
-                    <div className="text-5xl sm:text-6xl font-black font-mono tracking-tight text-white drop-shadow-[0_0_25px_rgba(244,63,94,0.4)]">
-                      00:{String(timeRemainingSeconds).padStart(2, '0')}
-                    </div>
+              {/* DANGER REVEAL BANNER */}
+              {phase === 'DANGER_REVEAL' && dangerNumber !== null && (
+                <div className="w-full max-w-md p-5 rounded-3xl bg-gradient-to-r from-[#7F1D1D]/90 via-[#991B1B]/95 to-[#7F1D1D]/90 border-2 border-red-500 text-center shadow-[0_0_60px_rgba(239,68,68,0.8)] backdrop-blur-md animate-bounce mb-3">
+                  <p className="text-xs font-black uppercase tracking-widest text-red-200 mb-1">
+                    ⚠️ رقم الخطر في هذه الجولة ⚠️
+                  </p>
+                  <div className="text-6xl font-black font-mono text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
+                    {dangerNumber}
                   </div>
-
-                  <div className="w-full grid grid-cols-5 gap-2 sm:gap-3 mb-4">
-                    {[
-                      { num: 1, label: 'أمان فائق', steps: '+1 خطوة', risk: 'منخفض جداً', color: 'border-emerald-500/40 from-emerald-950/40' },
-                      { num: 2, label: 'حذر', steps: '+2 خطوات', risk: 'منخفض', color: 'border-teal-500/40 from-teal-950/40' },
-                      { num: 3, label: 'متوازن', steps: '+3 خطوات', risk: 'متوسط', color: 'border-blue-500/40 from-blue-950/40' },
-                      { num: 4, label: 'مخاطرة', steps: '+4 خطوات', risk: 'مرتفع', color: 'border-amber-500/40 from-amber-950/40' },
-                      { num: 5, label: 'مخاطرة قصوى', steps: '+5 خطوات', risk: 'مرتفع جداً', color: 'border-rose-500/40 from-rose-950/40' }
-                    ].map((item) => {
-                      const count = choiceStats[item.num] || 0;
-                      const percentage = totalChosenCount > 0 ? Math.round((count / totalChosenCount) * 100) : 0;
-
-                      return (
-                        <div
-                          key={item.num}
-                          className={`p-3 sm:p-4 rounded-2xl bg-gradient-to-b to-[#0D101C] border flex flex-col items-center justify-between text-center relative overflow-hidden transition-all duration-300 ${item.color} ${
-                            count > 0 ? 'shadow-[0_0_20px_rgba(244,63,94,0.15)] scale-[1.02]' : 'opacity-70'
-                          }`}
-                        >
-                          <span className="text-[10px] font-bold text-slate-400 mb-1">
-                            {item.label}
-                          </span>
-                          <span className="text-3xl sm:text-4xl font-black font-mono text-white mb-1">
-                            {item.num}
-                          </span>
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-white/10 text-white mb-2">
-                            {item.steps}
-                          </span>
-
-                          <div className="w-full pt-2 border-t border-white/10 flex flex-col items-center">
-                            <span className="text-[11px] font-mono font-bold text-white">
-                              {count} لاعب
-                            </span>
-                            <span className="text-[9px] text-slate-400 font-mono">
-                              ({percentage}%)
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={handleSimulateChoices}
-                      className="px-4 py-2 rounded-xl bg-[#151928] border border-[#27324A] hover:border-[#F43F5E] text-slate-300 text-xs font-bold flex items-center gap-1.5 transition-all shadow-md"
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-[#F43F5E]" />
-                      <span>محاكاة اختيارات الشات (Demo)</span>
-                    </button>
-                    <button
-                      onClick={handleLockChoices}
-                      className="px-4 py-2 rounded-xl bg-[#F43F5E]/20 border border-[#F43F5E]/40 text-[#F43F5E] hover:bg-[#F43F5E]/30 text-xs font-bold flex items-center gap-1.5 transition-all"
-                    >
-                      <Clock className="w-3.5 h-3.5" />
-                      <span>إغلاق الاختيارات فوراً</span>
-                    </button>
-                  </div>
+                  <p className="text-xs font-bold text-red-100 mt-1">
+                    كل من اختار الرقم [{dangerNumber}] يتم استهدافه بليزر الدمية وإقصاؤه!
+                  </p>
                 </div>
               )}
 
               {/* LOCKING PHASE */}
               {phase === 'LOCKING' && (
-                <div className="p-6 rounded-3xl bg-[#121626] border border-[#27314B] text-center max-w-md shadow-2xl">
-                  <div className="w-10 h-10 rounded-full bg-[#F43F5E]/20 border border-[#F43F5E]/40 text-[#F43F5E] flex items-center justify-center mx-auto mb-3 animate-spin">
-                    <RefreshCw className="w-5 h-5" />
+                <div className="p-4 px-6 rounded-2xl bg-[#121626]/90 border border-[#27314B] text-center max-w-sm shadow-2xl backdrop-blur-md mb-3">
+                  <div className="w-8 h-8 rounded-full bg-[#F43F5E]/20 border border-[#F43F5E]/40 text-[#F43F5E] flex items-center justify-center mx-auto mb-2 animate-spin">
+                    <RefreshCw className="w-4 h-4" />
                   </div>
-                  <h3 className="text-lg font-black text-white mb-1">
+                  <h3 className="text-sm font-black text-white mb-0.5">
                     أغلقت الاختيارات
                   </h3>
-                  <p className="text-xs text-slate-300">
+                  <p className="text-[11px] text-slate-300">
                     جاري فحص وتثبيت اختيارات {totalChosenCount} متسابقين...
                   </p>
+                </div>
+              )}
+            </div>
+
+            {/* Center Overlays (LOBBY, RESULTS_REVEAL, GAME_OVER) */}
+            <div className="w-full flex flex-col items-center justify-center my-auto pointer-events-auto">
+              {phase === 'LOBBY' && (
+                <div className="w-full max-w-lg text-center flex flex-col items-center p-6 sm:p-8 rounded-3xl bg-[#090C15]/85 border border-[#232A40]/80 shadow-[0_0_60px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#F43F5E] via-[#EC4899] to-[#8B5CF6] p-1 mb-4 shadow-[0_0_35px_rgba(244,63,94,0.4)] animate-pulse">
+                    <div className="w-full h-full bg-[#090B12] rounded-[14px] flex items-center justify-center">
+                      <Skull className="w-8 h-8 text-[#F43F5E]" />
+                    </div>
+                  </div>
+
+                  <h2 className="text-2xl sm:text-3xl font-black text-white mb-2 tracking-tight">
+                    لعبة «الحبار» — الساحة التفاعلية 3D
+                  </h2>
+                  <p className="text-xs sm:text-sm font-semibold text-slate-300 mb-5 max-w-sm">
+                    تحدي خطوات ونجاة تفاعلي مباشر أمام الجمهور. اختر رقمك من 1 إلى 5 وتجنب رقم الخطر للوصول للنهاية!
+                  </p>
+
+                  <div className="w-full p-3.5 rounded-2xl bg-[#141929]/90 border border-[#2B3550] mb-5 flex items-center justify-center gap-3 shadow-inner">
+                    <Radio className="w-4 h-4 text-[#F43F5E] animate-ping" />
+                    <span className="text-sm sm:text-base font-black text-white">
+                      اكتب <span className="text-[#F43F5E] underline decoration-2 underline-offset-4">«العب»</span> في الشات للدخول
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={startNextRound}
+                      disabled={players.length === 0}
+                      className={`px-6 py-3 rounded-2xl font-black text-sm flex items-center gap-2 transition-all shadow-xl ${
+                        players.length > 0
+                          ? 'bg-gradient-to-r from-[#F43F5E] to-[#E11D48] text-white hover:scale-105 active:scale-95 shadow-[0_4px_25px_rgba(244,63,94,0.4)]'
+                          : 'bg-[#181D2D] text-slate-500 border border-[#2A334B] cursor-not-allowed'
+                      }`}
+                    >
+                      <Play className="w-4 h-4 fill-current" />
+                      <span>بدء اللعبة ({players.length} مشارك)</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleAddMockPlayers(10)}
+                      className="px-4 py-3 rounded-2xl bg-[#141928] border border-[#26304A] hover:border-[#F43F5E] text-slate-300 text-xs font-bold flex items-center gap-1.5 transition-all"
+                    >
+                      <UserPlus className="w-4 h-4 text-[#F43F5E]" />
+                      <span>+10 تجريبي (Demo)</span>
+                    </button>
+                  </div>
                 </div>
               )}
 
               {/* RESULTS REVEAL SUMMARY */}
               {phase === 'RESULT_REVEAL' && (
-                <div className="w-full max-w-xl p-6 rounded-3xl bg-[#0D111D]/95 border border-[#232B40] text-center shadow-2xl backdrop-blur-2xl">
-                  <h3 className="text-xl font-black text-white mb-2">
+                <div className="w-full max-w-md p-5 rounded-3xl bg-[#0D111D]/90 border border-[#232B40] text-center shadow-2xl backdrop-blur-xl animate-fadeIn">
+                  <h3 className="text-lg font-black text-white mb-2">
                     نتائج الجولة {roundNumber}
                   </h3>
-                  <div className="grid grid-cols-2 gap-4 my-4">
-                    <div className="p-4 rounded-2xl bg-[#0F1E19] border border-[#10B981]/40">
-                      <p className="text-xs font-bold text-emerald-400 mb-1">🟢 الناجون والمتقدمون</p>
-                      <p className="text-3xl font-black font-mono text-emerald-300">
+                  <div className="grid grid-cols-2 gap-3 my-3">
+                    <div className="p-3 rounded-2xl bg-[#0F1E19]/80 border border-[#10B981]/40">
+                      <p className="text-[11px] font-bold text-emerald-400 mb-0.5">🟢 الناجون والمتقدمون</p>
+                      <p className="text-2xl font-black font-mono text-emerald-300">
                         {alivePlayers.length}
                       </p>
                     </div>
-                    <div className="p-4 rounded-2xl bg-[#210D12] border border-[#EF4444]/40">
-                      <p className="text-xs font-bold text-rose-400 mb-1">🔴 المقصيون في الخطر</p>
-                      <p className="text-3xl font-black font-mono text-rose-300">
+                    <div className="p-3 rounded-2xl bg-[#210D12]/80 border border-[#EF4444]/40">
+                      <p className="text-[11px] font-bold text-rose-400 mb-0.5">🔴 المقصيون بالليزر</p>
+                      <p className="text-2xl font-black font-mono text-rose-300">
                         {eliminatedPlayers.filter(p => p.eliminatedAtRound === roundNumber).length}
                       </p>
                     </div>
                   </div>
-                  <p className="text-xs font-semibold text-slate-400">
+                  <p className="text-[11px] font-semibold text-slate-400">
                     جاري فحص خط النهاية والتجهيز للجولة القادمة...
                   </p>
                 </div>
               )}
-            </div>
-          )}
 
-          {/* GAME OVER / WINNER STAGE */}
-          {phase === 'GAME_OVER' && (
-            <div className="w-full max-w-xl text-center p-8 rounded-3xl bg-gradient-to-b from-[#161B2E] via-[#0E1220] to-[#0A0D16] border-2 border-[#D6A84F] shadow-[0_0_80px_rgba(214,168,79,0.3)] backdrop-blur-3xl animate-fadeIn">
-              <div className="w-24 h-24 rounded-3xl bg-gradient-to-tr from-[#D6A84F] to-[#FFE28A] p-1 mx-auto mb-4 shadow-[0_0_40px_rgba(214,168,79,0.5)]">
-                <div className="w-full h-full bg-[#0E111B] rounded-[22px] flex items-center justify-center">
-                  <Trophy className="w-12 h-12 text-[#D6A84F] animate-bounce" />
-                </div>
-              </div>
-
-              <span className="px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest bg-[#D6A84F]/20 text-[#D6A84F] border border-[#D6A84F]/40 mb-3 inline-block">
-                CHAMPION OF SQUID SURVIVAL
-              </span>
-
-              {winner ? (
-                <>
-                  <h2 className="text-3xl sm:text-4xl font-black text-white mb-1">
-                    الفائز باللعبة: {winner.displayName}
-                  </h2>
-                  <p className="text-sm text-slate-300 font-medium mb-6">
-                    وصل إلى خط النهاية ({winner.currentStep} / {config.winningSteps} خطوات) ونجا من كافة الجولات بنجاح!
-                  </p>
-                  
-                  <div className="flex items-center justify-center gap-4 mb-8">
-                    <img
-                      src={winner.avatarUrl}
-                      alt={winner.displayName}
-                      className="w-16 h-16 rounded-2xl border-2 border-[#D6A84F] shadow-lg"
-                    />
-                    <div className="text-right">
-                      <p className="text-base font-black text-white">{winner.displayName}</p>
-                      <p className="text-xs font-mono text-slate-400">{winner.username}</p>
-                      <p className="text-xs font-bold text-[#D6A84F] mt-1">+1000 نقطة فوز في لوحة الصدارة</p>
+              {/* GAME OVER / WINNER STAGE */}
+              {phase === 'GAME_OVER' && (
+                <div className="w-full max-w-lg text-center p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#161B2E]/95 via-[#0E1220]/95 to-[#0A0D16]/95 border-2 border-[#D6A84F] shadow-[0_0_80px_rgba(214,168,79,0.4)] backdrop-blur-2xl animate-fadeIn">
+                  <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-[#D6A84F] to-[#FFE28A] p-1 mx-auto mb-3 shadow-[0_0_40px_rgba(214,168,79,0.5)]">
+                    <div className="w-full h-full bg-[#0E111B] rounded-[22px] flex items-center justify-center">
+                      <Trophy className="w-10 h-10 text-[#D6A84F] animate-bounce" />
                     </div>
                   </div>
-                </>
-              ) : (
-                <div className="my-6">
-                  <h2 className="text-2xl font-black text-white mb-2">
-                    انتهت اللعبة دون أي فائز!
-                  </h2>
-                  <p className="text-xs text-slate-400">
-                    تم إقصاء جميع المشاركين في رقم الخطر الأخير.
-                  </p>
+
+                  <span className="px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-[#D6A84F]/20 text-[#D6A84F] border border-[#D6A84F]/40 mb-2 inline-block">
+                    CHAMPION OF SQUID SURVIVAL
+                  </span>
+
+                  {winner ? (
+                    <>
+                      <h2 className="text-2xl sm:text-3xl font-black text-white mb-1">
+                        الفائز باللعبة: {winner.displayName}
+                      </h2>
+                      <p className="text-xs text-slate-300 font-medium mb-4">
+                        وصل إلى خط النهاية ({winner.currentStep} / {config.winningSteps} خطوات) ونجا من كافة الجولات بنجاح!
+                      </p>
+                      
+                      <div className="flex items-center justify-center gap-3 mb-6">
+                        <img
+                          src={winner.avatarUrl}
+                          alt={winner.displayName}
+                          className="w-14 h-14 rounded-2xl border-2 border-[#D6A84F] shadow-lg"
+                        />
+                        <div className="text-right">
+                          <p className="text-sm font-black text-white">{winner.displayName}</p>
+                          <p className="text-[11px] font-mono text-slate-400">{winner.username}</p>
+                          <p className="text-[11px] font-bold text-[#D6A84F] mt-0.5">+1000 نقطة فوز في لوحة الصدارة</p>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="my-4">
+                      <h2 className="text-xl font-black text-white mb-1">
+                        انتهت اللعبة دون أي فائز!
+                      </h2>
+                      <p className="text-xs text-slate-400">
+                        تم إقصاء جميع المشاركين في رقم الخطر الأخير.
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-center gap-3">
+                    <button
+                      onClick={handleResetGame}
+                      className="px-6 py-3 rounded-2xl bg-gradient-to-r from-[#D6A84F] to-[#E5BE6C] text-[#08090C] font-black text-xs sm:text-sm flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 transition-all"
+                    >
+                      <RotateCcw className="w-4 h-4 stroke-[2.5]" />
+                      <span>بدء لعبة جديدة</span>
+                    </button>
+                  </div>
                 </div>
               )}
-
-              <div className="flex items-center justify-center gap-3">
-                <button
-                  onClick={handleResetGame}
-                  className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#D6A84F] to-[#E5BE6C] text-[#08090C] font-black text-sm flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 transition-all"
-                >
-                  <RotateCcw className="w-4 h-4 stroke-[2.5]" />
-                  <span>بدء لعبة جديدة</span>
-                </button>
-              </div>
             </div>
-          )}
+
+            {/* Bottom Overlay: CHOOSING PHASE COUNTDOWN & OPTIONS */}
+            {phase === 'CHOOSING' && (
+              <div className="pointer-events-auto w-full max-w-2xl flex flex-col items-center bg-black/60 p-3 sm:p-4 rounded-3xl border border-white/10 backdrop-blur-md shadow-2xl">
+                <div className="text-center mb-2 flex items-center justify-between w-full px-4">
+                  <p className="text-xs sm:text-sm font-black text-slate-200">
+                    اكتب رقمك من <span className="text-[#F43F5E]">1 إلى 5</span> في الشات
+                  </p>
+                  <div className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-white drop-shadow-[0_0_20px_rgba(244,63,94,0.6)]">
+                    00:{String(timeRemainingSeconds).padStart(2, '0')}
+                  </div>
+                </div>
+
+                <div className="w-full grid grid-cols-5 gap-1.5 sm:gap-2.5 mb-2.5">
+                  {[
+                    { num: 1, label: 'أمان فائق', steps: '+1 خطوة', risk: 'منخفض جداً', color: 'border-emerald-500/40 from-emerald-950/60 bg-emerald-950/40' },
+                    { num: 2, label: 'حذر', steps: '+2 خطوات', risk: 'منخفض', color: 'border-teal-500/40 from-teal-950/60 bg-teal-950/40' },
+                    { num: 3, label: 'متوازن', steps: '+3 خطوات', risk: 'متوسط', color: 'border-blue-500/40 from-blue-950/60 bg-blue-950/40' },
+                    { num: 4, label: 'مخاطرة', steps: '+4 خطوات', risk: 'مرتفع', color: 'border-amber-500/40 from-amber-950/60 bg-amber-950/40' },
+                    { num: 5, label: 'مخاطرة قصوى', steps: '+5 خطوات', risk: 'مرتفع جداً', color: 'border-rose-500/40 from-rose-950/60 bg-rose-950/40' }
+                  ].map((item) => {
+                    const count = choiceStats[item.num] || 0;
+                    const percentage = totalChosenCount > 0 ? Math.round((count / totalChosenCount) * 100) : 0;
+
+                    return (
+                      <div
+                        key={item.num}
+                        className={`p-2 sm:p-3 rounded-2xl bg-gradient-to-b to-[#0D101C]/90 border flex flex-col items-center justify-between text-center relative overflow-hidden transition-all duration-300 ${item.color} ${
+                          count > 0 ? 'shadow-[0_0_20px_rgba(244,63,94,0.25)] scale-[1.02]' : 'opacity-80'
+                        }`}
+                      >
+                        <span className="text-[9px] font-bold text-slate-300 mb-0.5">
+                          {item.label}
+                        </span>
+                        <span className="text-2xl sm:text-3xl font-black font-mono text-white mb-0.5">
+                          {item.num}
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-white/10 text-white mb-1.5">
+                          {item.steps}
+                        </span>
+
+                        <div className="w-full pt-1.5 border-t border-white/10 flex flex-col items-center">
+                          <span className="text-[10px] font-mono font-bold text-white">
+                            {count} لاعب
+                          </span>
+                          <span className="text-[8px] text-slate-400 font-mono">
+                            ({percentage}%)
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handleSimulateChoices}
+                    className="px-3 py-1.5 rounded-xl bg-[#151928] border border-[#27324A] hover:border-[#F43F5E] text-slate-300 text-[11px] font-bold flex items-center gap-1.5 transition-all shadow-md"
+                  >
+                    <Sparkles className="w-3 h-3 text-[#F43F5E]" />
+                    <span>محاكاة اختيارات الشات (Demo)</span>
+                  </button>
+                  <button
+                    onClick={handleLockChoices}
+                    className="px-3 py-1.5 rounded-xl bg-[#F43F5E]/20 border border-[#F43F5E]/40 text-[#F43F5E] hover:bg-[#F43F5E]/30 text-[11px] font-bold flex items-center gap-1.5 transition-all"
+                  >
+                    <Clock className="w-3 h-3" />
+                    <span>إغلاق الاختيارات فوراً</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+          </div>
         </section>
       </main>
 

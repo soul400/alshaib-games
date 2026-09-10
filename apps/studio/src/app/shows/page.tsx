@@ -53,6 +53,8 @@ export default function ShowsBuilderPage() {
 
   // Quick Multi-Game Selector State
   const [selectedQuickEngines, setSelectedQuickEngines] = useState<Record<string, { enabled: boolean; questionsCount: number; points: number }>>({
+    'viewer-race': { enabled: true, questionsCount: 1, points: 500 },
+    'squid-game': { enabled: true, questionsCount: 1, points: 500 },
     'capitals': { enabled: true, questionsCount: 5, points: 100 },
     'memory-match': { enabled: true, questionsCount: 3, points: 200 },
     'bomb-pass': { enabled: true, questionsCount: 3, points: 500 },

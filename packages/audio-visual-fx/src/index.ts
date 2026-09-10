@@ -615,6 +615,90 @@ export class SoundFXManager {
           break;
         }
 
+        case 'race_horn': {
+          // Dual-tone rally / stadium starting trumpet horn
+          [523.25, 659.25, 783.99].forEach((freq, i) => {
+            const osc = this.audioCtx!.createOscillator();
+            const gain = this.audioCtx!.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, now + i * 0.08);
+            gain.gain.setValueAtTime(volume * 0.6, now + i * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.9);
+            osc.connect(gain);
+            gain.connect(this.audioCtx!.destination);
+            osc.start(now + i * 0.08);
+            osc.stop(now + 0.9);
+          });
+          break;
+        }
+
+        case 'horse_gallop': {
+          // Rhythmic double-clack horse hoof gallop sound
+          [0, 0.12].forEach((offset) => {
+            const osc = this.audioCtx!.createOscillator();
+            const gain = this.audioCtx!.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(180, now + offset);
+            osc.frequency.exponentialRampToValueAtTime(70, now + offset + 0.08);
+            gain.gain.setValueAtTime(volume * 0.5, now + offset);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + offset + 0.08);
+            osc.connect(gain);
+            gain.connect(this.audioCtx!.destination);
+            osc.start(now + offset);
+            osc.stop(now + offset + 0.08);
+          });
+          break;
+        }
+
+        case 'race_turbo': {
+          // Ascending nitro / turbo jet boost swoosh
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(1400, now + 0.45);
+          gain.gain.setValueAtTime(volume * 0.7, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+          osc.connect(gain);
+          gain.connect(this.audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.45);
+          break;
+        }
+
+        case 'overtake_swoosh': {
+          // High-speed wind overtake whoosh
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.exponentialRampToValueAtTime(240, now + 0.3);
+          gain.gain.setValueAtTime(volume * 0.6, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.connect(gain);
+          gain.connect(this.audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+          break;
+        }
+
+        case 'photo_finish': {
+          // Victory bell and high-tech finish flash
+          [880, 1108.73, 1318.51, 1760].forEach((freq, idx) => {
+            const osc = this.audioCtx!.createOscillator();
+            const gain = this.audioCtx!.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+            gain.gain.setValueAtTime(volume * 0.7, now + idx * 0.06);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+            osc.connect(gain);
+            gain.connect(this.audioCtx!.destination);
+            osc.start(now + idx * 0.06);
+            osc.stop(now + 1.2);
+          });
+          break;
+        }
+
         case 'reveal_question':
         case 'box_open':
         case 'wheel_spin':

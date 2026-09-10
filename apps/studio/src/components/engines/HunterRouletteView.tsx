@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { HunterRouletteQuestion, HunterRouletteParticipant, HunterGamePhase } from '@aep/types';
 import { useStudioStore } from '../../store/useStudioStore';
 import { soundFX, triggerVisualEffect } from '@aep/audio-visual-fx';
+import { RouletteWheelCanvas } from './RouletteWheelCanvas';
 import { 
   Crosshair, Users, Play, Lock, RefreshCw, Trophy, Skull, ShieldCheck, 
   Clock, Flame, Sparkles, AlertTriangle, Target, Crown, Volume2, CheckCircle, UserPlus, Plus,
@@ -32,9 +33,10 @@ export function HunterRouletteView({ question }: Props) {
   const [roundNumber, setRoundNumber] = useState<number>(1);
   const [winner, setWinner] = useState<HunterRouletteParticipant | null>(null);
 
-  // Wheel Physics Rotation Angle
+  // Wheel Physics & Animation States
   const [wheelRotation, setWheelRotation] = useState<number>(0);
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
+  const [selectedShooterTarget, setSelectedShooterTarget] = useState<HunterRouletteParticipant | null>(null);
 
   // 🎯 Realistic 6-Chamber Revolver Cylinder State
   const [cylinderChamber, setCylinderChamber] = useState<number>(0);
@@ -150,7 +152,32 @@ export function HunterRouletteView({ question }: Props) {
     soundFX.play('box_open');
   };
 
-  // 4. Spin Fortune Wheel (Anti-consecutive: max 2 in a row per person)
+  // 4. Spin Fortune Wheel with Canvas Physics & Sound Callbacks
+  const handleWheelSpinComplete = useCallback((selectedWinner: HunterRouletteParticipant) => {
+    setIsSpinning(false);
+    setCurrentShooter(selectedWinner);
+    setPhase('WINNER_REVEALED');
+    soundFX.play('winner_announcement');
+    triggerVisualEffect('confetti');
+
+    // 🔓 Check Rare Revive Gate Condition:
+    // Must have eliminated players, aliveCount strictly > 3, and reviveCountUsed < 2 (max 2 per game)
+    const currentEliminated = participants.filter(p => !p.isAlive);
+    const alivePlayers = participants.filter(p => p.isAlive);
+    const canTriggerRevive = currentEliminated.length > 0 && alivePlayers.length > 3 && reviveCountUsed < 2;
+    const willTriggerRevive = canTriggerRevive && Math.random() < 0.35; // ~35% rare chance
+
+    setIsReviveGateOpen(willTriggerRevive);
+
+    // Auto-transition to Target Selection after 4 seconds reveal banner
+    setTimeout(() => {
+      setPhase('TARGET_SELECTION');
+      if (willTriggerRevive) {
+        soundFX.play('winner_card');
+      }
+    }, 4000);
+  }, [participants, reviveCountUsed]);
+
   const handleSpinRoulette = () => {
     const alivePlayers = participants.filter(p => p.isAlive);
     if (alivePlayers.length <= 1) {
@@ -163,11 +190,6 @@ export function HunterRouletteView({ question }: Props) {
 
     if (isSpinning) return;
 
-    setIsSpinning(true);
-    setPhase('SPINNING');
-    shotExecutedThisRound.current = false;
-    soundFX.play('wheel_spin');
-
     // Rule: Prevent selecting the same person more than 2 times in a row
     let eligibleShooters = alivePlayers;
     if (alivePlayers.length > 1 && lastSelectedShooterIdRef.current && consecutiveShooterCountRef.current >= 2) {
@@ -179,7 +201,6 @@ export function HunterRouletteView({ question }: Props) {
 
     // Pick random winner from eligible pool
     const selectedWinner = eligibleShooters[Math.floor(Math.random() * eligibleShooters.length)];
-    const winnerIndex = alivePlayers.findIndex(p => p.id === selectedWinner.id);
 
     // Track consecutive selection
     if (lastSelectedShooterIdRef.current === selectedWinner.id) {
@@ -189,39 +210,11 @@ export function HunterRouletteView({ question }: Props) {
       consecutiveShooterCountRef.current = 1;
     }
 
-    // Calculate Slice Angle
-    const sliceAngle = 360 / alivePlayers.length;
-    const sliceCenterAngle = winnerIndex * sliceAngle + sliceAngle / 2;
-
-    // Pointer is at Top (270 degrees in SVG coordinates)
-    const targetDeg = wheelRotation + 2520 + (270 - sliceCenterAngle - (wheelRotation % 360));
-    setWheelRotation(targetDeg);
-
-    // After 5.2 seconds (matching transition duration)
-    setTimeout(() => {
-      setIsSpinning(false);
-      setCurrentShooter(selectedWinner);
-      setPhase('WINNER_REVEALED');
-      soundFX.play('winner_announcement');
-      triggerVisualEffect('confetti');
-
-      // 🔓 Check Rare Revive Gate Condition:
-      // Must have eliminated players, aliveCount strictly > 3, and reviveCountUsed < 2 (max 2 per game)
-      const currentEliminated = participants.filter(p => !p.isAlive);
-      const canTriggerRevive = currentEliminated.length > 0 && alivePlayers.length > 3 && reviveCountUsed < 2;
-      const willTriggerRevive = canTriggerRevive && Math.random() < 0.35; // ~35% rare chance
-
-      setIsReviveGateOpen(willTriggerRevive);
-
-      // Auto-transition to Target Selection after 4 seconds reveal banner
-      setTimeout(() => {
-        setPhase('TARGET_SELECTION');
-        if (willTriggerRevive) {
-          soundFX.play('winner_card');
-        }
-      }, 4000);
-
-    }, 5200);
+    setSelectedShooterTarget(selectedWinner);
+    setIsSpinning(true);
+    setPhase('SPINNING');
+    shotExecutedThisRound.current = false;
+    soundFX.play('wheel_spin');
   };
 
   // 5. 100% Manual Target Selection (User chooses directly by clicking victim card or chat)
@@ -693,86 +686,18 @@ export function HunterRouletteView({ question }: Props) {
             </div>
           </div>
 
-          {/* 🎡 ROULETTE WHEEL CONTAINER (Grand Sized Wheel for Live Stream) */}
-          <div className="relative w-[360px] h-[360px] sm:w-[500px] sm:h-[500px] md:w-[600px] md:h-[600px] lg:w-[680px] lg:h-[680px] xl:w-[720px] xl:h-[720px] flex items-center justify-center my-2 sm:my-3 transition-all duration-300">
-            
-            {/* Top Golden Pointer Pin (ريشة العجلة الذهبية المكبرة) */}
-            <div className="absolute -top-8 sm:-top-12 z-30 flex flex-col items-center filter drop-shadow-[0_8px_25px_rgba(245,158,11,1)]">
-              <div className="w-12 sm:w-16 h-14 sm:h-20 bg-gradient-to-b from-amber-300 via-yellow-400 to-amber-600 [clip-path:polygon(50%_100%,0%_0%,100%_0%)]" />
-              <div className="w-5 sm:w-6 h-5 sm:h-6 rounded-full bg-amber-200 border-2 border-white -mt-13 sm:-mt-19 shadow-inner" />
-            </div>
-
-            {/* Glowing Outer Wheel Frame */}
-            <div className="w-full h-full rounded-full border-[10px] sm:border-[16px] md:border-[20px] border-[#25284A] p-2 sm:p-3 md:p-4 bg-[#0C0D1C] shadow-[0_0_120px_rgba(124,58,237,0.65),0_0_40px_rgba(245,158,11,0.3)] flex items-center justify-center relative overflow-hidden">
-              
-              {/* Rotating SVG Wheel */}
-              <div
-                className="w-full h-full rounded-full transition-transform duration-[5000ms] cubic-bezier(0.15, 0.9, 0.2, 1)"
-                style={{ transform: `rotate(${wheelRotation}deg)` }}
-              >
-                <svg viewBox="0 0 200 200" className="w-full h-full rounded-full">
-                  {aliveParticipants.map((p, i) => {
-                    const N = aliveParticipants.length;
-                    const sliceAngle = 360 / N;
-                    const startAngle = i * sliceAngle;
-                    const endAngle = (i + 1) * sliceAngle;
-
-                    const rad1 = (startAngle * Math.PI) / 180;
-                    const rad2 = (endAngle * Math.PI) / 180;
-
-                    const x1 = 100 + 100 * Math.cos(rad1);
-                    const y1 = 100 + 100 * Math.sin(rad1);
-                    const x2 = 100 + 100 * Math.cos(rad2);
-                    const y2 = 100 + 100 * Math.sin(rad2);
-
-                    const largeArc = sliceAngle > 180 ? 1 : 0;
-                    const color = SLICE_COLORS[i % SLICE_COLORS.length];
-
-                    // Text Angle
-                    const midAngle = startAngle + sliceAngle / 2;
-                    const textRad = (midAngle * Math.PI) / 180;
-                    const textX = 100 + 64 * Math.cos(textRad);
-                    const textY = 100 + 64 * Math.sin(textRad);
-
-                    const fontSize = N > 30 ? '4.5' : N > 18 ? '6' : N > 10 ? '8' : '10';
-
-                    return (
-                      <g key={p.id}>
-                        {/* Slice Sector */}
-                        <path
-                          d={`M 100 100 L ${x1} ${y1} A 100 100 0 ${largeArc} 1 ${x2} ${y2} Z`}
-                          fill={color}
-                          stroke="#0E0F20"
-                          strokeWidth="1.5"
-                        />
-                        {/* Player Name Text along slice */}
-                        <text
-                          x={textX}
-                          y={textY}
-                          fill="#FFFFFF"
-                          fontSize={fontSize}
-                          fontWeight="900"
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                          style={{ filter: 'drop-shadow(0px 1px 3px rgba(0,0,0,0.95))' }}
-                          transform={`rotate(${midAngle + 180}, ${textX}, ${textY})`}
-                        >
-                          {p.displayName.length > 10 ? p.displayName.substring(0, 9) + '..' : p.displayName}
-                        </text>
-                      </g>
-                    );
-                  })}
-                </svg>
-              </div>
-
-              {/* Center Golden Shield Badge */}
-              <div className="absolute w-24 h-24 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-600 p-2 shadow-[0_0_50px_rgba(245,158,11,0.8)] flex items-center justify-center z-20">
-                <div className="w-full h-full rounded-full bg-[#0E0F20] flex flex-col items-center justify-center text-amber-400">
-                  <Crosshair className="w-12 h-12 sm:w-16 sm:h-16 md:w-18 md:h-18 animate-spin-slow" />
-                </div>
-              </div>
-
-            </div>
+          {/* 🎡 ROULETTE WHEEL CONTAINER (AAA Broadcast Canvas Engine) */}
+          <div className={`relative w-[360px] h-[360px] sm:w-[500px] sm:h-[500px] md:w-[600px] md:h-[600px] lg:w-[680px] lg:h-[680px] xl:w-[720px] xl:h-[720px] flex items-center justify-center my-2 sm:my-3 transition-all duration-500 ${
+            phase === 'WINNER_REVEALED' ? 'scale-105 filter drop-shadow-[0_0_60px_rgba(245,158,11,0.65)]' : ''
+          }`}>
+            <RouletteWheelCanvas
+              participants={aliveParticipants}
+              targetWinner={selectedShooterTarget}
+              isSpinning={isSpinning}
+              onPinClick={() => soundFX.play('lock_clack', 0.25)}
+              onSpinComplete={handleWheelSpinComplete}
+              size={680}
+            />
           </div>
 
           {/* Spin Button */}

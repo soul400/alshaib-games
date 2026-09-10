@@ -17,7 +17,8 @@ export type EngineType =
   | 'memory-match'
   | 'capitals'
   | 'bus-tayyibin'
-  | 'squid-game';
+  | 'squid-game'
+  | 'viewer-race';
 
 export type ImageTransformStyle =
   | 'normal'
@@ -68,7 +69,12 @@ export type SoundEffectType =
   | 'round_complete'
   | 'doll_turn'
   | 'danger_reveal'
-  | 'elimination_laser';
+  | 'elimination_laser'
+  | 'race_horn'
+  | 'horse_gallop'
+  | 'race_turbo'
+  | 'overtake_swoosh'
+  | 'photo_finish';
 
 export type VisualEffectType =
   | 'confetti'
@@ -1099,5 +1105,57 @@ export interface SquidGameQuestion extends BaseQuestion {
   engineType: 'squid-game';
   config: SquidGameConfig;
 }
+
+// ══════════════════════════════════════════════════════════════
+// 🏇 VIEWER RACE (AL-SHAIB VIEWER RACE GRAND PRIX)
+// ══════════════════════════════════════════════════════════════
+
+export type ViewerRacePhase =
+  | 'LOBBY'             // مرحلة انتظار وانضمام المشاهدين عبر الشات («العب» أو «1»)
+  | 'COUNTDOWN'         // العد التنازلي الدرامي (3, 2, 1, انطلق!)
+  | 'RACING'            // السباق نشط والمتسابقون يجرون مع مؤثرات التوربو والعثرات
+  | 'FINAL_STRETCH'     // الأمتار الأخيرة، حماس عالي وتركيز الكاميرا على الصدارة
+  | 'FINISH'            // وصول أول متسابق لخط النهاية وحسم النتيجة
+  | 'WINNER'            // تتويج البطل، زووم سينمائي، واحتفال الكونفيتي ولوحة الصدارة
+  | 'COOLDOWN';         // استراحة واستعداد للجولة التالية
+
+export interface ViewerRacer {
+  id: string;
+  userId: string;
+  username: string;
+  displayName: string;
+  avatarUrl: string;
+  lane: number;
+  color: string;
+  progress: number;       // 0 to 100 (percentage of track completed)
+  distanceMeters: number; // in meters (e.g. 0 to 1000)
+  speed: number;          // current instant speed (pixels/meters per sec)
+  baseSpeed: number;      // regular cruising speed
+  boostTimer: number;     // seconds of active boost remaining
+  stumbleTimer: number;   // seconds of stumble/obstacle remaining
+  rank: number;           // current 1-based rank in race
+  finishTime?: number;    // timestamp of crossing finish line
+  finishedRank?: number;  // final 1st, 2nd, 3rd, etc.
+  isBot?: boolean;
+  cheerCount: number;     // number of live chat cheers received during race
+  joinedAt: number;
+}
+
+export interface ViewerRaceConfig {
+  trackLengthMeters: number;       // e.g. 500 or 1000 meters
+  lobbyDurationSeconds: number;    // e.g. 15 or 20 seconds
+  countdownDurationSeconds: number;// e.g. 3 or 5 seconds
+  maxRacers: number;               // maximum racers per round (default 24 or 32)
+  chatBoostEnabled: boolean;       // allow viewers to speed up by cheering
+  comebackMechanicEnabled: boolean;// allow trailers to catch up with burst
+  soundEnabled: boolean;
+  cameraMode: 'smart_cinematic' | 'leader_follow' | 'wide_track' | 'photo_finish';
+}
+
+export interface ViewerRaceQuestion extends BaseQuestion {
+  engineType: 'viewer-race';
+  config: ViewerRaceConfig;
+}
+
 
 

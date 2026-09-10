@@ -37,11 +37,22 @@ export function convertArabicIndicDigits(text: string): string {
 // Reverence and honorary phrases to automatically strip from answers and candidate comments
 const REVERENCE_PHRASES_REGEX = /\b(رضي\s+الله\s+(عنه|عنها|عنهم|عنهما)|رضوان\s+الله\s+عليهم|صلى\s+الله\s+عليه\s+وسلم|عليه\s+(الصلاة\s+والسلام|السلام)|عليها\s+السلام|عليهم\s+السلام|كرم\s+الله\s+وجهه|رحمه\s+الله|رحمها\s+الله|رحمهم\s+الله|قدس\s+سره)\b/gi;
 
-// Unit / Date / Context words that can be omitted when answering numbers or years
-const UNIT_CONTEXT_WORDS_REGEX = /\b(في\s+عام|عام|سنة|سنه|سنوات|سنين|اعوام|هجري|هجريه|هجرية|هـ|ميلادي|ميلاديه|ميلادية|م|قبل\s+الميلاد|ق\s*م|يوم|ايام|شهر|اشهر|شهور|مرة|مرات|ساعة|ساعات|دقيقة|دقائق)\b/gi;
+// Unit / Date / Context words that can be omitted when answering numbers or years (using Arabic word-safe boundary checks)
+const UNIT_CONTEXT_WORDS_REGEX = /(?:^|\s)(?:في\s+عام|في\s+العام|في\s+سنة|في\s+سنه|عام|العام|سنة|السنة|سنه|السنه|سنوات|السنوات|سنين|السنين|اعوام|الاعوام|هجري|هجرية|هجريه|الهجري|الهجرية|الهجريه|هـ|ه|ميلادي|ميلادية|ميلاديه|الميلادي|الميلادية|الميلاديه|م|قبل\s+الميلاد|ق\s*م|يوم|ايام|شهر|اشهر|شهور|مرة|مرات|ساعة|ساعات|دقيقة|دقائق)(?=\s|$)/gi;
 
 // Words that cannot stand alone as a valid single-word answer
-const GENERIC_STOP_WORDS = new Set(['بن', 'ابن', 'ابو', 'ابي', 'ام', 'عبد', 'الله', 'من', 'عن', 'في', 'هو', 'هي', 'ذو', 'ذي', 'ذا', 'على', 'الى', 'ال']);
+const GENERIC_STOP_WORDS = new Set([
+  'بن', 'ابن', 'ابو', 'ابي', 'ام', 'عبد', 'الله', 'من', 'عن', 'في', 'هو', 'هي', 'ذو', 'ذي', 'ذا', 'على', 'الى', 'ال',
+  'ان', 'كان', 'مع', 'ما', 'لا', 'قد', 'ثم', 'او', 'هل', 'كم', 'متى', 'اين', 'هذا', 'هذه', 'ذلك', 'تلك', 'التي', 'الذي'
+]);
+
+// Unit words that should not be scored alone as an answer when stripped
+const UNIT_STOP_WORDS = new Set([
+  'عام', 'العام', 'سنة', 'السنة', 'سنه', 'السنه', 'سنوات', 'السنوات', 'سنين', 'السنين', 'اعوام', 'الاعوام',
+  'هجري', 'هجرية', 'هجريه', 'الهجري', 'الهجرية', 'الهجريه', 'هـ', 'ه',
+  'ميلادي', 'ميلادية', 'ميلاديه', 'الميلادي', 'الميلادية', 'الميلاديه', 'م',
+  'يوم', 'ايام', 'شهر', 'اشهر', 'شهور', 'مرة', 'مرات', 'ساعة', 'ساعات', 'دقيقة', 'دقائق'
+]);
 
 // Arabic Number Word Map (1 to 20, tens, hundreds)
 const NUMBER_TO_ARABIC_WORDS: Record<number, string[]> = {
@@ -178,31 +189,39 @@ export function expandAcceptableSegments(rawAnswer: string): string[] {
   const segments = new Set<string>();
   segments.add(norm);
 
-  // 1. NUMBER EXPANSION (e.g. "9 سنوات", "في عام 204 هجري", "11 سنة")
-  const digitsInText = norm.match(/\d+/g);
+  // 1. Raw answer and normalized answer without unit/date context (e.g. "في العام 2 هجري" -> "2")
+  const rawStrippedUnits = rawAnswer.replace(UNIT_CONTEXT_WORDS_REGEX, ' ').trim();
+  const normRawStripped = normalizeAnswer(rawStrippedUnits);
+  if (normRawStripped && normRawStripped !== norm) {
+    segments.add(normRawStripped);
+  }
+
+  const strippedUnits = norm.replace(UNIT_CONTEXT_WORDS_REGEX, ' ').trim();
+  const normStripped = normalizeAnswer(strippedUnits);
+  if (normStripped && normStripped !== norm) {
+    segments.add(normStripped);
+  }
+
+  // 2. NUMBER EXPANSION (e.g. "9 سنوات", "في عام 204 هجري", "11 سنة")
+  const combinedForDigits = `${norm} ${normRawStripped || ''}`;
+  const digitsInText = combinedForDigits.match(/\d+/g);
   if (digitsInText) {
     for (const dStr of digitsInText) {
       const num = parseInt(dStr, 10);
-      segments.add(dStr); // The pure number itself e.g. "9", "204", "11"
+      segments.add(dStr); // The pure number itself e.g. "9", "204", "11", "2"
 
-      // Add Arabic written word representations (e.g. 9 -> "تسعة", "تسع", 11 -> "احد عشر")
+      // Add Arabic written word representations (e.g. 9 -> "تسعة", "تسع", 2 -> "اثنان", "اثنين")
       if (NUMBER_TO_ARABIC_WORDS[num]) {
         for (const w of NUMBER_TO_ARABIC_WORDS[num]) {
           segments.add(normalizeAnswer(w));
         }
       }
-
-      // Add number + stripped unit combinations
-      const strippedUnits = norm.replace(UNIT_CONTEXT_WORDS_REGEX, ' ').trim();
-      const normStripped = normalizeAnswer(strippedUnits);
-      if (normStripped && normStripped !== norm) {
-        segments.add(normStripped);
-      }
     }
   }
 
   // Also check if text is a number written in words (e.g. "تسعة" or "تسع سنوات")
-  for (const [num, wordForms] of Object.entries(NUMBER_TO_ARABIC_WORDS)) {
+  for (const [numStr, wordForms] of Object.entries(NUMBER_TO_ARABIC_WORDS)) {
+    const num = parseInt(numStr, 10);
     const hasWordForm = wordForms.some(w => {
       const normW = normalizeAnswer(w);
       const tokens = norm.split(/\s+/);
@@ -210,7 +229,7 @@ export function expandAcceptableSegments(rawAnswer: string): string[] {
     });
 
     if (hasWordForm) {
-      segments.add(num); // Add digit equivalent e.g. "9"
+      segments.add(String(num)); // Add digit equivalent e.g. "9"
       for (const w of wordForms) {
         segments.add(normalizeAnswer(w));
       }
@@ -222,17 +241,24 @@ export function expandAcceptableSegments(rawAnswer: string): string[] {
     return Array.from(segments);
   }
 
-  // 2. Add consecutive sub-phrases (2 to 4 words)
+  // 3. Add consecutive sub-phrases (2 to 4 words)
   for (let len = 2; len <= Math.min(tokens.length, 4); len++) {
     for (let i = 0; i <= tokens.length - len; i++) {
       const subPhrase = tokens.slice(i, i + len).join(' ');
       const subTokens = subPhrase.split(' ');
-      if (subTokens.every(t => GENERIC_STOP_WORDS.has(t))) continue;
+      if (subTokens.every(t => GENERIC_STOP_WORDS.has(t) || UNIT_STOP_WORDS.has(t))) continue;
       segments.add(subPhrase);
     }
   }
 
-  // 3. Identify Kunyas: "ابو [اسم]", "ام [اسم]", "ابن [اسم]"
+  // 4. Significant individual tokens (keywords e.g. "صدمة" from "صدمة عصبية")
+  for (const t of tokens) {
+    if (t.length >= 3 && !GENERIC_STOP_WORDS.has(t) && !UNIT_STOP_WORDS.has(t)) {
+      segments.add(t);
+    }
+  }
+
+  // 5. Identify Kunyas: "ابو [اسم]", "ام [اسم]", "ابن [اسم]"
   for (let i = 0; i < tokens.length - 1; i++) {
     if (['ابو', 'ابي', 'ام', 'ابن'].includes(tokens[i])) {
       const kunya = `${tokens[i]} ${tokens[i + 1]}`;
@@ -243,7 +269,7 @@ export function expandAcceptableSegments(rawAnswer: string): string[] {
     }
   }
 
-  // 4. Identify Patronymics / Nasab: e.g. "[اسم1] بن [اسم2]" (e.g. "عبدالله بن مسعود", "يوسف بن تاشفين", "منصور بن عكرمة")
+  // 6. Identify Patronymics / Nasab: e.g. "[اسم1] بن [اسم2]" (e.g. "عبدالله بن مسعود", "يوسف بن تاشفين", "منصور بن عكرمة")
   for (let i = 0; i < tokens.length; i++) {
     if (tokens[i] === 'بن' && i > 0 && i < tokens.length - 1) {
       const name1 = tokens[i - 1];
@@ -278,7 +304,7 @@ export function expandAcceptableSegments(rawAnswer: string): string[] {
   // Filter out any segment that is purely a single stop word or too short
   return Array.from(segments).filter(s => {
     const sTokens = s.split(' ');
-    if (sTokens.length === 1 && (GENERIC_STOP_WORDS.has(sTokens[0]) || (sTokens[0].length < 3 && !/^\d+$/.test(sTokens[0])))) {
+    if (sTokens.length === 1 && (GENERIC_STOP_WORDS.has(sTokens[0]) || UNIT_STOP_WORDS.has(sTokens[0]) || (sTokens[0].length < 3 && !/^\d+$/.test(sTokens[0])))) {
       return false;
     }
     return true;
@@ -311,10 +337,13 @@ export function isAnswerMatch(candidate: string, acceptableAnswers: string[], th
     return false;
   }
 
-  // Reject if candidate is ONLY a single generic stop word (e.g. just "بن" or "ابو" or "عبد")
-  if (candTokens.length === 1 && GENERIC_STOP_WORDS.has(candTokens[0])) {
+  // Reject if candidate is ONLY a single generic stop word or unit word (e.g. just "بن" or "في" or "عام" or "هجري")
+  if (candTokens.length === 1 && (GENERIC_STOP_WORDS.has(candTokens[0]) || UNIT_STOP_WORDS.has(candTokens[0]))) {
     return false;
   }
+
+  // Also build stripped candidate for numbers/dates (e.g. user commented "عام 2" or "في عام 2 هجري")
+  const candStrippedUnits = normalizeAnswer(candidate.replace(UNIT_CONTEXT_WORDS_REGEX, ' ').trim());
 
   // Expand all acceptable answers into their valid sub-segments
   const allTargetSegments: string[] = [];
@@ -327,19 +356,25 @@ export function isAnswerMatch(candidate: string, acceptableAnswers: string[], th
   for (const targetSegment of allTargetSegments) {
     if (!targetSegment) continue;
 
-    // A. EXACT MATCH (e.g. "ابو موسى" === "ابو موسى" or "اشعري" === "اشعري" or "كبسة" === "كبسة")
+    // A. EXACT MATCH (e.g. "ابو موسى" === "ابو موسى" or "اشعري" === "اشعري" or "كبسة" === "كبسة" or "2" === "2")
     if (normCandidate === targetSegment) {
+      return true;
+    }
+    if (candStrippedUnits && candStrippedUnits === targetSegment) {
       return true;
     }
 
     const segTokens = targetSegment.split(/\s+/).filter(Boolean);
 
-    // B. SINGLE-WORD TARGET (e.g. "اشعري", "انصاري", "رياض", "عويمر", "كبسة", "جوال")
+    // B. SINGLE-WORD TARGET (e.g. "اشعري", "انصاري", "رياض", "عويمر", "كبسة", "جوال", "صدمة")
     if (segTokens.length === 1) {
       const targetWord = segTokens[0];
 
-      // B.1 Exact token match in comment (e.g. "هو الاشعري" contains "اشعري", "اتوقع الجوال" contains "جوال")
+      // B.1 Exact token match in comment (e.g. "هو الاشعري" contains "اشعري", "اتوقع صدمة" contains "صدمة")
       if (candTokens.includes(targetWord)) {
+        return true;
+      }
+      if (candStrippedUnits && candStrippedUnits.split(/\s+/).includes(targetWord)) {
         return true;
       }
 
@@ -362,6 +397,9 @@ export function isAnswerMatch(candidate: string, acceptableAnswers: string[], th
       // C. MULTI-WORD TARGET (e.g. "ابو موسى", "عويمر بن عبد الله", "طاش ما طاش")
       // C.1 Full phrase contained in candidate (e.g. "اتوقع ابو موسى الاشعري" contains "ابو موسى")
       if (normCandidate.includes(targetSegment)) {
+        return true;
+      }
+      if (candStrippedUnits && candStrippedUnits.includes(targetSegment)) {
         return true;
       }
 
@@ -1828,5 +1866,7 @@ export * from './busTayyibinEngine';
 // ══════════════════════════════════════════════════════════════
 export * from './squidGameEngine';
 
-
-
+// ══════════════════════════════════════════════════════════════
+// 🏇 EXPORT VIEWER RACE ENGINE
+// ══════════════════════════════════════════════════════════════
+export * from './viewerRaceEngine';

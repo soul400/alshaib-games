@@ -20,6 +20,7 @@ import {
 import { soundFX, triggerVisualEffect } from '@aep/audio-visual-fx';
 import { tiktokEngine } from '@aep/tiktok-live';
 import { useStudioStore } from '../../store/useStudioStore';
+import { Bomb3DScene } from './Bomb3DScene';
 import { 
   Flame, 
   Shield, 
@@ -751,13 +752,17 @@ export const BombPassView: React.FC<BombPassViewProps> = ({
         
         {/* LOBBY VIEW */}
         {phase === 'LOBBY' && (
-          <div className="flex flex-col items-center text-center gap-6 max-w-xl animate-in zoom-in-95">
-            <div className="relative">
-              <div className="w-28 h-28 rounded-3xl bg-gradient-to-b from-red-600/30 to-amber-600/10 border-2 border-red-500/50 flex items-center justify-center shadow-[0_0_60px_rgba(239,68,68,0.3)] animate-bounce">
-                <span className="text-6xl">💣</span>
-              </div>
-              <div className="absolute -top-2 -right-2 px-2.5 py-1 rounded-full bg-red-600 text-white font-mono font-black text-xs shadow">
-                جاهز
+          <div className="flex flex-col items-center text-center gap-5 max-w-xl animate-in zoom-in-95">
+            {/* 3D Idle Bomb with Glowing Embers & Sparks */}
+            <div className="relative w-72 h-56 -mb-6 flex items-center justify-center">
+              <Bomb3DScene
+                phase="LOBBY"
+                timeRemainingMs={0}
+                currentHolder={null}
+                transferringNotice={null}
+              />
+              <div className="absolute top-2 right-4 px-3 py-1 rounded-full bg-red-600 text-white font-mono font-black text-xs shadow-lg border border-red-400/50 animate-pulse">
+                جاهز للإطلاق 💣
               </div>
             </div>
 
@@ -805,10 +810,21 @@ export const BombPassView: React.FC<BombPassViewProps> = ({
 
         {/* ACTIVE ROUND: SPOTLIGHT CARD + DANGER TIMER */}
         {(phase === 'ROUND_ACTIVE' || phase === 'BOMB_TRANSFERRING' || phase === 'SURVIVAL') && currentHolder && (
-          <div className="w-full flex flex-col items-center gap-4 my-auto">
+          <div className="w-full flex flex-col items-center gap-2 my-auto">
             
+            {/* 3D Dynamic Bomb Centerpiece with Burning Fuse & Parabolic Flight */}
+            <div className="relative w-full max-w-md h-48 -mb-6 flex items-center justify-center pointer-events-none">
+              <Bomb3DScene
+                phase={phase}
+                timeRemainingMs={timeRemainingMs}
+                currentHolder={currentHolder}
+                transferringNotice={transferringNotice}
+                cameraShake={isDangerTime}
+              />
+            </div>
+
             {/* Spotlight Card */}
-            <div className={`relative flex flex-col items-center p-6 sm:p-8 rounded-3xl transition-all duration-300 max-w-md w-full border-2 ${
+            <div className={`relative flex flex-col items-center p-6 sm:p-7 rounded-3xl transition-all duration-300 max-w-md w-full border-2 ${
               isDangerTime 
                 ? 'bg-red-950/60 border-red-500 animate-bomb-danger bomb-card-danger-glow' 
                 : 'bg-gradient-to-b from-[#181B2E] to-[#0E101D] border-red-500/50 bomb-card-holder-glow'
@@ -820,16 +836,13 @@ export const BombPassView: React.FC<BombPassViewProps> = ({
                 <span>حامل القنبلة الحالي 💣</span>
               </div>
 
-              {/* Avatar + Bomb Badge */}
-              <div className="relative my-2">
+              {/* Avatar */}
+              <div className="relative my-1">
                 <img
                   src={currentHolder.avatarUrl}
                   alt={currentHolder.displayName}
-                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-red-500 shadow-2xl"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-red-500 shadow-2xl"
                 />
-                <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-black border-2 border-amber-400 flex items-center justify-center text-xl shadow-lg animate-bounce">
-                  💣
-                </div>
               </div>
 
               {/* Player Display Name (NEVER USERNAME) */}
@@ -840,7 +853,7 @@ export const BombPassView: React.FC<BombPassViewProps> = ({
               </div>
 
               {/* Server-Authoritative Timer Display */}
-              <div className={`mt-4 px-6 py-2 rounded-2xl font-mono font-black text-3xl sm:text-4xl tracking-wider border shadow-inner transition-colors ${
+              <div className={`mt-3 px-6 py-2 rounded-2xl font-mono font-black text-3xl sm:text-4xl tracking-wider border shadow-inner transition-colors ${
                 isDangerTime
                   ? 'bg-red-600 text-white border-red-300 animate-pulse'
                   : 'bg-black/60 text-red-400 border-red-500/30'
@@ -902,17 +915,27 @@ export const BombPassView: React.FC<BombPassViewProps> = ({
 
         {/* EXPLOSION & ELIMINATION OVERLAY */}
         {phase === 'EXPLOSION' && lastEliminatedPlayer && (
-          <div className="flex flex-col items-center text-center gap-4 animate-in zoom-in-90 duration-200">
-            <div className="text-8xl sm:text-9xl animate-ping">💥</div>
-            <div className="space-y-1">
-              <h2 className="text-4xl sm:text-5xl font-black text-rose-500 tracking-tight">
+          <div className="flex flex-col items-center text-center gap-4 animate-in zoom-in-90 duration-200 relative w-full max-w-xl">
+            {/* 3D Catastrophic Fireball, Shockwave & Debris Scene */}
+            <div className="w-full h-72 relative flex items-center justify-center -mb-8 pointer-events-none">
+              <Bomb3DScene
+                phase="EXPLOSION"
+                timeRemainingMs={0}
+                currentHolder={lastEliminatedPlayer}
+                transferringNotice={null}
+                cameraShake={true}
+              />
+            </div>
+
+            <div className="space-y-1 z-10">
+              <h2 className="text-4xl sm:text-5xl font-black text-rose-500 tracking-tight drop-shadow-[0_0_35px_rgba(244,63,94,0.8)]">
                 انفجرت القنبلة! 💣💥
               </h2>
               <p className="text-2xl font-bold text-yellow-300">
                 تم إقصاء {lastEliminatedPlayer.displayName} من اللعبة!
               </p>
             </div>
-            <div className="px-4 py-1.5 rounded-full bg-black/60 border border-white/10 text-xs font-mono text-slate-400">
+            <div className="px-4 py-1.5 rounded-full bg-black/60 border border-white/10 text-xs font-mono text-slate-400 z-10">
               يتبقى {alivePlayers.length} مشاركين في المنافسة...
             </div>
           </div>

@@ -413,8 +413,8 @@ export class TikTokLiveEngine {
 
     this.commentListeners.forEach(cb => cb(comment));
 
-    // Standalone Interactive Engines (hunter-roulette, mystery-roulette, musical-chairs, the-vault, bomb-pass, react, what-do-they-say, memory-match) manage their own scoring & flow
-    if (this.currentEngineType === 'hunter-roulette' || this.currentEngineType === 'mystery-roulette' || this.currentEngineType === 'musical-chairs' || this.currentEngineType === 'the-vault' || this.currentEngineType === 'bomb-pass' || this.currentEngineType === 'react' || this.currentEngineType === 'what-do-they-say' || this.currentEngineType === 'memory-match') {
+    // Standalone Interactive Engines (viewer-race, squid-game, hunter-roulette, mystery-roulette, musical-chairs, the-vault, bomb-pass, react, what-do-they-say, memory-match) manage their own scoring & flow
+    if (this.currentEngineType === 'viewer-race' || this.currentEngineType === 'squid-game' || this.currentEngineType === 'hunter-roulette' || this.currentEngineType === 'mystery-roulette' || this.currentEngineType === 'musical-chairs' || this.currentEngineType === 'the-vault' || this.currentEngineType === 'bomb-pass' || this.currentEngineType === 'react' || this.currentEngineType === 'what-do-they-say' || this.currentEngineType === 'memory-match') {
       return;
     }
 

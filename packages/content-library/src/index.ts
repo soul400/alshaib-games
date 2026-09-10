@@ -5,7 +5,8 @@ import {
   generateBombPassQuestion, 
   generateReactQuestion, 
   generateMusicalChairsQuestion,
-  generateSquidQuestion
+  generateSquidQuestion,
+  generateViewerRaceQuestion
 } from '@aep/game-engines';
 import { WORLD_FLAGS_QUESTIONS } from './flags-data';
 import { ALPHABET_QUESTION_BANK, AlphabetBankQuestion } from './alphabet-data';
@@ -25,6 +26,7 @@ export {
   generateCapitalsQuestion,
   generateCapitalsRoundQuestions,
   generateSquidQuestion,
+  generateViewerRaceQuestion,
   isCapitalAnswerCorrect,
   normalizeCapitalAnswer,
   NATIONAL_DAY_96_BANK,
@@ -53,6 +55,18 @@ export interface GameEngineSectionInfo {
  * Detailed Metadata for the Game Engine Sections
  */
 export const GAME_ENGINE_SECTIONS: GameEngineSectionInfo[] = [
+  {
+    id: 'viewer-race',
+    title: 'سباق المشاهدين 🏇',
+    titleEn: 'AL-SHAIB Viewer Race Grand Prix',
+    description: 'سباق خيول جماهيري ملحمي للبث المباشر يدخل فيه المشاهدون بالتعليقات، مع كاميرا مخرج ذكية، مؤثرات توربو وفيزياء تنافسية!',
+    icon: 'Trophy',
+    category: 'سباق وأكشن',
+    questionsCount: 1,
+    avgPoints: 500,
+    recommendedDifficulty: 'medium',
+    badgeColor: 'from-amber-500 via-orange-600 to-rose-600'
+  },
   {
     id: 'squid-game',
     title: 'لعبة «الحبار» 🦑',
@@ -527,6 +541,9 @@ export const SAMPLE_QUESTIONS: AnyQuestion[] = [
 ];
 
 export function getQuestionsByEngine(engineType: EngineType): AnyQuestion[] {
+  if (engineType === 'viewer-race') {
+    return [generateViewerRaceQuestion()];
+  }
   if (engineType === 'squid-game') {
     return [generateSquidQuestion()];
   }
