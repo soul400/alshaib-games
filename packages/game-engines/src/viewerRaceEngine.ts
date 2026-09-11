@@ -239,26 +239,30 @@ export function calculateCameraDirector(
   const secondPlace = racers.find(r => r.rank === 2);
 
   // Leader's pixel position along track width
-  const leaderX = (leader.progress / 100) * trackWidthPixels;
+  const leaderX = Math.min(trackWidthPixels * 0.97, (leader.progress / 100) * (trackWidthPixels * 0.94) + 60);
 
   if (mode === 'wide_track') {
     return { cameraX: 0, zoom: 0.85, targetRacer: leader };
   }
 
-  // Camera targets 35% into the screen so lead space is visible ahead
-  const desiredX = leaderX - viewportWidth * 0.35;
-  const clampedDesiredX = Math.max(0, Math.min(trackWidthPixels - viewportWidth, desiredX));
+  // Camera targets so leader is at ~45% into the screen, keeping both the leader and the finish line in view
+  const desiredX = leaderX - viewportWidth * 0.45;
+  // Allow camera to pan past finish line so the winner crossing the tape is clearly visible
+  const maxCameraX = Math.max(0, trackWidthPixels * 0.98 - viewportWidth * 0.85);
+  const clampedDesiredX = Math.max(0, Math.min(maxCameraX, desiredX));
 
-  // Lerp smoothing (linear interpolation)
-  const cameraX = currentCameraX + (clampedDesiredX - currentCameraX) * 0.08;
+  // Lerp smoothing (linear interpolation) - fast and responsive
+  const cameraX = currentCameraX + (clampedDesiredX - currentCameraX) * 0.1;
 
-  // Zoom logic:
-  // Final stretch (progress > 85%) zooms in dynamically on the duel!
+  // Dynamic zoom:
+  // Final stretch (progress > 85%) zooms in dynamically on the finish line duel
   let zoom = 1.0;
-  if (leader.progress > 85) {
-    zoom = 1.18; // Close-up photo-finish tension
+  if (leader.progress >= 95) {
+    zoom = 1.15; // Photo-finish winner focus
+  } else if (leader.progress > 75) {
+    zoom = 1.08; // Final stretch tension
   } else if (secondPlace && Math.abs(leader.distanceMeters - secondPlace.distanceMeters) < 10) {
-    zoom = 1.08; // Neck and neck battle
+    zoom = 1.05; // Neck and neck battle
   }
 
   return { cameraX, zoom, targetRacer: leader };

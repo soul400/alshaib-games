@@ -214,16 +214,16 @@ export function AlphabetEngineView({ question, isAnswerRevealed }: Props) {
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
       {/* Right Board Panel: Honeycomb Hexagon Grid */}
-      <div className="lg:col-span-7 flex flex-col items-center justify-between p-4 sm:p-5 rounded-3xl glass-arena-card border-4 border-cyan-400 relative overflow-hidden shadow-[0_0_50px_rgba(0,240,255,0.4)] w-full">
+      <div className="lg:col-span-7 flex flex-col items-center justify-between p-5 sm:p-6 rounded-3xl glass-broadcast-panel border-2 border-cyan-400/60 relative overflow-hidden shadow-[0_0_50px_rgba(0,240,255,0.35)] rim-glow-cyan w-full">
         {/* Board Header */}
-        <div className="w-full flex items-center justify-between border-b border-white/10 pb-2 mb-2">
-          <h2 className="text-xl sm:text-2xl font-black text-cyan-300 tracking-wider neon-cyan-text flex items-center gap-2">
+        <div className="w-full flex items-center justify-between border-b border-white/10 pb-3 mb-2">
+          <h2 className="text-xl sm:text-2xl font-black text-cyan-300 tracking-wider flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
             <span>خلية حروف وألوف 🔤</span>
           </h2>
           <button
             onClick={handleResetEntireGrid}
-            className="px-3 py-1 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-400/30 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-3.5 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-400/30 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
             title="تصفير النقاط والشبكة والأسئلة"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -328,7 +328,7 @@ export function AlphabetEngineView({ question, isAnswerRevealed }: Props) {
       </div>
 
       {/* Left Panel: Question Display & Team Claim Controls */}
-      <div className="lg:col-span-5 flex flex-col justify-between gap-3 p-4 sm:p-5 rounded-3xl glass-arena-glow border-2 border-cyan-400/50 shadow-[0_0_40px_rgba(0,102,255,0.35)] w-full">
+      <div className="lg:col-span-5 flex flex-col justify-between gap-3 p-5 sm:p-6 rounded-3xl glass-broadcast-panel border-2 border-cyan-400/40 shadow-[0_0_40px_rgba(0,102,255,0.25)] w-full">
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-white/10 pb-2">
             <span className="text-xs font-black text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">

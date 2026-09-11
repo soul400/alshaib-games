@@ -654,7 +654,10 @@ export function MusicalChairsView({ question }: Props) {
   }
 
   return (
-    <div className="w-full max-w-7xl min-h-[88vh] flex flex-col items-center justify-between p-3 sm:p-6 text-white dir-rtl relative overflow-hidden rounded-3xl bg-[#090B17] border border-[#1E2240] shadow-[0_30px_100px_rgba(0,0,0,0.95)]">
+    <div className="w-full max-w-7xl min-h-[88vh] flex flex-col items-center justify-between p-4 sm:p-7 text-white dir-rtl relative overflow-hidden rounded-3xl glass-broadcast-panel border border-[#1E2240] shadow-[0_30px_100px_rgba(0,0,0,0.95)]">
+      {/* Ambient Sovereign Lights */}
+      <div className="absolute -top-32 left-1/3 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 right-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
       
       {/* Top Header Command Bar */}
       <div className="w-full flex items-center justify-between border-b border-white/10 pb-3 z-20 flex-wrap gap-2">

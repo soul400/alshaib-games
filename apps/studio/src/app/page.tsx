@@ -368,19 +368,19 @@ export default function CategorizedGamesCommandCenter() {
             return (
               <div
                 key={game.id}
-                className="group relative rounded-3xl bg-[#0F1117] border border-[#232736] hover:border-[#D6A84F]/60 transition-all duration-300 flex flex-col overflow-hidden shadow-xl hover:-translate-y-1.5"
+                className="group relative rounded-3xl glass-broadcast-panel border border-white/10 hover:border-[#D6A84F]/70 transition-all duration-300 flex flex-col overflow-hidden shadow-xl hover:-translate-y-1.5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.8)]"
               >
                 {/* Poster Artwork */}
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-black">
                   <img
                     src={game.image}
                     alt={game.title}
-                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-60"
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-65 group-hover:opacity-85"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#08090C] via-black/20 to-transparent" />
                   
                   <div className="absolute top-3 right-3">
-                    <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-mono font-black border ${game.badgeColor}`}>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-mono font-black border backdrop-blur-md ${game.badgeColor}`}>
                       {game.badge}
                     </span>
                   </div>
@@ -388,9 +388,9 @@ export default function CategorizedGamesCommandCenter() {
 
                 {/* Card Content */}
                 <div className="p-4 flex flex-col justify-between flex-1 gap-3">
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <span className="text-[9px] font-mono text-slate-400 font-bold uppercase block">{game.title}</span>
-                    <h3 className="font-display font-black text-sm text-white group-hover:text-[#D6A84F] transition-colors leading-snug">
+                    <h3 className="font-display font-black text-sm text-white group-hover:text-[#D6A84F] transition-colors leading-snug drop-shadow-sm">
                       {game.arabicTitle}
                     </h3>
                     <p className="text-[11px] text-slate-400 leading-relaxed line-clamp-2">
@@ -400,7 +400,7 @@ export default function CategorizedGamesCommandCenter() {
 
                   <Link
                     href={`/play?engine=${game.id}`}
-                    className="w-full py-2.5 rounded-xl bg-[#161922] hover:bg-[#D6A84F] text-white hover:text-[#08090C] border border-[#282E40] hover:border-[#D6A84F] font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow"
+                    className="w-full py-2.5 rounded-xl bg-white/5 hover:bg-gradient-to-r hover:from-[#D6A84F] hover:to-[#E5BE6C] text-white hover:text-slate-950 border border-white/10 hover:border-[#D6A84F] font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95"
                   >
                     <Play className="w-3.5 h-3.5 fill-current" />
                     <span>ابدأ اللعبة فوراً</span>
@@ -438,27 +438,27 @@ export default function CategorizedGamesCommandCenter() {
           {culturalGames.map((game) => (
             <div
               key={game.id}
-              className="group relative rounded-3xl bg-[#0F1117] border border-[#232736] hover:border-[#D6A84F]/60 transition-all duration-300 flex flex-col overflow-hidden shadow-xl hover:-translate-y-1.5"
+              className="group relative rounded-3xl glass-broadcast-panel border border-white/10 hover:border-[#D6A84F]/70 transition-all duration-300 flex flex-col overflow-hidden shadow-xl hover:-translate-y-1.5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.8)]"
             >
               <div className="relative aspect-[16/9] w-full overflow-hidden bg-black">
                 <img
                   src={game.image}
                   alt={game.title}
-                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-65"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-70 group-hover:opacity-90"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F1117] via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#08090C] via-black/30 to-transparent" />
                 
                 <div className="absolute top-3 right-3">
-                  <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-mono font-black border ${game.badgeColor}`}>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-mono font-black border backdrop-blur-md ${game.badgeColor}`}>
                     {game.badge}
                   </span>
                 </div>
               </div>
 
-              <div className="p-5 flex flex-col justify-between flex-1 gap-3">
-                <div className="space-y-1">
+              <div className="p-5 flex flex-col justify-between flex-1 gap-3.5">
+                <div className="space-y-1.5">
                   <span className="text-[10px] font-mono text-slate-400 font-bold uppercase block">{game.title}</span>
-                  <h3 className="font-display font-black text-base text-white group-hover:text-[#D6A84F] transition-colors leading-snug">
+                  <h3 className="font-display font-black text-base text-white group-hover:text-[#D6A84F] transition-colors leading-snug drop-shadow-sm">
                     {game.arabicTitle}
                   </h3>
                   <p className="text-xs text-slate-400 leading-relaxed">
@@ -468,7 +468,7 @@ export default function CategorizedGamesCommandCenter() {
 
                 <Link
                   href={`/play?engine=${game.id}`}
-                  className="w-full py-3 rounded-xl bg-[#161922] hover:bg-[#D6A84F] text-white hover:text-[#08090C] border border-[#282E40] hover:border-[#D6A84F] font-black text-xs flex items-center justify-center gap-2 transition-all shadow"
+                  className="w-full py-3 rounded-xl bg-white/5 hover:bg-gradient-to-r hover:from-[#D6A84F] hover:to-[#E5BE6C] text-white hover:text-slate-950 border border-white/10 hover:border-[#D6A84F] font-black text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
                 >
                   <Play className="w-3.5 h-3.5 fill-current" />
                   <span>بدء المسابقة الثقافية</span>

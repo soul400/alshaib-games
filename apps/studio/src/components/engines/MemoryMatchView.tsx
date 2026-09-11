@@ -378,8 +378,8 @@ export function MemoryMatchView({ onGameEnd }: Props) {
     <div className="w-full h-full min-h-screen bg-[#070913] text-white flex flex-col justify-between select-none relative overflow-hidden font-sans">
       
       {/* ── BACKGROUND LIGHTING AMBIENCE ── */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/15 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-600/15 blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#D6A84F]/10 blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-600/15 blur-[130px] pointer-events-none" />
 
       {/* ══════════════════════════════════════════════════════════
           1. BROADCAST TOP HUD (9:16 SAFE BAR)
@@ -566,7 +566,7 @@ export function MemoryMatchView({ onGameEnd }: Props) {
             )}
 
             {/* 4x4 Grid Container */}
-            <div className="grid grid-cols-4 gap-2.5 sm:gap-3.5 w-full max-w-2xl aspect-square p-2.5 rounded-3xl bg-[#08090C] border border-[#232736] shadow-2xl">
+            <div className="grid grid-cols-4 gap-3 sm:gap-4 w-full max-w-2xl aspect-square p-3.5 rounded-3xl glass-broadcast-panel border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.85)]">
               {cards.map((card) => {
                 const isTempRevealed = tempRevealedPos.includes(card.position);
                 const isMissed = missedPair?.posA === card.position || missedPair?.posB === card.position;
@@ -587,11 +587,11 @@ export function MemoryMatchView({ onGameEnd }: Props) {
                       {/* ── CARD BACK (HIDDEN STATE: SHOWS LARGE BOLD NUMBER) ── */}
                       <div className={`absolute inset-0 w-full h-full rounded-2xl sm:rounded-3xl [backface-visibility:hidden] flex flex-col items-center justify-center p-2 border-2 transition-all duration-200 ${
                         isSelectedByHost
-                          ? 'bg-amber-500/30 border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.8)] scale-105'
-                          : 'bg-gradient-to-br from-slate-900 via-[#131627] to-[#0A0D18] border-white/15 hover:border-amber-400/60 shadow-lg'
+                          ? 'glass-broadcast-panel-gold border-[#D6A84F] rim-glow-gold scale-105'
+                          : 'bg-gradient-to-br from-[#121520] via-[#161B2A] to-[#0D1018] border-white/15 hover:border-[#D6A84F]/70 shadow-lg'
                       }`}>
                         {/* Number in Center */}
-                        <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-white/[0.06] border border-white/15 flex items-center justify-center shadow-inner">
+                        <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl bg-white/[0.06] border border-white/15 flex items-center justify-center shadow-inner">
                           <span className="text-xl sm:text-3xl font-black font-mono text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 via-amber-300 to-amber-500 drop-shadow">
                             {String(card.position).padStart(2, '0')}
                           </span>

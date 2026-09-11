@@ -388,9 +388,15 @@ export function ViewerRaceView({ question: propQuestion }: Props) {
       ctx.translate(-cam.cameraX, 0);
 
       // 1. Draw Turf / Dirt Track Background
-      const laneHeight = 56;
-      const trackTop = 70;
-      const activeTrackHeight = Math.max(TRACK_HEIGHT - 120, racers.length * laneHeight + 40);
+      // Rule: If racers <= 10, give each racer a dedicated spacious individual lane
+      const totalLanes = Math.max(racers.length, 6);
+      const isCompactLanes = racers.length > 10;
+      const laneHeight = isCompactLanes 
+        ? Math.max(34, Math.min(50, Math.floor((viewportH - 120) / totalLanes)))
+        : Math.min(68, Math.floor((viewportH - 110) / Math.max(totalLanes, 8)));
+
+      const trackTop = Math.max(30, Math.floor((viewportH - totalLanes * laneHeight) / 2));
+      const activeTrackHeight = totalLanes * laneHeight;
 
       // Grass gradient top/bottom borders
       const bgGrad = ctx.createLinearGradient(0, 0, 0, viewportH);

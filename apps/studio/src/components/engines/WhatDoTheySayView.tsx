@@ -252,16 +252,16 @@ export function WhatDoTheySayView({ question }: Props) {
   const column2 = answers.slice(5, 10);
 
   return (
-    <div className="w-full max-w-6xl flex flex-col items-center justify-between p-4 sm:p-6 text-white dir-rtl relative overflow-hidden rounded-3xl bg-[#08090C] border border-[#232736] shadow-[0_30px_90px_rgba(0,0,0,0.95)]">
+    <div className="w-full max-w-6xl flex flex-col items-center justify-between p-5 sm:p-7 text-white dir-rtl relative overflow-hidden rounded-3xl glass-broadcast-panel border border-[#232736] shadow-[0_30px_90px_rgba(0,0,0,0.95)]">
       
       {/* 🌟 2026 AMBIENT SOVEREIGN GOLD LIGHTING */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#D6A84F]/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-[#D6A84F]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#D6A84F]/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-[#D6A84F]/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* 🔴 HEADER BAR: Title, Total 200 PTS, Mode Toggle */}
-      <div className="w-full flex flex-col sm:flex-row items-center justify-between border-b border-[#232736] pb-4 gap-4 z-10">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#D6A84F] via-[#E8C77B] to-[#B38734] flex items-center justify-center text-2xl shadow-[0_0_30px_rgba(214,168,79,0.4)] text-slate-950 font-black">
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between border-b border-white/10 pb-4 gap-4 z-10">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#D6A84F] via-[#E8C77B] to-[#B38734] flex items-center justify-center text-2xl shadow-[0_0_35px_rgba(214,168,79,0.5)] text-slate-950 font-black">
             🧠
           </div>
           <div>
@@ -369,23 +369,23 @@ export function WhatDoTheySayView({ question }: Props) {
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 my-2 z-10">
         
         {/* Column 1 (01 to 05) */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3.5">
           {column1.map((ans) => (
             <div
               key={ans.rank}
-              className={`w-full p-3.5 sm:p-4 rounded-2xl border transition-all duration-500 relative overflow-hidden flex items-center justify-between group ${
+              className={`w-full p-4 sm:p-4.5 rounded-2xl border transition-all duration-500 relative overflow-hidden flex items-center justify-between group ${
                 ans.isRevealed
-                  ? 'bg-gradient-to-r from-[#161922] via-[#1A1E2C] to-[#161922] border-[#D6A84F] shadow-[0_8px_30px_rgba(214,168,79,0.25)] animate-in zoom-in-95'
-                  : 'bg-[#0F1117] border-[#232736] hover:border-[#D6A84F]/50 hover:bg-[#161922]'
+                  ? 'glass-broadcast-panel-gold border-[#D6A84F] shadow-[0_10px_35px_rgba(214,168,79,0.3)] animate-in zoom-in-95 spotlight-sweep'
+                  : 'bg-[#0F1117]/90 border-white/10 hover:border-[#D6A84F]/50 hover:bg-[#161922] shadow-md'
               }`}
             >
               {/* Left Side: Rank Badge + Answer / Mystery Bar */}
-              <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="flex items-center gap-3.5 flex-1 min-w-0">
                 {/* Rank Badge Number */}
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm font-mono shrink-0 shadow-inner ${
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-black text-base font-mono shrink-0 shadow-inner ${
                   ans.isRevealed
-                    ? 'bg-gradient-to-br from-[#D6A84F] to-[#B38734] text-slate-950 font-black border border-[#FFE8A3]'
-                    : 'bg-[#161922] text-slate-400 border border-[#232736]'
+                    ? 'bg-gradient-to-br from-[#D6A84F] to-[#B38734] text-slate-950 font-black border border-[#FFE8A3] shadow-[0_0_15px_rgba(214,168,79,0.5)]'
+                    : 'bg-[#161922] text-slate-400 border border-white/10'
                 }`}>
                   {String(ans.rank).padStart(2, '0')}
                 </div>
@@ -393,18 +393,18 @@ export function WhatDoTheySayView({ question }: Props) {
                 {ans.isRevealed ? (
                   <div className="flex flex-col min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-xl">{ans.emoji || '✨'}</span>
-                      <span className="text-base sm:text-lg font-black text-white truncate">
+                      <span className="text-2xl">{ans.emoji || '✨'}</span>
+                      <span className="text-base sm:text-lg font-black text-white truncate drop-shadow">
                         {ans.title}
                       </span>
                     </div>
 
                     {ans.revealedBy && (
-                      <div className="flex items-center gap-1.5 mt-0.5">
+                      <div className="flex items-center gap-1.5 mt-1">
                         <img
                           src={ans.revealedBy.avatarUrl}
                           alt={ans.revealedBy.displayName}
-                          className="w-4 h-4 rounded-full object-cover border border-[#D6A84F]"
+                          className="w-4.5 h-4.5 rounded-full object-cover border border-[#D6A84F]"
                         />
                         <span className="text-[11px] font-bold text-[#D6A84F] truncate">
                           {ans.revealedBy.displayName}
@@ -414,7 +414,7 @@ export function WhatDoTheySayView({ question }: Props) {
                   </div>
                 ) : (
                   <div className="flex items-center gap-2 flex-1">
-                    <div className="h-4 w-3/4 rounded-md bg-[#161922] animate-pulse border border-[#232736]" />
+                    <div className="h-4 w-3/4 rounded-md bg-[#161922] animate-pulse border border-white/5" />
                   </div>
                 )}
               </div>
@@ -422,7 +422,7 @@ export function WhatDoTheySayView({ question }: Props) {
               {/* Right Side: Points Badge / Host Reveal */}
               <div className="flex items-center gap-2 shrink-0">
                 {ans.isRevealed ? (
-                  <div className="px-3.5 py-1.5 rounded-xl bg-[#D6A84F]/20 border border-[#D6A84F]/50 text-[#D6A84F] font-mono font-black text-sm shadow-md">
+                  <div className="px-4 py-1.5 rounded-xl bg-[#D6A84F]/25 border border-[#D6A84F]/60 text-[#D6A84F] font-mono font-black text-sm shadow-[0_0_15px_rgba(214,168,79,0.3)]">
                     +{ans.points}
                   </div>
                 ) : (
@@ -440,23 +440,23 @@ export function WhatDoTheySayView({ question }: Props) {
         </div>
 
         {/* Column 2 (06 to 10) */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3.5">
           {column2.map((ans) => (
             <div
               key={ans.rank}
-              className={`w-full p-3.5 sm:p-4 rounded-2xl border transition-all duration-500 relative overflow-hidden flex items-center justify-between group ${
+              className={`w-full p-4 sm:p-4.5 rounded-2xl border transition-all duration-500 relative overflow-hidden flex items-center justify-between group ${
                 ans.isRevealed
-                  ? 'bg-gradient-to-r from-[#161922] via-[#1A1E2C] to-[#161922] border-[#D6A84F] shadow-[0_8px_30px_rgba(214,168,79,0.25)] animate-in zoom-in-95'
-                  : 'bg-[#0F1117] border-[#232736] hover:border-[#D6A84F]/50 hover:bg-[#161922]'
+                  ? 'glass-broadcast-panel-gold border-[#D6A84F] shadow-[0_10px_35px_rgba(214,168,79,0.3)] animate-in zoom-in-95 spotlight-sweep'
+                  : 'bg-[#0F1117]/90 border-white/10 hover:border-[#D6A84F]/50 hover:bg-[#161922] shadow-md'
               }`}
             >
               {/* Left Side: Rank Badge + Answer / Mystery Bar */}
-              <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="flex items-center gap-3.5 flex-1 min-w-0">
                 {/* Rank Badge Number */}
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm font-mono shrink-0 shadow-inner ${
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-black text-base font-mono shrink-0 shadow-inner ${
                   ans.isRevealed
-                    ? 'bg-gradient-to-br from-[#D6A84F] to-[#B38734] text-slate-950 font-black border border-[#FFE8A3]'
-                    : 'bg-[#161922] text-slate-400 border border-[#232736]'
+                    ? 'bg-gradient-to-br from-[#D6A84F] to-[#B38734] text-slate-950 font-black border border-[#FFE8A3] shadow-[0_0_15px_rgba(214,168,79,0.5)]'
+                    : 'bg-[#161922] text-slate-400 border border-white/10'
                 }`}>
                   {String(ans.rank).padStart(2, '0')}
                 </div>
@@ -464,18 +464,18 @@ export function WhatDoTheySayView({ question }: Props) {
                 {ans.isRevealed ? (
                   <div className="flex flex-col min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-xl">{ans.emoji || '✨'}</span>
-                      <span className="text-base sm:text-lg font-black text-white truncate">
+                      <span className="text-2xl">{ans.emoji || '✨'}</span>
+                      <span className="text-base sm:text-lg font-black text-white truncate drop-shadow">
                         {ans.title}
                       </span>
                     </div>
 
                     {ans.revealedBy && (
-                      <div className="flex items-center gap-1.5 mt-0.5">
+                      <div className="flex items-center gap-1.5 mt-1">
                         <img
                           src={ans.revealedBy.avatarUrl}
                           alt={ans.revealedBy.displayName}
-                          className="w-4 h-4 rounded-full object-cover border border-[#D6A84F]"
+                          className="w-4.5 h-4.5 rounded-full object-cover border border-[#D6A84F]"
                         />
                         <span className="text-[11px] font-bold text-[#D6A84F] truncate">
                           {ans.revealedBy.displayName}
