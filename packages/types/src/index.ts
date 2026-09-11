@@ -1132,6 +1132,8 @@ export interface ViewerRacer {
   speed: number;          // current instant speed (pixels/meters per sec)
   baseSpeed: number;      // regular cruising speed
   boostTimer: number;     // seconds of active boost remaining
+  boostUsed?: boolean;    // true if already used their one-time "اسرع" boost in this race
+  likesCount?: number;    // real-time tap/like count contributed by this racer
   stumbleTimer: number;   // seconds of stumble/obstacle remaining
   rank: number;           // current 1-based rank in race
   finishTime?: number;    // timestamp of crossing finish line
@@ -1143,7 +1145,8 @@ export interface ViewerRacer {
 
 export interface ViewerRaceConfig {
   trackLengthMeters: number;       // e.g. 500 or 1000 meters
-  lobbyDurationSeconds: number;    // e.g. 15 or 20 seconds
+  lobbyDurationSeconds: number;    // e.g. 15 or 20 seconds (or 0 for manual start)
+  manualStart?: boolean;           // true if host manually presses start
   countdownDurationSeconds: number;// e.g. 3 or 5 seconds
   maxRacers: number;               // maximum racers per round (default 24 or 32)
   chatBoostEnabled: boolean;       // allow viewers to speed up by cheering

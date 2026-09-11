@@ -151,18 +151,26 @@ export function ViewerRaceView({ question: propQuestion }: Props) {
         }
       }
 
-      // Check Chat Turbo Cheer during Race
+      // Check Chat Turbo Cheer during Race ("اسرع" / "سبرنت" / etc.)
+      // Rule: Exactly ONCE per racer per race, gives +45% boost for a short distance (~1.6s)
       if (phaseRef.current === 'RACING' || phaseRef.current === 'FINAL_STRETCH') {
         if (config.chatBoostEnabled && isRaceBoostComment(comment.comment)) {
           const userKey = (comment.userId || comment.username || '').toLowerCase().trim();
-          // Boost matching racer if active
+          
           setRacers(prev => prev.map(racer => {
-            if (racer.userId === userKey || racer.username.toLowerCase() === userKey) {
-              addRaceEvent(`⚡ شعللها ${racer.displayName} بتشجيع الشات!`, '🔥');
-              playSound('race_turbo', 0.6);
+            const isMatch = racer.userId === userKey || racer.username.toLowerCase() === userKey;
+            if (isMatch) {
+              if (racer.boostUsed) {
+                // Already used their one-time boost for this race!
+                return racer;
+              }
+
+              addRaceEvent(`⚡ سبرنت ناري! استخدم ${racer.displayName} دفعة السرعة (+45%)!`, '🔥');
+              playSound('race_turbo', 0.8);
               return {
                 ...racer,
-                boostTimer: Math.max(racer.boostTimer, 2.5),
+                boostTimer: 1.6, // Short distance surge (~25-30m at 45% speed)
+                boostUsed: true,  // Mark as used once
                 cheerCount: racer.cheerCount + 1
               };
             }
@@ -222,6 +230,11 @@ export function ViewerRaceView({ question: propQuestion }: Props) {
 
   // 6. TIMER TICK (Lobby, Countdown, Cooldown)
   useEffect(() => {
+    // If in LOBBY and manualStart is active, do NOT tick or auto-start
+    if (phase === 'LOBBY' && (config.manualStart || config.lobbyDurationSeconds <= 0)) {
+      return;
+    }
+
     if (phase !== 'LOBBY' && phase !== 'COUNTDOWN' && phase !== 'COOLDOWN') return;
 
     const timer = setInterval(() => {
@@ -262,7 +275,7 @@ export function ViewerRaceView({ question: propQuestion }: Props) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [phase, racers.length, startCountdown, addDemoRacers, playSound, addRaceEvent, resetRace, config.lobbyDurationSeconds]);
+  }, [phase, racers.length, startCountdown, addDemoRacers, playSound, addRaceEvent, resetRace, config.lobbyDurationSeconds, config.manualStart]);
 
   // 7. 60 FPS CANVAS GAME LOOP & PHYSICS
   useEffect(() => {
@@ -554,12 +567,12 @@ export function ViewerRaceView({ question: propQuestion }: Props) {
         ctx.textAlign = 'center';
         ctx.fillText(`${racer.rank}`, 14, avatarY - 4);
 
-        // Player Nameplate
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-        ctx.roundRect(-42, 18, 84, 16, 5);
+        // Player Nameplate & Likes/Taps Badge
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+        ctx.roundRect(-46, 18, 92, 17, 5);
         ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = racer.boostTimer > 0 ? '#F59E0B' : 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = racer.boostTimer > 0 ? 2 : 1;
         ctx.stroke();
 
         ctx.fillStyle = '#FFFFFF';
@@ -567,6 +580,18 @@ export function ViewerRaceView({ question: propQuestion }: Props) {
         ctx.textAlign = 'center';
         const truncatedName = racer.displayName.length > 10 ? racer.displayName.substring(0, 9) + '..' : racer.displayName;
         ctx.fillText(truncatedName, 0, 30);
+
+        // Boost Status Icon (🔥 for active, ⚡ ready if not used, empty if already used)
+        if (racer.boostTimer > 0) {
+          ctx.fillStyle = '#FF4500';
+          ctx.font = 'bold 12px sans-serif';
+          ctx.fillText('🔥+45%', 0, -42);
+        } else if (!racer.boostUsed) {
+          // Available
+          ctx.fillStyle = '#F59E0B';
+          ctx.font = 'bold 9px sans-serif';
+          ctx.fillText('⚡اسرع', 0, -42);
+        }
 
         ctx.restore();
       });
@@ -621,9 +646,20 @@ export function ViewerRaceView({ question: propQuestion }: Props) {
 
         {/* Right Host Actions */}
         <div className="flex items-center gap-2">
+          {phase === 'LOBBY' && (
+            <button
+              onClick={startCountdown}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md transition-all cursor-pointer"
+              title="بدء السباق فوراً"
+            >
+              <Play className="w-3.5 h-3.5 fill-current" />
+              <span>ابدأ السباق 🏁</span>
+            </button>
+          )}
+
           <button
             onClick={() => setIsMuted(!isMuted)}
-            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors"
+            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors cursor-pointer"
             title={isMuted ? 'تشغيل الصوت' : 'كتم الصوت'}
           >
             {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
@@ -631,7 +667,7 @@ export function ViewerRaceView({ question: propQuestion }: Props) {
 
           <button
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors"
+            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors cursor-pointer"
             title="الإعدادات والتحكم"
           >
             <Settings className="w-4 h-4" />
@@ -662,33 +698,41 @@ export function ViewerRaceView({ question: propQuestion }: Props) {
                 اكتب في تعليقات البث: <span className="text-amber-400 font-extrabold text-sm">العب</span> أو <span className="text-amber-400 font-extrabold text-sm">1</span> للنزول بالخيل
               </p>
 
-              {/* Countdown Progress Ring */}
-              <div className="flex items-center justify-center gap-3 my-3">
-                <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-black text-amber-400 font-mono">{timeRemainingSeconds}</span>
-                  <span className="text-[9px] text-slate-400 font-bold">ثانية</span>
+              {/* Registration Status & Instructions */}
+              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 my-3 text-right">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                    <Users className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-white">المتسابقون المسجلون: {racers.length}</p>
+                    <p className="text-[11px] text-amber-300/80 font-bold">التسجيل مفتوح حتى يضغط المذيع على «ابدأ السباق»</p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm font-bold text-white">المتسابقون الجاهزون: {racers.length}</p>
-                  <p className="text-xs text-slate-400">سيبدأ السباق تلقائياً فور انتهاء الوقت</p>
-                </div>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
               </div>
 
-              {/* Quick Host Actions */}
-              <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
+              {/* Instructions banner */}
+              <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 text-[11px] text-slate-300 space-y-1 text-right mb-2 font-medium">
+                <p>⚡ <strong className="text-white">السرعة:</strong> تعتمد طوال السباق على تكبيس وتفاعل كل متسابق في البث.</p>
+                <p>🚀 <strong className="text-amber-400">سبرنت «اسرع»:</strong> يحق لك كتابة <span className="text-white font-bold">«اسرع»</span> مرة واحدة فقط لزيادة السرعة 45% لمسافة قصيرة!</p>
+              </div>
+
+              {/* Quick Host Actions: Big Manual Start Button */}
+              <div className="flex items-center gap-2.5 mt-4 pt-3 border-t border-white/10">
                 <button
                   onClick={() => addDemoRacers(6)}
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
+                  className="py-3 px-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                 >
-                  <UserPlus className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>إضافة متسابقين (+6)</span>
+                  <UserPlus className="w-4 h-4 text-cyan-400" />
+                  <span>متسابقين تجريبيين (+6)</span>
                 </button>
                 <button
                   onClick={startCountdown}
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white text-xs font-black flex items-center justify-center gap-1.5 shadow-lg transition-all"
+                  className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#D6A84F] via-[#F59E0B] to-[#D97706] hover:brightness-110 text-slate-950 text-sm font-black flex items-center justify-center gap-2 shadow-[0_4px_25px_rgba(214,168,79,0.4)] transition-all cursor-pointer scale-100 hover:scale-[1.02] active:scale-95"
                 >
-                  <Play className="w-3.5 h-3.5" />
-                  <span>انطلاق فوري</span>
+                  <Play className="w-4 h-4 fill-current" />
+                  <span>ابدأ السباق الآن 🏁</span>
                 </button>
               </div>
             </div>

@@ -7,7 +7,8 @@ import { convertArabicIndicDigits } from './index';
 
 export const DEFAULT_RACE_CONFIG: ViewerRaceConfig = {
   trackLengthMeters: 600,
-  lobbyDurationSeconds: 15,
+  lobbyDurationSeconds: 0, // Manual start mode by default
+  manualStart: true,
   countdownDurationSeconds: 3,
   maxRacers: 24,
   chatBoostEnabled: true,
@@ -142,22 +143,26 @@ export function updateRacersPhysics(
       return racer; // Already finished
     }
 
-    let currentSpeed = racer.baseSpeed;
+    // Base speed influenced dynamically by racer's tap/like engagement
+    const likes = racer.likesCount || 0;
+    // Every 5 likes gives an extra burst up to +50% speed
+    const tapSpeedMultiplier = 1 + Math.min(0.6, likes * 0.025);
+    let currentSpeed = racer.baseSpeed * tapSpeedMultiplier;
 
-    // 1. Boost Timer handling
+    // 1. One-time Short Distance Boost (+45% speed for ~1.6 seconds, covering short distance)
     let boostTimer = Math.max(0, racer.boostTimer - deltaSeconds);
     if (boostTimer > 0) {
-      currentSpeed *= 1.45; // 45% speed surge
+      currentSpeed *= 1.45; // Exactly 45% speed surge
     }
 
     // 2. Stumble / Obstacle handling
     let stumbleTimer = Math.max(0, racer.stumbleTimer - deltaSeconds);
     if (stumbleTimer > 0) {
-      currentSpeed *= 0.65; // 35% speed drop
+      currentSpeed *= 0.75; // slight stumble
     }
 
-    // 3. Random Mini-Surges & Mini-Brakes (realistic horse galloping dynamics)
-    const naturalNoise = (Math.random() - 0.48) * 3.5;
+    // 3. Realistic natural gallop noise
+    const naturalNoise = (Math.random() - 0.48) * 2.5;
     currentSpeed += naturalNoise;
 
     // 4. Comeback (Rubberbanding) Mechanic for trailing racers
