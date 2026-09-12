@@ -47,9 +47,10 @@ export function HunterRouletteView({ question }: Props) {
   const [reviveCountUsed, setReviveCountUsed] = useState<number>(0);
   const [revivedPlayer, setRevivedPlayer] = useState<HunterRouletteParticipant | null>(null);
 
-  // 🎡 Anti-consecutive shooter selection tracking (max 2 times in a row)
+  // 🎡 Fair Wheel Distribution & Anti-Repetition Tracking
   const lastSelectedShooterIdRef = useRef<string | null>(null);
   const consecutiveShooterCountRef = useRef<number>(0);
+  const shooterPickHistoryRef = useRef<Map<string, number>>(new Map());
 
   const registeredUserIds = useRef<Set<string>>(new Set());
   const shotExecutedThisRound = useRef<boolean>(false);
@@ -160,12 +161,12 @@ export function HunterRouletteView({ question }: Props) {
     soundFX.play('winner_announcement');
     triggerVisualEffect('confetti');
 
-    // 🔓 Check Rare Revive Gate Condition:
-    // Must have eliminated players, aliveCount strictly > 3, and reviveCountUsed < 2 (max 2 per game)
+    // 🔓 Check Ultra-Rare Revive Gate Condition:
+    // Max 1 revive per game, requires >4 players alive, and only 15% chance
     const currentEliminated = participants.filter(p => !p.isAlive);
     const alivePlayers = participants.filter(p => p.isAlive);
-    const canTriggerRevive = currentEliminated.length > 0 && alivePlayers.length > 3 && reviveCountUsed < 2;
-    const willTriggerRevive = canTriggerRevive && Math.random() < 0.35; // ~35% rare chance
+    const canTriggerRevive = currentEliminated.length > 0 && alivePlayers.length > 4 && reviveCountUsed < 1;
+    const willTriggerRevive = canTriggerRevive && Math.random() < 0.15; // 15% ultra-rare chance
 
     setIsReviveGateOpen(willTriggerRevive);
 
@@ -190,25 +191,37 @@ export function HunterRouletteView({ question }: Props) {
 
     if (isSpinning) return;
 
-    // Rule: Prevent selecting the same person more than 2 times in a row
-    let eligibleShooters = alivePlayers;
-    if (alivePlayers.length > 1 && lastSelectedShooterIdRef.current && consecutiveShooterCountRef.current >= 2) {
-      const filtered = alivePlayers.filter(p => p.id !== lastSelectedShooterIdRef.current);
-      if (filtered.length > 0) {
-        eligibleShooters = filtered;
+    // Rule 1: Strictly prevent consecutive repetition (if >1 player alive, never choose the same person back-to-back)
+    let candidates = alivePlayers;
+    if (alivePlayers.length > 1 && lastSelectedShooterIdRef.current) {
+      const withoutLast = alivePlayers.filter(p => p.id !== lastSelectedShooterIdRef.current);
+      if (withoutLast.length > 0) {
+        candidates = withoutLast;
       }
     }
 
-    // Pick random winner from eligible pool
-    const selectedWinner = eligibleShooters[Math.floor(Math.random() * eligibleShooters.length)];
+    // Rule 2: Fair Opportunity Distribution - Prioritize participants who haven't been picked yet
+    // Count picks for each candidate
+    const pickCounts = candidates.map(p => shooterPickHistoryRef.current.get(p.id) || 0);
+    const minPicks = Math.min(...pickCounts);
+    
+    // Weighted selection: players with minimum picks get 4x the chance of players picked frequently
+    const weightedPool: HunterRouletteParticipant[] = [];
+    candidates.forEach(p => {
+      const picks = shooterPickHistoryRef.current.get(p.id) || 0;
+      const weight = picks === minPicks ? 4 : Math.max(1, 4 - (picks - minPicks));
+      for (let w = 0; w < weight; w++) {
+        weightedPool.push(p);
+      }
+    });
 
-    // Track consecutive selection
-    if (lastSelectedShooterIdRef.current === selectedWinner.id) {
-      consecutiveShooterCountRef.current += 1;
-    } else {
-      lastSelectedShooterIdRef.current = selectedWinner.id;
-      consecutiveShooterCountRef.current = 1;
-    }
+    // Pick random winner from the balanced weighted pool
+    const selectedWinner = weightedPool[Math.floor(Math.random() * weightedPool.length)];
+
+    // Update history
+    const currentPicks = shooterPickHistoryRef.current.get(selectedWinner.id) || 0;
+    shooterPickHistoryRef.current.set(selectedWinner.id, currentPicks + 1);
+    lastSelectedShooterIdRef.current = selectedWinner.id;
 
     setSelectedShooterTarget(selectedWinner);
     setIsSpinning(true);
@@ -376,26 +389,26 @@ export function HunterRouletteView({ question }: Props) {
     }
   };
 
-  // 6. Realistic 6-Chamber Weapon Execution
+  // 6. Realistic High-Stakes Weapon Execution
   const executeShotSequence = (target: HunterRouletteParticipant) => {
     setCurrentTarget(target);
     setPhase('HUNTER_SCENE');
 
-    // 🎯 Improved Realistic Gun Logic:
-    // Guarantees a hit within at most 3 shots (impossible to get 6 blanks in a row!)
-    let isLoaded = false;
-    if (consecutiveBlanks >= 2) {
-      isLoaded = true; // Guaranteed live bullet after 2 consecutive blanks
+    // 🎯 High-Stakes Lethal Gun Logic:
+    // Blanks are rare to keep game fast-paced and thrilling:
+    // 1st shot has 82% chance of bullet, and if there was ever a blank, next is 100% bullet (NO consecutive blanks allowed!)
+    let isLoaded = true;
+    if (consecutiveBlanks >= 1) {
+      isLoaded = true; // Guaranteed live bullet immediately after any blank
     } else {
-      // Dynamic escalating probability: 45% on 1st shot, 70% on 2nd shot
-      const bulletChance = 0.45 + (consecutiveBlanks * 0.25);
-      isLoaded = Math.random() < bulletChance;
+      // 82% lethal bullet chance, only 18% rare escape
+      isLoaded = Math.random() < 0.82;
     }
 
     if (isLoaded) {
       setConsecutiveBlanks(0);
     } else {
-      setConsecutiveBlanks(b => b + 1);
+      setConsecutiveBlanks(1);
     }
     setCylinderChamber(c => (c + 1) % 6);
     setIsLoadedShot(isLoaded);
@@ -1212,9 +1225,11 @@ export function HunterRouletteView({ question }: Props) {
               setCurrentTarget(null);
               setIsLoadedShot(null);
               setWheelRotation(0);
-              setIsReviveGateOpen(false);
               setReviveCountUsed(0);
               setRevivedPlayer(null);
+              lastSelectedShooterIdRef.current = null;
+              consecutiveShooterCountRef.current = 0;
+              shooterPickHistoryRef.current.clear();
             }}
             className="px-10 py-4 rounded-2xl gold-cta-button text-white font-black text-sm transition-all hover:scale-105 cursor-pointer mt-4"
           >
