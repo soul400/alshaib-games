@@ -15,6 +15,7 @@ import { SquidGameView } from '../../components/engines/SquidGameView';
 import { ViewerRaceView } from '../../components/engines/ViewerRaceView';
 import { LeaderboardOverlay } from '../../components/studio/LeaderboardOverlay';
 import { WinnerAnnouncementModal } from '../../components/studio/WinnerAnnouncementModal';
+import { GameHUD, HUDPhase } from '../../components/studio/GameHUD';
 import { GAME_ENGINE_SECTIONS } from '@aep/content-library';
 import { EngineType } from '@aep/types';
 import { Play, Pause, Trophy, Zap, Hand, Home, Check, Crown, Medal, Flame, Star, Sparkles } from 'lucide-react';
@@ -288,8 +289,32 @@ function PlayArenaContent() {
 
   const top5 = leaderboard.slice(0, 5);
 
+  // Compute contextual broadcast HUD phase
+  let hudPhase: HUDPhase = 'WAITING';
+  if (controlState.activeOverlay === 'winner' || controlState.currentWinner) {
+    hudPhase = 'WINNER';
+  } else if (!controlState.isPlaying) {
+    hudPhase = 'WAITING';
+  } else if (controlState.timeRemainingSeconds <= 5 && controlState.timeRemainingSeconds > 0) {
+    hudPhase = 'DANGER';
+  } else {
+    hudPhase = 'ACTIVE';
+  }
+
   return (
-    <div className="flex flex-col gap-6 w-full pb-8">
+    <div className="flex flex-col gap-6 w-full max-w-[1600px] mx-auto pb-8 select-none">
+      {/* 👑 UNIVERSAL BROADCAST GAME HUD STRIP */}
+      <GameHUD
+        phase={hudPhase}
+        gameTitle={activeEngineInfo.title}
+        gameCategory={activeEngineInfo.category}
+        roundNumber={1}
+        timeRemainingSeconds={controlState.timeRemainingSeconds}
+        totalTimeSeconds={currentQuestion?.timeLimitSeconds || 30}
+        activePlayersCount={leaderboard.length}
+        liveStatusText={controlState.isPlaying ? '● الجولة المباشرة نشطة' : 'في انتظار بدء الجولة'}
+      />
+
       {/* Top Sovereign Gold Broadcast Command Strip Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 sm:p-5 rounded-3xl glass-broadcast-panel shadow-[0_20px_50px_rgba(0,0,0,0.85)]">
         <div className="flex items-center gap-3">

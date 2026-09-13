@@ -301,42 +301,157 @@ export default function CategorizedGamesCommandCenter() {
       )}
 
       {/* ═══════════════════════════════════════════════════════ */}
-      {/* 1. TOP HERO COMMAND BAR                                 */}
+      {/* 🌟 1. CINEMA BROADCAST SPOTLIGHT HERO (ORBIT/ONYX STYLE) */}
       {/* ═══════════════════════════════════════════════════════ */}
-      <div className="relative w-full rounded-3xl bg-[#0F1117] border border-[#232736] p-7 sm:p-10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden">
-        <div className="flex flex-col gap-2.5 max-w-2xl text-right z-10">
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-[#D6A84F]/10 border border-[#D6A84F]/30 text-[#D6A84F] font-mono text-[10px] font-bold uppercase tracking-wider">
-              AL-SHAIB BROADCAST GAME OS • مكتبة الألعاب الكاملة
-            </span>
-            <span className="px-2.5 py-0.5 rounded-full bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/30 text-[10px] font-mono font-bold">
-              {totalGamesCount} محرك ألعاب جاهز
-            </span>
-          </div>
-
-          <h1 className="font-display font-black text-3xl sm:text-4xl text-white tracking-tight leading-tight">
-            استوديو ومحركات الألعاب التفاعلية
-          </h1>
-
-          <p className="text-sm text-slate-300 font-medium leading-relaxed">
-            اختر لعبتك المفضلة من الأقسام أدناه وأطلق الجولة المباشرة لمتابعيك على TikTok Live في ثوانٍ معدودة.
-          </p>
+      <div className="relative w-full rounded-3xl overflow-hidden border border-white/10 bg-[#0A0C13] shadow-[0_25px_60px_rgba(0,0,0,0.9)]">
+        {/* Background Atmosphere Image with Dynamic Gradient Fades */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1200&q=85"
+            alt="سباق المشاهدين"
+            className="w-full h-full object-cover object-center opacity-30 scale-105 filter blur-[2px] transition-transform duration-1000"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#08090C] via-[#08090C]/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#08090C] via-[#08090C]/90 to-transparent" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-500/15 via-transparent to-transparent pointer-events-none" />
         </div>
 
-        <div className="flex items-center gap-3 z-10 shrink-0">
-          <Link
-            href="/play?engine=memory-match"
-            className="px-6 py-3.5 rounded-2xl gold-cta-button flex items-center gap-2.5 cursor-pointer text-sm shadow-xl"
-          >
-            <Play className="w-4 h-4 fill-current ml-0.5" />
-            <span>تشغيل اللعبة المميزة 🧠</span>
-          </Link>
-          <Link
-            href="/host-desk"
-            className="px-5 py-3.5 rounded-2xl bg-[#161922] hover:bg-[#1C202C] border border-[#282E40] text-white text-sm font-bold flex items-center gap-2 transition-all cursor-pointer"
-          >
-            <span>غرفة التحكم (Host Desk)</span>
-          </Link>
+        {/* Hero Content Container */}
+        <div className="relative z-10 p-6 sm:p-10 lg:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+          <div className="flex flex-col gap-4 max-w-3xl text-right">
+            {/* Ticker Badges */}
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="px-3.5 py-1 rounded-full bg-[#D6A84F]/15 border border-[#D6A84F]/40 text-[#D6A84F] font-mono text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_20px_rgba(214,168,79,0.2)]">
+                <Sparkles className="w-3.5 h-3.5 fill-current" />
+                <span>AL-SHAIB BROADCAST STUDIO OS</span>
+              </span>
+
+              <span className="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[11px] font-mono font-black flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <span>{totalGamesCount} محرك ألعاب تفاعلي متزامن</span>
+              </span>
+
+              {roomStatus?.isOnline ? (
+                <span className="px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[11px] font-mono font-black flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                  <span>بث مباشر نشط الآن</span>
+                </span>
+              ) : (
+                <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-[11px] font-mono font-bold">
+                  وضع الاستعداد (Standby)
+                </span>
+              )}
+            </div>
+
+            {/* Spotlight Title & Story */}
+            <div className="space-y-2">
+              <span className="text-xs font-mono font-bold text-amber-400 tracking-wider block">
+                ⭐ اللعبة المميزة لهذا الأسبوع
+              </span>
+              <h1 className="font-display font-black text-3xl sm:text-5xl text-white tracking-tight leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]">
+                سباق المشاهدين 🏇 (VIEWER RACE)
+              </h1>
+              <p className="text-sm sm:text-base text-slate-300 font-medium leading-relaxed max-w-2xl">
+                سباق خيول جماهيري ملحمي — كل متسابق في مسار مستقل، وكاميرا ذكية تتبع الصدارة حتى خط النهاية مع تسريع 45% بتفاعل التكبيس والشات الفعلي!
+              </p>
+            </div>
+
+            {/* Realtime Live Telemetry Strip */}
+            <div className="flex items-center gap-4 text-xs text-slate-400 pt-1 font-mono">
+              <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1 rounded-xl border border-white/10">
+                <Users className="w-3.5 h-3.5 text-amber-400" />
+                <span>1-10 متسابقين • تفاعل تكبيس حي</span>
+              </span>
+              <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1 rounded-xl border border-white/10">
+                <Clock className="w-3.5 h-3.5 text-cyan-400" />
+                <span>تشغيل فوري بضغطة زر</span>
+              </span>
+            </div>
+
+            {/* Launch CTAs */}
+            <div className="flex items-center gap-3.5 pt-2 flex-wrap">
+              <Link
+                href="/play?engine=viewer-race"
+                className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#D6A84F] via-[#E5BE6C] to-[#B88628] text-slate-950 font-black text-sm sm:text-base flex items-center gap-2.5 shadow-[0_10px_35px_rgba(214,168,79,0.45)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
+              >
+                <Play className="w-5 h-5 fill-current ml-0.5" />
+                <span>إطلاق سباق المشاهدين الآن 🏇</span>
+              </Link>
+
+              <Link
+                href="/host-desk"
+                className="px-6 py-4 rounded-2xl bg-[#161922] hover:bg-[#1E2230] border border-[#2B3245] text-white text-sm font-bold flex items-center gap-2 transition-all cursor-pointer"
+              >
+                <span>غرفة التحكم (Host Desk)</span>
+                <ArrowLeft className="w-4 h-4 text-slate-400" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Quick Highlight Cards (Right Rail) */}
+          <div className="w-full lg:w-80 flex flex-col gap-3 shrink-0">
+            <span className="text-xs font-mono font-bold text-slate-400">⚡ ألعاب سريعة مفضلة للبث:</span>
+            
+            <Link
+              href="/play?engine=squid-game"
+              className="p-3.5 rounded-2xl bg-[#12141F]/90 border border-white/10 hover:border-[#F43F5E]/60 transition-all flex items-center justify-between group hover:bg-[#181B2B]"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center shrink-0 text-rose-400 group-hover:scale-110 transition-transform">
+                  <Skull className="w-5 h-5" />
+                </div>
+                <div className="flex flex-col min-w-0 text-right">
+                  <span className="text-xs font-black text-white truncate group-hover:text-rose-400 transition-colors">
+                    لعبة «الحبار» 🦑
+                  </span>
+                  <span className="text-[10px] text-slate-400 truncate">
+                    بقاء وإقصاء فوري
+                  </span>
+                </div>
+              </div>
+              <Play className="w-4 h-4 text-slate-500 group-hover:text-rose-400 transition-colors shrink-0 mr-2" />
+            </Link>
+
+            <Link
+              href="/play?engine=hunter-roulette"
+              className="p-3.5 rounded-2xl bg-[#12141F]/90 border border-white/10 hover:border-[#059669]/60 transition-all flex items-center justify-between group hover:bg-[#181B2B]"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400 group-hover:scale-110 transition-transform">
+                  <Crosshair className="w-5 h-5" />
+                </div>
+                <div className="flex flex-col min-w-0 text-right">
+                  <span className="text-xs font-black text-white truncate group-hover:text-emerald-400 transition-colors">
+                    روليت الصياد 🎯
+                  </span>
+                  <span className="text-[10px] text-slate-400 truncate">
+                    عجلة الحظ وتحدي الرصاص
+                  </span>
+                </div>
+              </div>
+              <Play className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors shrink-0 mr-2" />
+            </Link>
+
+            <Link
+              href="/play?engine=memory-match"
+              className="p-3.5 rounded-2xl bg-[#12141F]/90 border border-white/10 hover:border-[#8B5CF6]/60 transition-all flex items-center justify-between group hover:bg-[#181B2B]"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0 text-purple-400 group-hover:scale-110 transition-transform">
+                  <Brain className="w-5 h-5" />
+                </div>
+                <div className="flex flex-col min-w-0 text-right">
+                  <span className="text-xs font-black text-white truncate group-hover:text-purple-400 transition-colors">
+                    لعبة الذاكرة 🧠
+                  </span>
+                  <span className="text-[10px] text-slate-400 truncate">
+                    تفاعل فوري من الشات
+                  </span>
+                </div>
+              </div>
+              <Play className="w-4 h-4 text-slate-500 group-hover:text-purple-400 transition-colors shrink-0 mr-2" />
+            </Link>
+          </div>
         </div>
       </div>
 

@@ -43,14 +43,16 @@ export default function ProfessionalHostDeskControlRoom() {
   const isOnline = Boolean(roomStatus?.isOnline);
 
   const gameList: { id: EngineType; title: string; subtitle: string; icon: string; accent: string }[] = [
-    { id: 'capitals', title: 'تحدي عواصم العالم', subtitle: 'دول كبرى وعربية', icon: '🏛️', accent: '#D6A84F' },
-    { id: 'memory-match', title: 'لعبة الذاكرة', subtitle: '16 بطاقة • 8 أزواج', icon: '🧠', accent: '#8B5CF6' },
-    { id: 'bomb-pass', title: 'القنبلة الموقوتة', subtitle: 'مرر قبل الانفجار', icon: '🧨', accent: '#DC2626' },
-    { id: 'hunter-roulette', title: 'روليت الصياد', subtitle: 'عجلة الحظ الدائرية', icon: '🎯', accent: '#059669' },
-    { id: 'mystery-roulette', title: 'الروليت الغامض', subtitle: 'بطاقات أرقام وإقصاء غامض', icon: '🔮', accent: '#D6A84F' },
-    { id: 'musical-chairs', title: 'الكراسي الموسيقية', subtitle: 'بقاء وإقصاء فوري', icon: '🪑', accent: '#2563EB' },
-    { id: 'react', title: 'تخمين الأرقام', subtitle: 'كشف الخانات المخفية', icon: '🔢', accent: '#06B6D4' },
-    { id: 'quiz', title: 'المسابقات الثقافية', subtitle: 'أسئلة وتحديات معلومات', icon: '🎓', accent: '#D6A84F' },
+    { id: 'viewer-race', title: 'سباق المشاهدين 🏇', subtitle: 'سباق خيول وتكبيس حي', icon: '🏇', accent: '#F59E0B' },
+    { id: 'squid-game', title: 'لعبة الحبار 🦑', subtitle: 'بقاء وإقصاء فوري', icon: '🦑', accent: '#F43F5E' },
+    { id: 'capitals', title: 'تحدي عواصم العالم 🏛️', subtitle: 'دول كبرى وعربية', icon: '🏛️', accent: '#D6A84F' },
+    { id: 'memory-match', title: 'لعبة الذاكرة 🧠', subtitle: '16 بطاقة • 8 أزواج', icon: '🧠', accent: '#8B5CF6' },
+    { id: 'bomb-pass', title: 'القنبلة الموقوتة 🧨', subtitle: 'مرر قبل الانفجار', icon: '🧨', accent: '#DC2626' },
+    { id: 'hunter-roulette', title: 'روليت الصياد 🎯', subtitle: 'عجلة الحظ وتحدي الرصاص', icon: '🎯', accent: '#059669' },
+    { id: 'mystery-roulette', title: 'الروليت الغامض 🔮', subtitle: 'بطاقات أرقام وإقصاء غامض', icon: '🔮', accent: '#D6A84F' },
+    { id: 'musical-chairs', title: 'الكراسي الموسيقية 🪑', subtitle: 'بقاء وإقصاء فوري', icon: '🪑', accent: '#2563EB' },
+    { id: 'react', title: 'تخمين الأرقام 🔢', subtitle: 'كشف الخانات المخفية', icon: '🔢', accent: '#06B6D4' },
+    { id: 'quiz', title: 'المسابقات الثقافية 🎓', subtitle: 'أسئلة وتحديات معلومات', icon: '🎓', accent: '#D6A84F' },
   ];
 
   const soundboardEvents: { label: string; type: SoundEffectType; color: string }[] = [
@@ -73,35 +75,43 @@ export default function ProfessionalHostDeskControlRoom() {
       {/* ═══════════════════════════════════════════════════════ */}
       {/* TOP HEADER: MASTER BROADCAST STATUS & CONTROLS         */}
       {/* ═══════════════════════════════════════════════════════ */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-5 rounded-2xl bg-[#0F1117] border border-[#232736] shadow-xl">
-        <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-[#D6A84F]/10 border border-[#D6A84F]/30 text-[#D6A84F] flex items-center justify-center font-black">
-            <Sliders className="w-5 h-5" />
+      <div className="flex flex-wrap items-center justify-between gap-4 p-5 sm:p-6 rounded-3xl glass-broadcast-panel border border-white/10 shadow-2xl">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#D6A84F] to-[#B88628] text-slate-950 flex items-center justify-center font-black shadow-[0_0_25px_rgba(214,168,79,0.35)]">
+            <Sliders className="w-6 h-6 stroke-[2.5]" />
           </div>
           <div>
-            <div className="flex items-center gap-2.5">
-              <h1 className="font-display font-black text-xl text-white">غرفة التحكم التلفزيونية (HOST DESK)</h1>
-              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black flex items-center gap-1.5 ${
+            <div className="flex items-center gap-3">
+              <h1 className="font-display font-black text-xl sm:text-2xl text-white tracking-tight">غرفة التحكم المركزية (MCR HOST DESK)</h1>
+              <span className={`px-3 py-1 rounded-full text-[10px] font-mono font-black flex items-center gap-1.5 backdrop-blur-md ${
                 isOnline 
-                  ? 'bg-[#EF4444]/20 text-[#EF4444] border border-[#EF4444]/40'
+                  ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40 shadow-[0_0_15px_rgba(239,68,68,0.25)]'
                   : 'bg-slate-800 text-slate-400 border border-slate-700'
               }`}>
-                <span className={`w-2 h-2 rounded-full ${isOnline ? 'bg-[#EF4444] animate-ping' : 'bg-slate-500'}`} />
-                <span>{isOnline ? 'ON-AIR DIRECT' : 'STANDBY (OFFLINE)'}</span>
+                <span className={`w-2 h-2 rounded-full ${isOnline ? 'bg-rose-500 animate-ping' : 'bg-slate-500'}`} />
+                <span>{isOnline ? '● ON-AIR BROADCAST' : 'STANDBY (OFFLINE)'}</span>
               </span>
             </div>
-            <p className="text-xs text-slate-400 font-medium">التحكم المركزي بالبث، ترتيب الألعاب، توجيه الأسئلة، ومراقبة تفاعل الشات فوراً</p>
+            <p className="text-xs text-slate-400 font-medium pt-0.5">التحكم المركزي بالبث، ترتيب الألعاب، توجيه الأسئلة، ومراقبة تفاعل الشات فوراً</p>
           </div>
         </div>
 
-        {/* TOP QUICK ACTION: OPEN STANDALONE BROADCAST ARENA */}
+        {/* TOP QUICK ACTIONS */}
         <div className="flex items-center gap-3">
+          <Link
+            href={`/play?engine=${selectedEngine}&overlay=true`}
+            target="_blank"
+            className="px-4 py-2.5 rounded-2xl bg-[#161922] hover:bg-[#202534] border border-[#2B3245] text-slate-200 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-sm"
+          >
+            <span>نافذة البث المفرغة (OBS 16:9) ↗</span>
+          </Link>
           <Link
             href={`/play?engine=${selectedEngine}`}
             target="_blank"
-            className="px-4 py-2 rounded-xl bg-[#161922] hover:bg-[#1F2433] border border-[#282E40] text-white font-bold text-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#D6A84F] to-[#E5BE6C] text-slate-950 font-black text-xs flex items-center gap-2 transition-all cursor-pointer shadow-lg hover:scale-105"
           >
-            <span>فتح شاشة البث (9:16 Arena) ↗</span>
+            <Play className="w-3.5 h-3.5 fill-current" />
+            <span>فتح شاشة العرض (Full Arena) ↗</span>
           </Link>
         </div>
       </div>
