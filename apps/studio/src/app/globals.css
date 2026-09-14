@@ -1,103 +1,269 @@
-@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Readex+Pro:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* 👑 AL-SHAIB SOVEREIGN BROADCAST TOKENS */
-  --bg-obsidian: #08090C;
-  --surface-base: #0F1117;
-  --surface-elevated: #161922;
-  --surface-card: #12141C;
-  --border-subtle: #232736;
-  --border-prominent: #343A4E;
+  /* ══════════════════════════════════════════════════════════════ */
+  /* 1. MASTER COLOR PALETTE (اللوحة الأساسية المعتمدة)            */
+  /* ══════════════════════════════════════════════════════════════ */
   
-  /* Brand & Status Accents (Solid & High Contrast) */
-  --brand-gold: #D6A84F;
-  --brand-gold-hover: #E5BE6C;
-  --live-red: #EF4444;
+  /* الخلفية العامة للموقع — Deep Carbon */
+  --bg-deep-carbon: #0B0E14;
+  
+  /* خلفية الأسطح والبطاقات — Obsidian Slate */
+  --surface-obsidian-slate: #161B26;
+  
+  /* حدود الإطارات والعناصر — Border Steel */
+  --border-steel: #262C3A;
+  
+  /* اللون الرئيسي للأزرار والتفاعل — Hyper Violet */
+  --color-hyper-violet: #8B5CF6;
+  --color-hyper-violet-glow: rgba(139, 92, 246, 0.4);
+  
+  /* اللون الثانوي التكتيكي للعدادات والحالات النشطة — Cyber Cyan */
+  --color-cyber-cyan: #06B6D4;
+  --color-cyber-cyan-glow: rgba(6, 182, 212, 0.4);
+  
+  /* حالة البث المباشر والإجابات الصحيحة — Neon Mint */
+  --color-neon-mint: #10B981;
+  --color-neon-mint-glow: rgba(16, 185, 129, 0.4);
+  
+  /* الحالات الحرجة والتحذير والعد التنازلي الأخير — Vibrant Crimson */
+  --color-vibrant-crimson: #FF2E54;
+  --color-vibrant-crimson-glow: rgba(255, 46, 84, 0.5);
+  
+  /* النصوص الرئيسية — Pure White */
+  --text-pure-white: #F8FAFC;
+  
+  /* النصوص الثانوية والمعلومات التقنية — Muted Gray */
+  --text-muted-gray: #94A3B8;
+  
+  /* Compatible Aliases */
+  --bg-obsidian: #0B0E14;
+  --surface-base: #161B26;
+  --surface-elevated: #1D2333;
+  --surface-card: #161B26;
+  --border-subtle: #262C3A;
+  --border-prominent: #374151;
+  --brand-gold: #06B6D4;
+  --brand-gold-hover: #22D3EE;
+  --live-red: #FF2E54;
   --success-emerald: #10B981;
   --warning-amber: #F59E0B;
-  
-  /* Game Theme Matrix */
-  --game-memory: #8B5CF6;
-  --game-bomb: #DC2626;
-  --game-roulette: #059669;
-  --game-chairs: #2563EB;
-  --game-react: #06B6D4;
 }
 
 html {
   direction: rtl;
-  background-color: var(--bg-obsidian);
+  background-color: #0B0E14;
   color: #F8FAFC;
   scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--bg-obsidian);
+  background-color: #0B0E14;
   color: #F8FAFC;
-  font-family: 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
+  font-family: 'Readex Pro', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
   direction: rtl;
   min-height: 100vh;
   letter-spacing: -0.01em;
 }
 
-h1, h2, h3, .font-display {
-  font-family: 'Alexandria', sans-serif;
+/* ══════════════════════════════════════════════════════════════ */
+/* 2. TYPOGRAPHY SYSTEM: Cairo & Readex Pro                       */
+/* ══════════════════════════════════════════════════════════════ */
+
+h1, h2, h3, h4, h5, h6, .font-display, .font-cairo {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 800;
 }
 
-/* Solid Broadcast Arena Theme */
+.font-readex {
+  font-family: 'Readex Pro', sans-serif;
+}
+
+/* Solid Broadcast Deep Carbon Background */
 .broadcast-obsidian-bg {
-  background-color: #08090C;
-  background-image: radial-gradient(circle at 50% 0%, #151824 0%, #08090C 75%);
+  background-color: #0B0E14;
+  background-image: radial-gradient(circle at 50% 0%, #161B26 0%, #0B0E14 80%);
 }
 
-/* Solid Studio Surface */
+/* Obsidian Slate Surface */
 .studio-surface {
-  background-color: #0F1117;
-  border: 1px solid #232736;
+  background-color: #161B26;
+  border: 1px solid #262C3A;
 }
 
 .studio-surface-elevated {
-  background-color: #161922;
-  border: 1px solid #282E40;
+  background-color: #1E2433;
+  border: 1px solid #2B3345;
 }
 
-/* Warm Gold Broadcast Primary CTA */
+/* ══════════════════════════════════════════════════════════════ */
+/* 3. BUTTONS & INTERACTIVE ACTIONS                               */
+/* ══════════════════════════════════════════════════════════════ */
+
+/* Hyper Violet Primary Action Button */
+.btn-hyper-violet, .purple-cta-button {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+  color: #FFFFFF;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 800;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+}
+
+.btn-hyper-violet:hover, .purple-cta-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #9D74F8 0%, #8B5CF6 100%);
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.65);
+}
+
+/* Cyber Cyan Secondary / Control Action Button */
+.btn-cyber-cyan {
+  background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+  color: #0B0E14;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 800;
+  box-shadow: 0 4px 20px rgba(6, 182, 212, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+}
+
+.btn-cyber-cyan:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #22D3EE 0%, #06B6D4 100%);
+  box-shadow: 0 8px 25px rgba(6, 182, 212, 0.55);
+}
+
+/* Neon Mint Live & Success Button */
+.btn-neon-mint {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #0B0E14;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 800;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+/* Gold CTA fallback mapped to Hyper Violet / Cyan high tech glow */
 .gold-cta-button {
-  background: linear-gradient(135deg, #D6A84F 0%, #B88628 100%);
-  color: #08090C;
-  font-weight: 900;
-  border: 1px solid rgba(214, 168, 79, 0.4);
-  box-shadow: 0 4px 20px rgba(214, 168, 79, 0.25);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+  color: #FFFFFF;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 800;
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  box-shadow: 0 4px 25px rgba(139, 92, 246, 0.4);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gold-cta-button:hover {
-  background: linear-gradient(135deg, #E5BE6C 0%, #C99632 100%);
+  background: linear-gradient(135deg, #9D74F8 0%, #7C3AED 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(214, 168, 79, 0.45);
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.65);
 }
 
-/* Purple Action Button matching "استعراض الجوائز" & "انضم الآن" in Mockup */
-.purple-cta-button {
-  background: linear-gradient(135deg, #7C3AED 0%, #6366F1 100%);
-  color: #FFFFFF;
-  font-weight: 800;
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
-  transition: all 0.25s ease;
-}
-
-.purple-cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.6);
-}
-
-/* Active Nav Item Pill matching Mockup Sidebar */
+/* Active Nav Item Pill */
 .active-nav-pill {
-  background: linear-gradient(90deg, rgba(124, 58, 237, 0.25) 0%, rgba(124, 58, 237, 0.05) 100%);
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0.05) 100%);
   color: #FFFFFF;
-  border-right: 3px solid #7C3AED;
+  border-right: 3px solid #8B5CF6;
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 4. BROADCAST PANELS & CARDS (OBSIDIAN SLATE + BORDER STEEL)    */
+/* ══════════════════════════════════════════════════════════════ */
+
+/* Obsidian Slate Screen Container */
+.glass-broadcast-panel {
+  background: #161B26;
+  border: 1px solid #262C3A;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7);
+}
+
+.glass-broadcast-panel-gold {
+  background: #161B26;
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(6, 182, 212, 0.15);
+}
+
+/* Master Game Card Style */
+.master-game-card {
+  background: #161B26;
+  border: 1px solid #262C3A;
+  border-radius: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.master-game-card:hover {
+  border-color: #8B5CF6;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85), 0 0 30px rgba(139, 92, 246, 0.25);
+  transform: translateY(-4px);
+}
+
+.cultural-gold-card {
+  background: #161B26;
+  border: 1px solid #262C3A;
+  border-radius: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.cultural-gold-card:hover {
+  border-color: #06B6D4;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85), 0 0 30px rgba(6, 182, 212, 0.25);
+  transform: translateY(-4px);
+}
+
+/* TV Game Show Centerpiece Question Banner */
+.tv-show-question-banner {
+  background: #161B26;
+  border: 1.5px solid #262C3A;
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+
+.tv-show-question-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #8B5CF6, #06B6D4, #8B5CF6, transparent);
+  box-shadow: 0 0 15px #8B5CF6;
+}
+
+/* Quiz Option Card */
+.tv-option-card {
+  background: #161B26;
+  border: 1px solid #262C3A;
+  border-radius: 1rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tv-option-card:hover {
+  border-color: #8B5CF6;
+  background: #1E2433;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(139, 92, 246, 0.25);
+}
+
+/* Correct Option: Neon Mint */
+.tv-option-card-correct {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 2px solid #10B981 !important;
+  box-shadow: 0 0 35px rgba(16, 185, 129, 0.4), inset 0 0 15px rgba(16, 185, 129, 0.2) !important;
+  animation: pulse-correct 1.8s infinite;
+}
+
+@keyframes pulse-correct {
+  0%, 100% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.15); }
+  50% { box-shadow: 0 0 45px rgba(16, 185, 129, 0.6), inset 0 0 20px rgba(16, 185, 129, 0.3); }
 }
 
 /* Custom Scrollbar */
@@ -107,22 +273,19 @@ h1, h2, h3, .font-display {
 }
 
 ::-webkit-scrollbar-track {
-  background: #090A15;
+  background: #0B0E14;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1E2038;
+  background: #262C3A;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #7C3AED;
+  background: #8B5CF6;
 }
 
-/* ════════════════════════════════════════ */
-/* Hunter Roulette Game Animations         */
-/* ════════════════════════════════════════ */
-
+/* Animations */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   10% { transform: translateX(-8px); }
@@ -137,464 +300,4 @@ h1, h2, h3, .font-display {
 
 .animate-shake {
   animation: shake 0.6s ease-in-out;
-}
-
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 4s linear infinite;
-}
-
-@keyframes zoom-in-95 {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.animate-in.zoom-in-95 {
-  animation: zoom-in-95 0.5s ease-out forwards;
-}
-
-.animate-in.zoom-in {
-  animation: zoom-in-95 0.4s ease-out forwards;
-}
-
-/* Hunter Roulette Wheel Glow Ring */
-.hunter-wheel-glow {
-  box-shadow:
-    0 0 30px rgba(124, 58, 237, 0.5),
-    0 0 60px rgba(124, 58, 237, 0.2),
-    inset 0 0 20px rgba(245, 158, 11, 0.15);
-}
-
-/* Muzzle Flash Effect */
-@keyframes muzzle-flash {
-  0% { opacity: 1; transform: scale(0.8); }
-  30% { opacity: 1; transform: scale(1.5); }
-  100% { opacity: 0; transform: scale(2); }
-}
-
-.muzzle-flash {
-  animation: muzzle-flash 0.4s ease-out forwards;
-}
-
-/* Gold Winner Card */
-.gold-winner-card {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.08) 100%);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-/* ════════════════════════════════════════ */
-/* VEO 3 Cinematic Hunter Shooting Effects  */
-/* ════════════════════════════════════════ */
-
-@keyframes bullet-flight {
-  0% { transform: translateX(150px) scale(0.5); opacity: 0; }
-  20% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { transform: translateX(-250px) scale(1.4); opacity: 0; }
-}
-
-.animate-bullet-flight {
-  animation: bullet-flight 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-@keyframes recoil {
-  0% { transform: scale(1) rotate(0deg); }
-  15% { transform: scale(1.15) translateX(-20px) rotate(-6deg); }
-  40% { transform: scale(1.08) translateX(-10px) rotate(-2deg); }
-  100% { transform: scale(1) rotate(0deg); }
-}
-
-.animate-recoil {
-  animation: recoil 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-@keyframes click-recoil {
-  0% { transform: scale(1); }
-  30% { transform: scale(1.04) translateX(-4px); }
-  100% { transform: scale(1); }
-}
-
-.animate-click-recoil {
-  animation: click-recoil 0.4s ease-out forwards;
-}
-
-/* ════════════════════════════════════════ */
-/* 🔐 THE VAULT: Cinematic Heist Animations */
-/* ════════════════════════════════════════ */
-
-@keyframes vault-door-swing {
-  0% { transform: perspective(1200px) rotateY(0deg) scale(1); filter: brightness(1); }
-  40% { transform: perspective(1200px) rotateY(-25deg) scale(0.98); filter: brightness(1.2); }
-  100% { transform: perspective(1200px) rotateY(-85deg) scale(0.92) translateX(-80px); filter: brightness(1.6); opacity: 0.15; }
-}
-
-.animate-vault-open {
-  animation: vault-door-swing 3.2s cubic-bezier(0.25, 0.9, 0.3, 1) forwards;
-  transform-origin: left center;
-}
-
-@keyframes gear-clockwise {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.animate-gear-spin {
-  animation: gear-clockwise 8s linear infinite;
-}
-
-@keyframes gear-counter {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
-}
-
-.animate-gear-counter {
-  animation: gear-counter 8s linear infinite;
-}
-
-@keyframes alarm-pulse-red {
-  0%, 100% { background-color: rgba(220, 38, 38, 0.15); box-shadow: inset 0 0 30px rgba(239, 68, 68, 0.3), 0 0 40px rgba(239, 68, 68, 0.4); }
-  50% { background-color: rgba(220, 38, 38, 0.45); box-shadow: inset 0 0 80px rgba(239, 68, 68, 0.7), 0 0 80px rgba(239, 68, 68, 0.8); }
-}
-
-.animate-alarm-red {
-  animation: alarm-pulse-red 0.8s ease-in-out infinite;
-}
-
-@keyframes lock-pop-green {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.25); filter: drop-shadow(0 0 20px #10B981); }
-  100% { transform: scale(1); filter: drop-shadow(0 0 10px #10B981); }
-}
-
-.animate-lock-unlocked {
-  animation: lock-pop-green 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-@keyframes laser-glow-pulse {
-  0%, 100% { text-shadow: 0 0 10px #00F0FF, 0 0 20px #00F0FF, 0 0 40px #0066FF; }
-  50% { text-shadow: 0 0 20px #00F0FF, 0 0 35px #00F0FF, 0 0 60px #00F0FF; }
-}
-
-.laser-pin-text {
-  font-family: 'Courier New', Courier, monospace;
-  animation: laser-glow-pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes gold-rays-burst {
-  0% { opacity: 0; transform: scale(0.6) rotate(0deg); }
-  50% { opacity: 0.9; transform: scale(1.1) rotate(60deg); }
-  100% { opacity: 1; transform: scale(1) rotate(120deg); }
-}
-
-.animate-gold-burst {
-  animation: gold-rays-burst 2.5s ease-out forwards;
-}
-
-.vault-metal-surface {
-  background: radial-gradient(circle at center, #242838 0%, #161824 60%, #0c0d15 100%);
-  border: 4px solid #363c54;
-  box-shadow:
-    inset 0 0 40px rgba(0, 0, 0, 0.8),
-    0 25px 60px rgba(0, 0, 0, 0.9),
-    0 0 0 1px rgba(255, 255, 255, 0.08);
-}
-
-.vault-rim-bolts {
-  box-shadow:
-    inset 0 2px 4px rgba(255, 255, 255, 0.25),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.7),
-    0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* ════════════════════════════════════════ */
-/* 🧨 BOMB PASS Cinematic Effects & Styles  */
-/* ════════════════════════════════════════ */
-
-@keyframes bomb-pulse-idle {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.4)); }
-  50% { transform: scale(1.06); filter: drop-shadow(0 0 30px rgba(239, 68, 68, 0.8)); }
-}
-
-.animate-bomb-pulse {
-  animation: bomb-pulse-idle 1.2s ease-in-out infinite;
-}
-
-@keyframes bomb-danger-shake {
-  0%, 100% { transform: translate(0, 0) scale(1.12); filter: drop-shadow(0 0 40px #EF4444); }
-  20% { transform: translate(-3px, 2px) scale(1.14); }
-  40% { transform: translate(3px, -2px) scale(1.12); }
-  60% { transform: translate(-4px, -1px) scale(1.15); }
-  80% { transform: translate(4px, 1px) scale(1.13); }
-}
-
-.animate-bomb-danger {
-  animation: bomb-danger-shake 0.18s ease-in-out infinite;
-}
-
-@keyframes explosion-screen-shake {
-  0% { transform: translate(0, 0) scale(1); }
-  10% { transform: translate(-12px, -8px) scale(1.03); }
-  25% { transform: translate(14px, 10px) scale(1.02); }
-  40% { transform: translate(-10px, 6px) scale(1.01); }
-  60% { transform: translate(8px, -4px) scale(1.005); }
-  80% { transform: translate(-4px, 2px) scale(1); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-.animate-screen-shake {
-  animation: explosion-screen-shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
-}
-
-@keyframes fuse-spark {
-  0% { opacity: 1; transform: scale(1) rotate(0deg); }
-  50% { opacity: 0.7; transform: scale(1.4) rotate(180deg); }
-  100% { opacity: 1; transform: scale(1) rotate(360deg); }
-}
-
-.animate-fuse-spark {
-  animation: fuse-spark 0.3s linear infinite;
-}
-
-@keyframes bomb-projectile {
-  0% { transform: scale(0.6) translate(-60px, -40px); opacity: 0; }
-  30% { transform: scale(1.2) translate(0, -20px); opacity: 1; }
-  100% { transform: scale(1) translate(0, 0); opacity: 1; }
-}
-
-.animate-bomb-projectile {
-  animation: bomb-projectile 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-.bomb-card-holder-glow {
-  box-shadow: 
-    0 0 35px rgba(239, 68, 68, 0.45),
-    0 0 70px rgba(245, 158, 11, 0.25),
-    inset 0 0 20px rgba(239, 68, 68, 0.2);
-}
-
-.bomb-card-danger-glow {
-  box-shadow: 
-    0 0 50px rgba(239, 68, 68, 0.85),
-    0 0 100px rgba(220, 38, 38, 0.5),
-    inset 0 0 30px rgba(239, 68, 68, 0.4);
-}
-
-@keyframes slideDown {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Floating Up & Down Motion for Donation QR Badge */
-@keyframes floatUpDown {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-.animate-float-up-down {
-  animation: floatUpDown 2.4s ease-in-out infinite;
-}
-
-/* 🦑 SQUID SURVIVAL REALISTIC ARENA & LASER ANIMATIONS */
-@keyframes laserSweep {
-  0% {
-    opacity: 0;
-    transform: scaleX(0.1);
-  }
-  30% {
-    opacity: 1;
-    transform: scaleX(1.1);
-    filter: drop-shadow(0 0 15px #FF0033) drop-shadow(0 0 35px #FF0055);
-  }
-  70% {
-    opacity: 1;
-    transform: scaleX(1);
-    filter: drop-shadow(0 0 25px #FF0033) drop-shadow(0 0 50px #FF0000);
-  }
-  100% {
-    opacity: 0;
-    transform: scaleX(0.8);
-  }
-}
-
-@keyframes profileDisintegrate {
-  0% {
-    transform: scale(1) translateY(0);
-    filter: brightness(1) drop-shadow(0 0 0 transparent);
-  }
-  25% {
-    transform: scale(1.15) translateY(-6px);
-    filter: brightness(2.5) drop-shadow(0 0 25px #EF4444);
-  }
-  50% {
-    transform: scale(0.9) rotate(6deg);
-    filter: brightness(3) contrast(200%) drop-shadow(0 0 40px #DC2626);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(0) translateY(20px) rotate(-15deg);
-    filter: brightness(5) drop-shadow(0 0 60px #991B1B);
-    opacity: 0;
-  }
-}
-
-@keyframes dollHeadTurn {
-  0% {
-    transform: rotateY(180deg);
-  }
-  100% {
-    transform: rotateY(0deg);
-  }
-}
-
-.animate-laser-beam {
-  animation: laserSweep 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-.animate-profile-destroy {
-  animation: profileDisintegrate 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-/* ══════════════════════════════════════════════════════════════ */
-/* 📺 AL-SHAIB BROADCAST STUDIO MASTER DESIGN UTILITIES           */
-/* ══════════════════════════════════════════════════════════════ */
-
-/* Dark frosted glass container for 16:9 TV broadcast screens */
-.glass-broadcast-panel {
-  background: linear-gradient(135deg, rgba(15, 17, 23, 0.85) 0%, rgba(8, 9, 12, 0.95) 100%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.glass-broadcast-panel-gold {
-  background: linear-gradient(135deg, rgba(22, 25, 34, 0.9) 0%, rgba(15, 17, 23, 0.95) 100%);
-  backdrop-filter: blur(24px);
-  border: 1px solid rgba(214, 168, 79, 0.3);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(214, 168, 79, 0.15), inset 0 1px 1px rgba(214, 168, 79, 0.4);
-}
-
-/* Broadcast live ticker text animation */
-@keyframes broadcastPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.92); }
-}
-
-.animate-broadcast-pulse {
-  animation: broadcastPulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* TV Studio Rim Light Glow */
-.rim-glow-gold {
-  box-shadow: 0 0 35px -5px rgba(214, 168, 79, 0.35);
-}
-
-.rim-glow-red {
-  box-shadow: 0 0 35px -5px rgba(239, 68, 68, 0.45);
-}
-
-.rim-glow-cyan {
-  box-shadow: 0 0 35px -5px rgba(6, 182, 212, 0.45);
-}
-
-/* Spotlight Sweep Animation for winners and active cards */
-@keyframes spotlightSweep {
-  0% { transform: translateX(-100%) rotate(25deg); }
-  100% { transform: translateX(200%) rotate(25deg); }
-}
-
-.spotlight-sweep::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.08) 45%,
-    rgba(255, 255, 255, 0.2) 50%,
-    rgba(255, 255, 255, 0.08) 55%,
-    transparent 100%
-  );
-  transform: rotate(25deg);
-  animation: spotlightSweep 3.5s ease-in-out infinite;
-  pointer-events: none;
-}
-
-
-/* ══════════════════════════════════════════════════════════════ */
-/* 🌟 LUXURY TV GAME SHOW & BROADCAST MASTER CARDS               */
-/* ══════════════════════════════════════════════════════════════ */
-
-.tv-show-question-banner {
-  background: linear-gradient(135deg, rgba(18, 20, 32, 0.95) 0%, rgba(10, 11, 18, 0.98) 100%);
-  border: 1.5px solid rgba(214, 168, 79, 0.45);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(214, 168, 79, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  position: relative;
-}
-
-.tv-show-question-banner::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 15%;
-  right: 15%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #D6A84F, #FFE79A, #D6A84F, transparent);
-  box-shadow: 0 0 15px #D6A84F;
-}
-
-.tv-option-card {
-  background: linear-gradient(135deg, rgba(20, 23, 34, 0.85) 0%, rgba(12, 14, 22, 0.92) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.tv-option-card:hover {
-  border-color: rgba(214, 168, 79, 0.5);
-  background: linear-gradient(135deg, rgba(30, 34, 48, 0.9) 0%, rgba(18, 21, 32, 0.95) 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(214, 168, 79, 0.2);
-}
-
-.tv-option-card-correct {
-  background: linear-gradient(135deg, rgba(6, 78, 59, 0.9) 0%, rgba(4, 47, 46, 0.95) 100%) !important;
-  border: 2px solid #10B981 !important;
-  box-shadow: 0 0 40px rgba(16, 185, 129, 0.5), inset 0 0 20px rgba(16, 185, 129, 0.3) !important;
-  animation: pulse-correct 1.8s infinite;
-}
-
-@keyframes pulse-correct {
-  0%, 100% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.4), inset 0 0 15px rgba(16, 185, 129, 0.2); }
-  50% { box-shadow: 0 0 50px rgba(16, 185, 129, 0.7), inset 0 0 25px rgba(16, 185, 129, 0.4); }
-}
-
-.cultural-gold-card {
-  background: linear-gradient(180deg, rgba(20, 24, 34, 0.95) 0%, rgba(10, 12, 18, 0.98) 100%);
-  border: 1px solid rgba(214, 168, 79, 0.25);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.cultural-gold-card:hover {
-  border-color: rgba(214, 168, 79, 0.7);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(214, 168, 79, 0.25);
-  transform: translateY(-4px);
 }

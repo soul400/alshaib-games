@@ -74,7 +74,7 @@ export default function CategorizedGamesCommandCenter() {
       arabicTitle: 'القنبلة الموقوتة 🧨',
       tagline: 'مرر القنبلة عبر الشات قبل الانفجار والإقصاء الفوري',
       badge: 'أكشن وبقاء',
-      badgeColor: 'bg-[#DC2626]/20 text-[#DC2626] border-[#DC2626]/40',
+      badgeColor: 'bg-[#8B5CF6]/20 text-[#8B5CF6] border-[#DC2626]/40',
       accentColor: '#DC2626',
       icon: Bomb,
       image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=85'
@@ -303,7 +303,7 @@ export default function CategorizedGamesCommandCenter() {
       {/* ═══════════════════════════════════════════════════════ */}
       {/* 🌟 1. CINEMA BROADCAST SPOTLIGHT HERO (ORBIT/ONYX STYLE) */}
       {/* ═══════════════════════════════════════════════════════ */}
-      <div className="relative w-full rounded-3xl overflow-hidden border border-white/10 bg-[#0A0C13] shadow-[0_25px_60px_rgba(0,0,0,0.9)]">
+      <div className="relative w-full rounded-3xl overflow-hidden border border-white/10 bg-[#161B26] border border-[#262C3A] shadow-[0_25px_60px_rgba(0,0,0,0.9)]">
         {/* Background Atmosphere Image with Dynamic Gradient Fades */}
         <div className="absolute inset-0 z-0">
           <img
@@ -321,12 +321,12 @@ export default function CategorizedGamesCommandCenter() {
           <div className="flex flex-col gap-4 max-w-3xl text-right">
             {/* Ticker Badges */}
             <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="px-3.5 py-1 rounded-full bg-[#D6A84F]/15 border border-[#D6A84F]/40 text-[#D6A84F] font-mono text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_20px_rgba(214,168,79,0.2)]">
+              <span className="px-3.5 py-1 rounded-full bg-[#8B5CF6]/15 border border-[#8B5CF6]/40 text-[#8B5CF6] font-mono text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_20px_rgba(214,168,79,0.2)]">
                 <Sparkles className="w-3.5 h-3.5 fill-current" />
                 <span>AL-SHAIB BROADCAST STUDIO OS</span>
               </span>
 
-              <span className="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[11px] font-mono font-black flex items-center gap-1.5">
+              <span className="px-3 py-1 rounded-full bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30 text-[11px] font-mono font-black flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
                 <span>{totalGamesCount} محرك ألعاب تفاعلي متزامن</span>
               </span>
@@ -372,7 +372,7 @@ export default function CategorizedGamesCommandCenter() {
             <div className="flex items-center gap-3.5 pt-2 flex-wrap">
               <Link
                 href="/play?engine=viewer-race"
-                className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#D6A84F] via-[#E5BE6C] to-[#B88628] text-slate-950 font-black text-sm sm:text-base flex items-center gap-2.5 shadow-[0_10px_35px_rgba(214,168,79,0.45)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                className="px-8 py-4 rounded-2xl btn-hyper-violet text-sm sm:text-base flex items-center gap-2.5 font-cairo hover:scale-105 active:scale-95 transition-all cursor-pointer"
               >
                 <Play className="w-5 h-5 fill-current ml-0.5" />
                 <span>إطلاق سباق المشاهدين الآن 🏇</span>
@@ -380,7 +380,7 @@ export default function CategorizedGamesCommandCenter() {
 
               <Link
                 href="/host-desk"
-                className="px-6 py-4 rounded-2xl bg-[#161922] hover:bg-[#1E2230] border border-[#2B3245] text-white text-sm font-bold flex items-center gap-2 transition-all cursor-pointer"
+                className="px-6 py-4 rounded-2xl bg-[#161B26] hover:bg-[#1E2433] border border-[#262C3A] hover:border-[#06B6D4] text-white text-sm font-cairo flex items-center gap-2 transition-all cursor-pointer"
               >
                 <span>غرفة التحكم (Host Desk)</span>
                 <ArrowLeft className="w-4 h-4 text-slate-400" />
@@ -461,13 +461,13 @@ export default function CategorizedGamesCommandCenter() {
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between border-b border-[#1F2433] pb-3">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#DC2626]/10 border border-[#DC2626]/30 text-[#DC2626] flex items-center justify-center font-black">
+            <div className="w-9 h-9 rounded-xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/30 text-[#8B5CF6] flex items-center justify-center font-black">
               <Flame className="w-5 h-5" />
             </div>
             <div>
               <h2 className="font-display font-black text-xl text-white flex items-center gap-2">
                 <span>ألعاب البث المباشر التفاعلية والأكشن</span>
-                <span className="px-2 py-0.5 rounded-md bg-[#DC2626]/20 text-[#DC2626] text-[10px] font-mono font-black uppercase">
+                <span className="px-2 py-0.5 rounded-md bg-[#8B5CF6]/20 text-[#8B5CF6] text-[10px] font-mono font-black uppercase">
                   ● LIVE ACTION
                 </span>
               </h2>
@@ -483,7 +483,7 @@ export default function CategorizedGamesCommandCenter() {
             return (
               <div
                 key={game.id}
-                className="group relative rounded-3xl glass-broadcast-panel border border-white/10 hover:border-[#D6A84F]/70 transition-all duration-300 flex flex-col overflow-hidden shadow-xl hover:-translate-y-1.5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.8)]"
+                className="group relative rounded-3xl master-game-card flex flex-col overflow-hidden"
               >
                 {/* Poster Artwork */}
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-black">
@@ -515,7 +515,7 @@ export default function CategorizedGamesCommandCenter() {
 
                   <Link
                     href={`/play?engine=${game.id}`}
-                    className="w-full py-2.5 rounded-xl bg-white/5 hover:bg-gradient-to-r hover:from-[#D6A84F] hover:to-[#E5BE6C] text-white hover:text-slate-950 border border-white/10 hover:border-[#D6A84F] font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95"
+                    className="w-full py-2.5 rounded-xl bg-[#161B26] hover:bg-[#8B5CF6] text-white border border-[#262C3A] hover:border-[#8B5CF6] font-cairo font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95"
                   >
                     <Play className="w-3.5 h-3.5 fill-current" />
                     <span>ابدأ اللعبة فوراً</span>
@@ -533,20 +533,20 @@ export default function CategorizedGamesCommandCenter() {
       <section className="flex flex-col gap-5">
         <div className="flex items-center justify-between border-b border-[#2A2F45] pb-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#D6A84F] to-[#E5BE6C] text-slate-950 flex items-center justify-center font-black shadow-[0_0_25px_rgba(214,168,79,0.35)]">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#8B5CF6] to-[#06B6D4] text-white flex items-center justify-center font-black shadow-[0_0_25px_rgba(214,168,79,0.35)]">
               <Trophy className="w-6 h-6 fill-current" />
             </div>
             <div>
               <h2 className="font-display font-black text-2xl text-white flex items-center gap-3">
                 <span>المسابقات الثقافية والبرامج التلفزيونية</span>
-                <span className="px-3 py-1 rounded-full bg-[#D6A84F]/20 text-[#D6A84F] border border-[#D6A84F]/40 text-xs font-mono font-black uppercase shadow-sm">
+                <span className="px-3 py-1 rounded-full bg-[#06B6D4]/20 text-[#06B6D4] border border-[#06B6D4]/40 text-xs font-mono font-black uppercase shadow-sm">
                   ● TV QUIZ SHOWS
                 </span>
               </h2>
               <p className="text-xs text-slate-300 mt-0.5">تحديات أسئلة ومعلومات عامة واستطلاعات رأي كبرى بنظام استوديو البث التلفزيوني الفاخر.</p>
             </div>
           </div>
-          <span className="text-xs font-mono font-black text-[#D6A84F] bg-[#D6A84F]/10 border border-[#D6A84F]/30 px-3.5 py-1.5 rounded-xl">{culturalGames.length} ألعاب تلفزيونية</span>
+          <span className="text-xs font-mono font-black text-[#06B6D4] bg-[#06B6D4]/10 border border-[#06B6D4]/30 px-3.5 py-1.5 rounded-xl">{culturalGames.length} ألعاب تلفزيونية</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -593,7 +593,7 @@ export default function CategorizedGamesCommandCenter() {
 
                 <Link
                   href={`/play?engine=${game.id}`}
-                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#D6A84F] via-[#E5BE6C] to-[#B38734] text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-[0_8px_25px_rgba(214,168,79,0.35)] group-hover:shadow-[0_12px_30px_rgba(214,168,79,0.5)] transition-all active:scale-95 cursor-pointer"
+                  className="w-full py-3 rounded-2xl btn-cyber-cyan text-xs flex items-center justify-center gap-2 font-cairo shadow-[0_8px_25px_rgba(6,182,212,0.35)] transition-all active:scale-95 cursor-pointer"
                 >
                   <Play className="w-4 h-4 fill-current ml-0.5" />
                   <span>دخول المسابقة فوراً</span>
@@ -630,7 +630,7 @@ export default function CategorizedGamesCommandCenter() {
           {puzzleGames.map((game) => (
             <div
               key={game.id}
-              className="group relative rounded-3xl bg-[#0F1117] border border-[#232736] hover:border-[#10B981]/60 transition-all duration-300 flex flex-col overflow-hidden shadow-xl hover:-translate-y-1.5"
+              className="group relative rounded-3xl master-game-card flex flex-col overflow-hidden"
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-black">
                 <img
@@ -660,7 +660,7 @@ export default function CategorizedGamesCommandCenter() {
 
                 <Link
                   href={`/play?engine=${game.id}`}
-                  className="w-full py-2.5 rounded-xl bg-[#161922] hover:bg-[#10B981] text-white hover:text-[#08090C] border border-[#282E40] hover:border-[#10B981] font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow"
+                  className="w-full py-2.5 rounded-xl bg-[#161B26] hover:bg-[#8B5CF6] text-white border border-[#262C3A] hover:border-[#8B5CF6] font-cairo font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow"
                 >
                   <Play className="w-3.5 h-3.5 fill-current" />
                   <span>بدء اللغز</span>
@@ -697,7 +697,7 @@ export default function CategorizedGamesCommandCenter() {
           {mediaGames.map((game) => (
             <div
               key={game.id}
-              className="group relative rounded-3xl bg-[#0F1117] border border-[#232736] hover:border-[#D6A84F]/60 transition-all duration-300 flex flex-col sm:flex-row overflow-hidden shadow-xl hover:-translate-y-1.5"
+              className="group relative rounded-3xl master-game-card flex flex-col sm:flex-row overflow-hidden"
             >
               <div className="relative aspect-video sm:w-1/2 overflow-hidden bg-black shrink-0">
                 <img
@@ -727,7 +727,7 @@ export default function CategorizedGamesCommandCenter() {
 
                 <Link
                   href={`/play?engine=${game.id}`}
-                  className="w-full py-2.5 rounded-xl bg-[#161922] hover:bg-[#D6A84F] text-white hover:text-[#08090C] border border-[#282E40] hover:border-[#D6A84F] font-black text-xs flex items-center justify-center gap-2 transition-all shadow"
+                  className="w-full py-2.5 rounded-xl bg-[#161B26] hover:bg-[#06B6D4] text-white hover:text-[#0B0E14] border border-[#262C3A] hover:border-[#06B6D4] font-cairo font-black text-xs flex items-center justify-center gap-2 transition-all shadow"
                 >
                   <Play className="w-3.5 h-3.5 fill-current" />
                   <span>بدء التحدي</span>

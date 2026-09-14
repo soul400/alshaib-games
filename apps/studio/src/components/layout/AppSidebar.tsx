@@ -46,13 +46,13 @@ export function AppSidebar() {
   };
 
   return (
-    <aside className="w-[72px] shrink-0 bg-[#08090C] border-l border-[#1F2433] flex flex-col items-center justify-between py-4 sticky top-0 h-screen z-40 hidden lg:flex select-none">
+    <aside className="w-[72px] shrink-0 bg-[#0B0E14] border-l border-[#262C3A] flex flex-col items-center justify-between py-4 sticky top-0 h-screen z-40 hidden lg:flex select-none">
       
       {/* TOP SECTION: BRAND LOGO */}
       <div className="flex flex-col items-center gap-4 w-full">
         <Link 
           href="/" 
-          className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-[#1A1D27] to-[#0E1017] border border-[#D6A84F]/40 p-1 flex items-center justify-center group hover:scale-105 transition-all shadow-[0_0_20px_rgba(214,168,79,0.15)]"
+          className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-[#1A1D27] to-[#0E1017] border border-[#8B5CF6]/40 p-1 flex items-center justify-center group hover:scale-105 transition-all shadow-[0_0_20px_rgba(139,92,246,0.2)]"
           title="الشايب — Broadcast Game OS"
         >
           <img
@@ -89,7 +89,7 @@ export function AppSidebar() {
                     href={item.href}
                     className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
                       active
-                        ? 'bg-[#D6A84F]/15 text-[#D6A84F] border border-[#D6A84F]/40 shadow-[0_0_15px_rgba(214,168,79,0.1)]'
+                        ? 'bg-[#D6A84F]/15 text-[#D6A84F] border border-[#8B5CF6]/40 shadow-[0_0_15px_rgba(214,168,79,0.1)]'
                         : 'text-slate-400 hover:text-white hover:bg-[#12141C] border border-transparent'
                     }`}
                   >

@@ -109,7 +109,7 @@ function PlayArenaContent() {
         <div className="w-full px-5 py-2.5 flex items-center justify-between border-b border-[#1F2433] bg-[#08090C]/90 backdrop-blur-md z-30 shrink-0">
           <Link
             href="/"
-            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#D6A84F] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
+            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#10B981] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
           >
             <Home className="w-3.5 h-3.5" />
             <span>العودة للرئيسية</span>
@@ -139,7 +139,7 @@ function PlayArenaContent() {
         <div className="w-full px-5 py-2.5 flex items-center justify-between border-b border-[#1F2433] bg-[#08090C]/90 backdrop-blur-md z-30 shrink-0">
           <Link
             href="/"
-            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#D6A84F] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
+            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#10B981] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
           >
             <Home className="w-3.5 h-3.5" />
             <span>العودة للرئيسية</span>
@@ -169,7 +169,7 @@ function PlayArenaContent() {
         <div className="w-full px-5 py-2.5 flex items-center justify-between border-b border-[#1F2433] bg-[#08090C]/90 backdrop-blur-md z-30 shrink-0">
           <Link
             href="/"
-            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#D6A84F] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
+            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#10B981] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
           >
             <Home className="w-3.5 h-3.5" />
             <span>العودة للرئيسية</span>
@@ -197,7 +197,7 @@ function PlayArenaContent() {
         <div className="w-full px-5 py-2.5 flex items-center justify-between border-b border-[#1F2433] bg-[#08090C]/90 backdrop-blur-md z-30 shrink-0">
           <Link
             href="/"
-            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#D6A84F] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
+            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#10B981] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
           >
             <Home className="w-3.5 h-3.5" />
             <span>العودة للرئيسية</span>
@@ -225,7 +225,7 @@ function PlayArenaContent() {
         <div className="w-full px-5 py-2.5 flex items-center justify-between border-b border-[#1F2433] bg-[#08090C]/90 backdrop-blur-md z-30 shrink-0">
           <Link
             href="/"
-            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#D6A84F] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
+            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#10B981] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
           >
             <Home className="w-3.5 h-3.5" />
             <span>العودة للرئيسية</span>
@@ -253,7 +253,7 @@ function PlayArenaContent() {
         <div className="w-full px-5 py-2.5 flex items-center justify-between border-b border-[#1F2433] bg-[#08090C]/90 backdrop-blur-md z-30 shrink-0">
           <Link
             href="/"
-            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#D6A84F] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
+            className="px-3 py-1.5 rounded-xl bg-[#0F1117] border border-[#232736] text-[#10B981] font-bold text-xs flex items-center gap-1.5 hover:bg-[#161922] transition-all"
           >
             <Home className="w-3.5 h-3.5" />
             <span>العودة للرئيسية</span>
@@ -320,7 +320,7 @@ function PlayArenaContent() {
             {!controlState.isPlaying ? (
               <button
                 onClick={startRound}
-                className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#D6A84F] via-[#E5BE6C] to-[#B38734] text-slate-950 font-black text-xs flex items-center gap-2 shadow-[0_8px_25px_rgba(214,168,79,0.4)] hover:scale-105 transition-all cursor-pointer"
+                className="px-5 py-2.5 rounded-2xl btn-hyper-violet text-xs flex items-center gap-2 font-cairo hover:scale-105 transition-all cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
                 <span>بدء اللعبة</span>
@@ -328,7 +328,7 @@ function PlayArenaContent() {
             ) : (
               <button
                 onClick={controlState.isTimerRunning ? pauseRound : resumeRound}
-                className="px-4 py-2.5 rounded-2xl bg-[#D6A84F] text-slate-950 font-black text-xs flex items-center gap-2 shadow-md hover:scale-105 transition-all cursor-pointer"
+                className="px-4 py-2.5 rounded-2xl btn-cyber-cyan text-xs flex items-center gap-2 font-cairo hover:scale-105 transition-all cursor-pointer"
               >
                 {controlState.isTimerRunning ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
                 <span>{controlState.isTimerRunning ? 'إيقاف مؤقت' : 'استئناف'}</span>
@@ -337,9 +337,9 @@ function PlayArenaContent() {
 
             <button
               onClick={() => toggleOverlay('leaderboard')}
-              className="px-3.5 py-2.5 rounded-2xl bg-[#161922] text-[#D6A84F] border border-[#232736] hover:border-[#D6A84F]/40 text-xs font-black flex items-center gap-1.5 cursor-pointer hover:bg-[#1C202F] transition-all shadow-sm"
+              className="px-3.5 py-2.5 rounded-2xl bg-[#161B26] text-[#06B6D4] border border-[#262C3A] hover:border-[#06B6D4] text-xs font-black flex items-center gap-1.5 cursor-pointer transition-all shadow-sm font-cairo"
             >
-              <Trophy className="w-3.5 h-3.5 text-[#D6A84F]" />
+              <Trophy className="w-3.5 h-3.5 text-[#06B6D4]" />
               <span className="hidden sm:inline">لوحة الصدارة</span>
             </button>
 
@@ -378,13 +378,13 @@ function PlayArenaContent() {
         <div className="lg:col-span-1 flex flex-col gap-6">
 
           {/* Mini Leaderboard - Top 5 (Matching Broadcast TV Design) */}
-          <div className="p-5 rounded-3xl glass-broadcast-panel flex flex-col gap-3 shadow-2xl">
+          <div className="p-5 rounded-3xl bg-[#161B26] border border-[#262C3A] rounded-3xl p-5 flex flex-col gap-3 shadow-2xl">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
-                <Crown className="w-5 h-5 text-[#D6A84F]" />
+                <Crown className="w-5 h-5 text-[#10B981]" />
                 <h3 className="font-black text-sm font-display text-white tracking-wider">لوحة الصدارة المباشرة</h3>
               </div>
-              <span className="text-[10px] text-[#D6A84F] font-bold bg-[#D6A84F]/15 px-2.5 py-0.5 rounded-full font-mono border border-[#D6A84F]/30 shadow-sm">LIVE</span>
+              <span className="text-[10px] text-[#10B981] font-bold bg-[#10B981]/15 px-2.5 py-0.5 rounded-full font-mono border border-[#10B981]/30 shadow-sm">LIVE</span>
             </div>
 
             {top5.length === 0 ? (
@@ -399,12 +399,14 @@ function PlayArenaContent() {
                     key={player.userId || player.username || `player-${idx}`}
                     className={`flex items-center gap-3 p-3 rounded-2xl text-xs transition-all ${
                       idx === 0
-                        ? 'bg-gradient-to-r from-[#1E1B10] to-[#12141C] border border-[#D6A84F] shadow-[0_0_20px_rgba(214,168,79,0.25)] scale-[1.01]'
-                        : 'bg-[#161922] border border-white/5 hover:border-white/20'
+      ? 'bg-[#10B981]/15 border border-[#10B981] shadow-[0_0_20px_rgba(16,185,129,0.3)] scale-[1.01]'
+      : idx === 1 || idx === 2
+      ? 'bg-[#06B6D4]/10 border border-[#06B6D4]/40'
+      : 'bg-[#161B26] border border-[#262C3A]'
                     }`}
                   >
                     <span className={`font-black text-base min-w-[24px] text-center ${
-                      idx === 0 ? 'text-[#D6A84F]' : idx === 1 ? 'text-slate-300' : idx === 2 ? 'text-amber-600' : 'text-slate-400'
+                      idx === 0 ? 'text-[#10B981]' : idx === 1 || idx === 2 ? 'text-[#06B6D4]' : 'text-[#94A3B8]'
                     }`}>
                       {idx === 0 ? '👑' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx + 1}`}
                     </span>
@@ -416,7 +418,7 @@ function PlayArenaContent() {
                     <div className="flex-1 min-w-0">
                       <span className="font-bold text-white truncate block text-xs">{player.displayName || player.username}</span>
                     </div>
-                    <span className="font-mono font-black text-[#D6A84F] text-sm">+{player.score} <span className="text-[10px] text-slate-400 font-normal">نقطة</span></span>
+                    <span className="font-mono font-black text-[#10B981] text-sm">+{player.score} <span className="text-[10px] text-slate-400 font-normal">نقطة</span></span>
                   </div>
                 ))}
               </div>
@@ -424,7 +426,7 @@ function PlayArenaContent() {
           </div>
 
           {/* Correct Answers Feed */}
-          <div className="p-5 rounded-3xl glass-broadcast-panel flex-1 min-h-[220px] max-h-[360px] flex flex-col shadow-2xl">
+          <div className="p-5 rounded-3xl bg-[#161B26] border border-[#262C3A] rounded-3xl p-5 flex-1 min-h-[220px] max-h-[360px] flex flex-col shadow-2xl">
             <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
               <div className="flex items-center gap-2">
                 <Check className="w-5 h-5 text-emerald-400" />
@@ -450,7 +452,7 @@ function PlayArenaContent() {
                       <span className="font-mono text-xs font-bold text-emerald-400">#{item.rank}</span>
                       <span className="font-bold text-white truncate max-w-[100px]">{item.playerName}</span>
                     </div>
-                    <span className="font-mono text-[#D6A84F] font-bold text-xs">+{item.points} ★</span>
+                    <span className="font-mono text-[#10B981] font-bold text-xs">+{item.points} ★</span>
                   </div>
                 ))
               )}

@@ -111,17 +111,17 @@ export function StageArena({
   }
 
   return (
-    <div className="w-full flex flex-col items-center justify-between p-5 sm:p-7 rounded-3xl glass-broadcast-panel relative overflow-hidden shadow-2xl h-full min-h-[520px]">
+    <div className="w-full flex flex-col items-center justify-between p-5 sm:p-7 rounded-3xl bg-[#161B26] border border-[#262C3A] rounded-3xl relative overflow-hidden shadow-2xl h-full min-h-[520px]">
       {/* Top Bar Header Badge Area with Broadcast Ticker Accent */}
       <div className="w-full flex items-center justify-between border-b border-white/10 pb-3 z-10 flex-wrap gap-2">
         <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#161922] border border-[#D6A84F]/40 text-[#D6A84F] font-black text-[11px] font-mono shadow-sm">
-            <Clock className="w-3.5 h-3.5 text-[#D6A84F]" />
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#161922] border border-[#D6A84F]/40 text-[#06B6D4] font-black text-[11px] font-mono shadow-sm">
+            <Clock className="w-3.5 h-3.5 text-[#06B6D4]" />
             <span>ROUND 1</span>
           </div>
 
           <div className="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#161922] border border-white/15 text-slate-200 font-bold text-[11px]">
-            <HelpCircle className="w-3.5 h-3.5 text-[#D6A84F]" />
+            <HelpCircle className="w-3.5 h-3.5 text-[#06B6D4]" />
             <span>{currentRound?.title || 'مسابقة البث المباشر التفاعلية'}</span>
           </div>
         </div>
@@ -148,16 +148,16 @@ export function StageArena({
         ) : (
           <>
             {/* 🌟 Luxury Prime-Time TV Game Show Question Centerpiece */}
-            <div className="w-full max-w-4xl p-7 sm:p-10 rounded-3xl tv-show-question-banner text-center relative overflow-hidden backdrop-blur-3xl shadow-[0_25px_70px_rgba(0,0,0,0.95)]">
+            <div className="w-full max-w-4xl p-7 sm:p-10 rounded-3xl tv-show-question-banner text-center relative overflow-hidden shadow-2xl">
               <div className="flex items-center justify-center gap-2.5 mb-4">
-                <span className="px-3.5 py-1 rounded-full text-[11px] font-black bg-[#D6A84F]/15 text-[#D6A84F] border border-[#D6A84F]/40 font-mono tracking-wider uppercase shadow-sm">
+                <span className="px-3.5 py-1 rounded-full text-[11px] font-black bg-[#06B6D4]/15 text-[#06B6D4] border border-[#06B6D4]/40 font-mono tracking-wider uppercase shadow-sm">
                   السؤال رقم #{currentQuestion.id || '1'}
                 </span>
-                <span className="px-3 py-1 rounded-full text-[11px] font-black bg-emerald-500/15 text-emerald-400 border border-emerald-400/30 font-mono shadow-sm">
+                <span className="px-3 py-1 rounded-full text-[11px] font-black bg-emerald-500/15 text-[#10B981] border border-[#10B981]/30 font-mono shadow-sm">
                   +{currentQuestion.points || 100} نقطة
                 </span>
               </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-display text-white leading-relaxed tracking-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.95)]">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-cairo text-[#F8FAFC] leading-relaxed tracking-tight">
                 {currentQuestion.title}
               </h2>
             </div>
@@ -202,9 +202,9 @@ export function StageArena({
               {/* Left: Reveal Answer Button (Broadcast Emerald / Gold Reveal) */}
               <button
                 onClick={onRevealAnswer}
-                className="flex-1 w-full py-4 px-6 rounded-2xl bg-[#161922] border border-[#D6A84F]/40 hover:bg-[#D6A84F]/15 hover:border-[#D6A84F] transition-all flex items-center justify-center gap-2.5 text-[#D6A84F] font-black text-base shadow-[0_8px_25px_rgba(214,168,79,0.15)] active:scale-95 cursor-pointer backdrop-blur-md"
+                className="flex-1 w-full py-4 px-6 rounded-2xl btn-cyber-cyan transition-all flex items-center justify-center gap-2.5 font-cairo font-black text-base active:scale-95 cursor-pointer"
               >
-                <Eye className="w-5 h-5 text-[#D6A84F]" />
+                <Eye className="w-5 h-5 text-[#06B6D4]" />
                 <span>كشف الإجابة</span>
               </button>
 
@@ -218,9 +218,9 @@ export function StageArena({
                 const seconds = timeRemainingSeconds % 60;
                 const displayTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
                 const isLow = timeRemainingSeconds <= 5;
-                const ringColor = isLow ? '#EF4444' : '#D6A84F';
-                const glowColor = isLow ? 'rgba(239,68,68,0.7)' : 'rgba(214,168,79,0.5)';
-                const textColor = isLow ? 'text-rose-400' : 'text-[#D6A84F]';
+                const ringColor = isLow ? '#FF2E54' : '#06B6D4';
+                const glowColor = isLow ? 'rgba(255,46,84,0.7)' : 'rgba(6,182,212,0.5)';
+                const textColor = isLow ? 'text-rose-400' : 'text-[#06B6D4]';
 
                 return (
                   <div className={`relative w-36 h-36 shrink-0 flex items-center justify-center ${isLow && isTimerRunning ? 'animate-pulse' : ''}`}>
@@ -255,7 +255,7 @@ export function StageArena({
                     </svg>
 
                     {/* Inner Dark Circle */}
-                    <div className="absolute inset-2.5 rounded-full bg-gradient-to-b from-[#151926] via-[#0E111C] to-[#07090F] flex flex-col items-center justify-center border border-white/10 shadow-inner">
+                    <div className="absolute inset-2.5 rounded-full bg-[#161B26] flex flex-col items-center justify-center border border-white/10 shadow-inner">
                       <span className={`text-3xl font-black font-mono tracking-wider ${textColor}`}
                         style={{ textShadow: `0 0 16px ${glowColor}`, transition: 'color 0.4s ease' }}
                       >
@@ -272,10 +272,10 @@ export function StageArena({
               {/* Right: Next Question Button (Sovereign Gold Gradient TV CTA) */}
               <button
                 onClick={onNextQuestion}
-                className="flex-1 w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#D6A84F] via-[#E5BE6C] to-[#B38734] text-slate-950 font-black text-base shadow-[0_10px_30px_rgba(214,168,79,0.4)] active:scale-95 cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.02] transition-all"
+                className="flex-1 w-full py-4 px-6 rounded-2xl btn-hyper-violet transition-all flex items-center justify-center gap-2 font-cairo font-black text-base active:scale-95 cursor-pointer hover:scale-[1.02]"
               >
                 <span>السؤال التالي</span>
-                <ArrowLeft className="w-5 h-5 text-slate-950" />
+                <ArrowLeft className="w-5 h-5 text-white" />
               </button>
             </div>
 

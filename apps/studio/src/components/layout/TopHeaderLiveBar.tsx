@@ -76,11 +76,11 @@ export function TopHeaderLiveBar() {
 
   return (
     <>
-      <header className="w-full bg-[#08090C] border-b border-[#1F2433] px-3 sm:px-5 py-2 sticky top-0 z-30 flex items-center justify-between gap-3 select-none flex-wrap">
+      <header className="w-full bg-[#0B0E14] border-b border-[#262C3A] px-3 sm:px-5 py-2 sticky top-0 z-30 flex items-center justify-between gap-3 select-none flex-wrap">
         
         {/* LEFT / TITLE: BREADCRUMB COMMAND */}
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-2 text-white hover:text-[#D6A84F] transition-colors">
+          <Link href="/" className="flex items-center gap-2 text-white hover:text-[#8B5CF6] transition-colors">
             <span className="font-display font-black text-sm tracking-tight">الشايب</span>
             <span className="text-slate-500 text-xs font-mono">/</span>
             <span className="text-xs text-slate-300 font-bold">Studio Command</span>
@@ -91,14 +91,14 @@ export function TopHeaderLiveBar() {
         <div className="flex items-center gap-2.5 sm:gap-3.5 flex-wrap">
           
           {/* 🔴 TIKTOK LIVE RECONNECT & STATUS CONTROLLER */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#111320] border border-[#252A42] text-xs">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#161B26] border border-[#262C3A] text-xs">
             <div className="flex items-center gap-1.5 font-mono font-bold">
               <span className={`w-2.5 h-2.5 rounded-full ${
-                isLive ? 'bg-emerald-400 animate-ping' : isConnecting ? 'bg-amber-400 animate-pulse' : 'bg-rose-500'
+                isLive ? 'bg-[#10B981] animate-ping' : isConnecting ? 'bg-amber-400 animate-pulse' : 'bg-[#FF2E54]'
               }`} />
               <span className="text-slate-200 text-xs font-black">@{activeChannel}</span>
               <span className={`text-[10px] px-1.5 py-0.5 rounded font-black ${
-                isLive ? 'bg-emerald-500/20 text-emerald-300' : isConnecting ? 'bg-amber-500/20 text-amber-300' : 'bg-rose-500/20 text-rose-300'
+                isLive ? 'bg-[#10B981]/20 text-[#10B981]' : isConnecting ? 'bg-amber-500/20 text-amber-300' : 'bg-[#FF2E54]/20 text-rose-300'
               }`}>
                 {isLive ? 'أونلاين 🟢' : isConnecting ? 'جاري الاتصال...' : 'أوفلاين 🔴'}
               </span>
@@ -108,7 +108,7 @@ export function TopHeaderLiveBar() {
             <button
               onClick={handleReconnect}
               disabled={isConnecting}
-              className="px-2.5 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-[11px] font-black transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50"
+              className="px-2.5 py-1 rounded-lg bg-[#06B6D4]/15 hover:bg-[#06B6D4]/25 text-[#06B6D4] border border-[#06B6D4]/40 font-cairo text-[11px] font-black transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50"
               title="إعادة الاتصال بالبث المباشر فوراً"
             >
               <RotateCcw className={`w-3 h-3 ${isConnecting ? 'animate-spin' : ''}`} />
@@ -137,7 +137,7 @@ export function TopHeaderLiveBar() {
           {/* 💎 DONATION LINK QUICK SETTINGS BUTTON */}
           <button
             onClick={() => setIsDonationModalOpen(true)}
-            className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-400/40 text-amber-300 text-xs font-black flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+            className="px-3 py-1.5 rounded-xl bg-[#8B5CF6]/15 hover:bg-[#8B5CF6]/25 border border-[#8B5CF6]/40 text-[#8B5CF6] font-cairo text-xs font-black flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
             title="تغيير واختيار رابط الدعم المعروض في البث"
           >
             <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400" />
@@ -149,8 +149,8 @@ export function TopHeaderLiveBar() {
 
           {/* USER ACCOUNT BADGE & LOGOUT */}
           {currentUser && (
-            <div className="flex items-center gap-2 bg-[#12141F] border border-white/10 px-2.5 py-1 rounded-xl">
-              <div className="w-6 h-6 rounded-lg bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-xs">
+            <div className="flex items-center gap-2 bg-[#161B26] border border-[#262C3A] px-2.5 py-1 rounded-xl">
+              <div className="w-6 h-6 rounded-lg bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 flex items-center justify-center text-xs">
                 {currentUser.username === 'shayeb' ? '🎙️' : currentUser.username === 'ashley' ? '🌸' : '⚙️'}
               </div>
               <span className="text-xs font-black text-white hidden md:inline">

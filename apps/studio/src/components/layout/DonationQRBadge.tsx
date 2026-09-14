@@ -35,7 +35,7 @@ export function DonationBanner({ show, onDone }: { show: boolean; onDone: () => 
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[9998] flex justify-center pointer-events-none animate-[slideDown_0.5s_ease-out,slideDown_0.5s_ease-in_5s_reverse_forwards]">
-      <div className="mt-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-600/90 via-yellow-500/90 to-amber-600/90 border border-amber-400/60 backdrop-blur-xl shadow-[0_8px_40px_rgba(245,158,11,0.5)] flex items-center gap-3 pointer-events-auto">
+      <div className="mt-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-[#8B5CF6]/90 via-[#7C3AED]/90 to-[#06B6D4]/90 border border-[#8B5CF6]/60 backdrop-blur-xl shadow-[0_8px_40px_rgba(139,92,246,0.4)] flex items-center gap-3 pointer-events-auto">
         <Gift className="w-5 h-5 text-white animate-bounce" />
         <span className="text-sm font-black text-white">
           💎 ادعم البث وساهم في استمراره — امسح QR الآن!
@@ -167,7 +167,7 @@ export function DonationQRBadge() {
           setIsMinimized(false);
           setIsVisible(true);
         }}
-        className="fixed bottom-24 left-5 sm:bottom-28 sm:left-8 z-[9999] w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 text-white flex items-center justify-center shadow-[0_4px_25px_rgba(245,158,11,0.7)] hover:scale-110 transition-all cursor-pointer animate-float-up-down border-2 border-amber-300"
+        className="fixed bottom-24 left-5 sm:bottom-28 sm:left-8 z-[9999] w-14 h-14 rounded-full bg-gradient-to-tr from-[#8B5CF6] to-[#06B6D4] text-white flex items-center justify-center shadow-[0_4px_25px_rgba(139,92,246,0.6)] hover:scale-110 transition-all cursor-pointer animate-float-up-down border-2 border-[#8B5CF6]/50"
         title="إظهار رابط الدعم"
       >
         <Heart className="w-7 h-7 fill-white" />
@@ -195,14 +195,14 @@ export function DonationQRBadge() {
         }`}>
           {/* Pulsing golden halo ring */}
           {isPulsing && (
-            <div className="absolute -inset-3 rounded-3xl bg-gradient-to-r from-amber-400/40 via-yellow-300/30 to-amber-400/40 animate-pulse blur-md pointer-events-none" />
+            <div className="absolute -inset-3 rounded-3xl bg-gradient-to-r from-[#8B5CF6]/40 via-[#06B6D4]/30 to-[#8B5CF6]/40 animate-pulse blur-md pointer-events-none" />
           )}
 
           {/* Main Card Container (Enlarged) */}
           <div className={`relative flex flex-col items-center gap-2.5 p-3.5 sm:p-4 rounded-3xl border-2 backdrop-blur-2xl transition-all duration-500 ${
             isPulsing
-              ? 'bg-[#0E0F1E]/95 border-amber-400'
-              : 'bg-[#0E0F1E]/90 border-amber-400/40 hover:border-amber-400/80 shadow-2xl'
+              ? 'bg-[#161B26] border-[#8B5CF6]'
+              : 'bg-[#161B26] border-[#262C3A] hover:border-[#8B5CF6]/80 shadow-2xl'
           }`}>
             {/* Close / Minimize button */}
             <button
@@ -215,7 +215,7 @@ export function DonationQRBadge() {
 
             {/* Enlarged QR Code Image (140px - 160px for effortless scanning) */}
             <div className={`relative w-[136px] h-[136px] sm:w-[155px] sm:h-[155px] rounded-2xl overflow-hidden bg-white p-2 shadow-inner transition-all duration-500 ${
-              isPulsing ? 'ring-3 ring-amber-400 ring-offset-2 ring-offset-[#0E0F1E]' : ''
+              isPulsing ? 'ring-3 ring-[#8B5CF6] ring-offset-2 ring-offset-[#161B26]' : ''
             }`}>
               <img
                 src={activeDonation.qrUrl}
@@ -229,9 +229,9 @@ export function DonationQRBadge() {
             </div>
 
             {/* Label & Glow Badge */}
-            <div className="flex items-center justify-center gap-1.5 w-full px-2.5 py-1.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-yellow-500/25 to-amber-500/20 border border-amber-400/50 shadow-sm text-center">
+            <div className="flex items-center justify-center gap-1.5 w-full px-2.5 py-1.5 rounded-2xl bg-[#161B26] border border-[#262C3A] shadow-sm text-center">
               <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400 animate-pulse shrink-0" />
-              <span className="text-[11px] font-black text-amber-300 font-mono tracking-tight truncate">
+              <span className="text-[11px] font-black text-[#06B6D4] font-mono font-bold tracking-tight truncate">
                 {activeDonation.title}
               </span>
             </div>

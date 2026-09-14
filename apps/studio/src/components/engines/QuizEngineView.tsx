@@ -32,11 +32,11 @@ export function QuizEngineView({ question, isAnswerRevealed }: Props) {
                   <span className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black font-mono shadow-md border ${
                     isCorrect
                       ? 'bg-emerald-400 text-slate-950 border-emerald-300'
-                      : 'bg-gradient-to-tr from-[#1E2235] to-[#141724] text-[#D6A84F] border-[#D6A84F]/40'
+                      : 'bg-[#161B26] text-[#06B6D4] border-[#06B6D4]/40'
                   }`}>
                     {letter}
                   </span>
-                  <span className="leading-relaxed tracking-tight text-white font-black">{opt}</span>
+                  <span className="leading-relaxed tracking-tight text-[#E2E8F0] font-black">{opt}</span>
                 </div>
                 {isCorrect && (
                   <div className="flex items-center gap-1.5 text-emerald-300 font-mono">
@@ -51,11 +51,11 @@ export function QuizEngineView({ question, isAnswerRevealed }: Props) {
       ) : hasAnswers ? (
         <div className="w-full max-w-xl p-8 rounded-3xl tv-show-question-banner text-center shadow-[0_20px_50px_rgba(0,0,0,0.9)]">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <Sparkles className="w-4 h-4 text-[#D6A84F]" />
+            <Sparkles className="w-4 h-4 text-[#06B6D4]" />
             <p className="text-slate-300 text-xs font-bold font-mono">اكتب إجابتك مباشرة في شات البث للفوز بالنقاط:</p>
           </div>
-          <div className="py-4 px-8 rounded-2xl bg-black/60 border border-[#D6A84F]/40 inline-block shadow-inner">
-            <p className="text-2xl sm:text-4xl font-black text-[#D6A84F] tracking-wider">
+          <div className="py-4 px-8 rounded-2xl bg-black/60 border border-[#06B6D4]/40 inline-block shadow-inner">
+            <p className="text-2xl sm:text-4xl font-black text-[#06B6D4] tracking-wider">
               {isAnswerRevealed ? question.acceptableAnswers.join(' / ') : '••••••••••••••••'}
             </p>
           </div>

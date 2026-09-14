@@ -69,7 +69,7 @@ export function BroadcastRadialTimer({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={isUrgent ? '#EF4444' : '#D6A84F'}
+          stroke={isUrgent ? '#FF2E54' : '#06B6D4'}
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
@@ -79,7 +79,7 @@ export function BroadcastRadialTimer({
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className={`font-mono font-black text-xs sm:text-sm ${isUrgent ? 'text-rose-500 animate-pulse' : 'text-[#D6A84F]'}`}>
+        <span className={`font-mono font-black text-xs sm:text-sm ${isUrgent ? 'text-[#FF2E54] animate-pulse' : 'text-[#06B6D4]'}`}>
           {timeRemaining}
         </span>
       </div>
@@ -102,7 +102,7 @@ export function PhaseTransitionBanner({
   switch (phase) {
     case 'COUNTDOWN':
       return (
-        <div className="w-full py-2.5 px-6 rounded-2xl bg-amber-500/20 border border-amber-400/40 text-amber-300 flex items-center justify-center gap-3 animate-pulse shadow-[0_0_30px_rgba(245,158,11,0.25)]">
+        <div className="w-full py-2.5 px-6 rounded-2xl bg-[#06B6D4]/20 border border-[#06B6D4]/40 text-[#06B6D4] flex items-center justify-center gap-3 animate-pulse shadow-[0_0_30px_rgba(245,158,11,0.25)]">
           <Clock className="w-4 h-4 text-amber-400 animate-spin" />
           <span className="font-display font-black text-sm tracking-wide">
             {customMessage || '⏱️ استعدوا.. جاري بدء التحدي!'}
@@ -113,8 +113,8 @@ export function PhaseTransitionBanner({
     case 'DANGER':
     case 'FINAL_STRETCH':
       return (
-        <div className="w-full py-2.5 px-6 rounded-2xl bg-rose-600/25 border border-rose-500/50 text-rose-200 flex items-center justify-center gap-3 animate-pulse shadow-[0_0_35px_rgba(239,68,68,0.35)]">
-          <Flame className="w-5 h-5 text-rose-400" />
+        <div className="w-full py-2.5 px-6 rounded-2xl bg-[#FF2E54]/20 border border-[#FF2E54]/50 text-[#FF2E54] flex items-center justify-center gap-3 animate-pulse shadow-[0_0_35px_rgba(239,68,68,0.35)]">
+          <Flame className="w-5 h-5 text-[#FF2E54]" />
           <span className="font-display font-black text-sm tracking-wide">
             {customMessage || '🚨 مرحلة الحسم القصوى! التحدي مشتعل الآن!'}
           </span>
@@ -123,8 +123,8 @@ export function PhaseTransitionBanner({
 
     case 'WAITING':
       return (
-        <div className="w-full py-2.5 px-6 rounded-2xl bg-cyan-500/15 border border-cyan-400/30 text-cyan-200 flex items-center justify-center gap-3 shadow-sm">
-          <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
+        <div className="w-full py-2.5 px-6 rounded-2xl bg-[#06B6D4]/15 border border-[#06B6D4]/30 text-[#06B6D4] flex items-center justify-center gap-3 shadow-sm">
+          <Radio className="w-4 h-4 text-[#06B6D4] animate-pulse" />
           <span className="font-display font-extrabold text-sm">
             {customMessage || '💬 باب الانضمام مفتوح عبر تعليقات البث المباشر'}
           </span>
@@ -166,20 +166,20 @@ export function GameHUD({
 }: GameHUDProps) {
   return (
     <div className="w-full flex flex-col gap-3 z-30 select-none">
-      <div className="w-full px-5 py-3.5 rounded-3xl bg-[#0F111A]/95 border border-[#D6A84F]/30 backdrop-blur-2xl flex flex-wrap items-center justify-between gap-4 shadow-[0_15px_45px_rgba(0,0,0,0.85)]">
+      <div className="w-full px-5 py-3.5 rounded-3xl bg-[#161B26] border border-[#262C3A] backdrop-blur-2xl flex flex-wrap items-center justify-between gap-4 shadow-[0_15px_45px_rgba(0,0,0,0.85)]">
         {/* Left: Brand / Game Identifier */}
         <div className="flex items-center gap-3">
           {showHomeButton && (
             <Link 
               href="/" 
-              className="p-2.5 rounded-2xl bg-[#161922] text-[#D6A84F] border border-white/10 hover:border-[#D6A84F]/50 hover:bg-[#1C202F] transition-all flex items-center justify-center shadow-sm"
+              className="p-2.5 rounded-2xl bg-[#161922] text-[#06B6D4] border border-white/10 hover:border-[#D6A84F]/50 hover:bg-[#1C202F] transition-all flex items-center justify-center shadow-sm"
               title="الصفحة الرئيسية"
             >
               <Home className="w-4 h-4" />
             </Link>
           )}
 
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#D6A84F] to-[#E5BE6C] text-slate-950 flex items-center justify-center font-black shadow-[0_0_20px_rgba(214,168,79,0.35)] shrink-0">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#8B5CF6] to-[#06B6D4] text-white flex items-center justify-center font-black shadow-[0_0_20px_rgba(214,168,79,0.35)] shrink-0">
             <Trophy className="w-5 h-5 fill-current" />
           </div>
 
@@ -189,7 +189,7 @@ export function GameHUD({
                 {gameTitle}
               </h1>
               {gameCategory && (
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black bg-[#D6A84F]/15 text-[#D6A84F] border border-[#D6A84F]/30 uppercase">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black bg-[#06B6D4]/15 text-[#06B6D4] border border-[#06B6D4]/30 uppercase">
                   {gameCategory}
                 </span>
               )}
@@ -201,7 +201,7 @@ export function GameHUD({
               {liveStatusText && (
                 <>
                   <span className="text-slate-600">•</span>
-                  <span className="text-emerald-400 font-mono text-[11px]">{liveStatusText}</span>
+                  <span className="text-[#10B981] font-mono text-[11px] font-bold">{liveStatusText}</span>
                 </>
               )}
             </div>
@@ -213,7 +213,7 @@ export function GameHUD({
           {activePlayersCount !== undefined && (
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono font-bold text-slate-300">
               <span>👥 المتبقون:</span>
-              <strong className="text-[#D6A84F]">{activePlayersCount}</strong>
+              <strong className="text-[#06B6D4]">{activePlayersCount}</strong>
               {totalPlayersCount ? <span className="text-slate-500">/ {totalPlayersCount}</span> : null}
             </div>
           )}

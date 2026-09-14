@@ -66,26 +66,26 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   // If not authenticated, render Login Screen
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#06070B] via-[#0E101B] to-[#08090E] flex items-center justify-center p-4 relative overflow-hidden dir-rtl select-none">
+    <div className="min-h-screen w-full bg-[#0B0E14] flex items-center justify-center p-4 relative overflow-hidden dir-rtl select-none">
       
       {/* Background Neon Elements */}
-      <div className="absolute top-1/4 -right-20 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 -left-20 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 -right-20 w-96 h-96 bg-[#8B5CF6]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 -left-20 w-96 h-96 bg-[#06B6D4]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
         
         {/* Main Card */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-[#111322]/90 border-2 border-[#20243E] shadow-[0_25px_70px_rgba(0,0,0,0.9)] backdrop-blur-2xl flex flex-col gap-6">
+        <div className="p-6 sm:p-8 rounded-3xl bg-[#161B26] border border-[#262C3A] shadow-[0_25px_70px_rgba(0,0,0,0.9)] backdrop-blur-2xl flex flex-col gap-6">
           
           {/* Header */}
           <div className="flex flex-col items-center text-center gap-3">
             <div className="relative">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 p-0.5 shadow-[0_0_30px_rgba(245,158,11,0.5)]">
-                <div className="w-full h-full bg-[#0E0F1E] rounded-2xl flex items-center justify-center">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#8B5CF6] to-[#06B6D4] p-0.5 shadow-[0_0_30px_rgba(139,92,246,0.35)]">
+                <div className="w-full h-full bg-[#161B26] rounded-2xl flex items-center justify-center">
                   <span className="text-4xl">👑</span>
                 </div>
               </div>
-              <span className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-mono font-black shadow-md">
+              <span className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full bg-[#10B981] text-slate-950 text-[10px] font-mono font-black shadow-md">
                 LIVE VIP
               </span>
             </div>
@@ -110,13 +110,13 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                 onClick={() => handleQuickSelect('shayeb', 'Aa10203040')}
                 className={`p-2.5 rounded-2xl border text-center transition-all flex flex-col items-center gap-1 cursor-pointer ${
                   username === 'shayeb'
-                    ? 'bg-amber-500/20 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
-                    : 'bg-[#181A30] border-white/5 hover:border-amber-400/40'
+                    ? 'bg-[#8B5CF6]/20 border-[#8B5CF6] shadow-[0_0_15px_rgba(139,92,246,0.3)]'
+                    : 'bg-[#161B26] border-[#262C3A] hover:border-amber-400/40'
                 }`}
               >
                 <span className="text-xl">🎙️</span>
                 <span className="text-xs font-black text-white">الشايب</span>
-                <span className="text-[9px] font-mono text-amber-300 font-bold">@soul80813</span>
+                <span className="text-[9px] font-mono text-[#8B5CF6] font-bold">@soul80813</span>
               </button>
 
               <button
@@ -125,7 +125,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                 className={`p-2.5 rounded-2xl border text-center transition-all flex flex-col items-center gap-1 cursor-pointer ${
                   username === 'ashley'
                     ? 'bg-rose-500/20 border-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.3)]'
-                    : 'bg-[#181A30] border-white/5 hover:border-rose-400/40'
+                    : 'bg-[#161B26] border-[#262C3A] hover:border-rose-400/40'
                 }`}
               >
                 <span className="text-xl">🌸</span>
@@ -139,7 +139,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                 className={`p-2.5 rounded-2xl border text-center transition-all flex flex-col items-center gap-1 cursor-pointer ${
                   username === 'admin'
                     ? 'bg-cyan-500/20 border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.3)]'
-                    : 'bg-[#181A30] border-white/5 hover:border-cyan-400/40'
+                    : 'bg-[#161B26] border-[#262C3A] hover:border-cyan-400/40'
                 }`}
               >
                 <span className="text-xl">⚙️</span>
@@ -156,7 +156,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
             {/* Username Input */}
             <div className="flex flex-col gap-1.5 text-right">
               <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-amber-400" />
+                <User className="w-3.5 h-3.5 text-[#8B5CF6]" />
                 <span>اسم المستخدم (User)</span>
               </label>
               <div className="relative">
@@ -165,7 +165,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="مثال: shayeb أو ashley أو admin"
-                  className="w-full px-4 py-3 rounded-xl bg-[#0B0C18] border border-[#262A48] focus:border-amber-400 text-white text-sm outline-none transition-all placeholder:text-slate-600 font-mono"
+                  className="w-full px-4 py-3 rounded-xl bg-[#161B26] border border-[#262C3A] focus:border-[#8B5CF6] text-white text-sm outline-none transition-all placeholder:text-slate-600 font-mono"
                   required
                 />
               </div>
@@ -174,7 +174,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
             {/* Password Input */}
             <div className="flex flex-col gap-1.5 text-right">
               <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                <Key className="w-3.5 h-3.5 text-amber-400" />
+                <Key className="w-3.5 h-3.5 text-[#8B5CF6]" />
                 <span>كلمة المرور (Password)</span>
               </label>
               <div className="relative">
@@ -183,7 +183,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-4 py-3 rounded-xl bg-[#0B0C18] border border-[#262A48] focus:border-amber-400 text-white text-sm outline-none transition-all placeholder:text-slate-600 font-mono"
+                  className="w-full px-4 py-3 rounded-xl bg-[#161B26] border border-[#262C3A] focus:border-[#8B5CF6] text-white text-sm outline-none transition-all placeholder:text-slate-600 font-mono"
                   required
                 />
               </div>
@@ -201,7 +201,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(245,158,11,0.4)] transition-all cursor-pointer disabled:opacity-50 mt-1"
+              className="w-full py-3.5 rounded-2xl btn-hyper-violet text-white font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50 mt-1"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
