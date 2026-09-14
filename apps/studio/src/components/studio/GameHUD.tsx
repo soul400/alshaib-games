@@ -3,8 +3,9 @@
 import React from 'react';
 import { 
   Trophy, Clock, Sparkles, AlertTriangle, Skull, 
-  Flame, CheckCircle2, Shield, Radio, Volume2
+  Flame, CheckCircle2, Shield, Radio, Volume2, Home
 } from 'lucide-react';
+import Link from 'next/link';
 
 export type HUDPhase = 
   | 'WAITING' 
@@ -28,6 +29,8 @@ export interface GameHUDProps {
   totalPlayersCount?: number;
   liveStatusText?: string;
   onTimerTick?: () => void;
+  controls?: React.ReactNode;
+  showHomeButton?: boolean;
   children?: React.ReactNode;
 }
 
@@ -72,18 +75,20 @@ export function BroadcastRadialTimer({
           strokeDashoffset={strokeDashoffset}
           strokeLinecap="round"
           fill="transparent"
-          className="transition-all duration-300"
+          className="transition-all duration-1000 ease-linear"
         />
       </svg>
-      <span className="absolute font-mono font-black text-sm tracking-tight text-white">
-        {timeRemaining}
-      </span>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className={`font-mono font-black text-xs sm:text-sm ${isUrgent ? 'text-rose-500 animate-pulse' : 'text-[#D6A84F]'}`}>
+          {timeRemaining}
+        </span>
+      </div>
     </div>
   );
 }
 
 /**
- * Live Broadcast Phase Banner
+ * Broadcast Phase Transition Overlay Banner
  */
 export function PhaseTransitionBanner({ 
   phase, 
@@ -155,18 +160,32 @@ export function GameHUD({
   activePlayersCount,
   totalPlayersCount,
   liveStatusText,
+  controls,
+  showHomeButton = true,
   children
 }: GameHUDProps) {
   return (
     <div className="w-full flex flex-col gap-3 z-30 select-none">
-      <div className="w-full px-5 py-3 rounded-2xl bg-[#0F111A]/90 border border-white/10 backdrop-blur-xl flex items-center justify-between shadow-[0_10px_35px_rgba(0,0,0,0.8)]">
+      <div className="w-full px-5 py-3.5 rounded-3xl bg-[#0F111A]/95 border border-[#D6A84F]/30 backdrop-blur-2xl flex flex-wrap items-center justify-between gap-4 shadow-[0_15px_45px_rgba(0,0,0,0.85)]">
+        {/* Left: Brand / Game Identifier */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#D6A84F] to-[#E5BE6C] text-slate-950 flex items-center justify-center font-black shadow-[0_0_20px_rgba(214,168,79,0.35)]">
+          {showHomeButton && (
+            <Link 
+              href="/" 
+              className="p-2.5 rounded-2xl bg-[#161922] text-[#D6A84F] border border-white/10 hover:border-[#D6A84F]/50 hover:bg-[#1C202F] transition-all flex items-center justify-center shadow-sm"
+              title="الصفحة الرئيسية"
+            >
+              <Home className="w-4 h-4" />
+            </Link>
+          )}
+
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#D6A84F] to-[#E5BE6C] text-slate-950 flex items-center justify-center font-black shadow-[0_0_20px_rgba(214,168,79,0.35)] shrink-0">
             <Trophy className="w-5 h-5 fill-current" />
           </div>
+
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-display font-black text-base sm:text-lg text-white tracking-tight">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="font-display font-black text-base sm:text-xl text-white tracking-tight">
                 {gameTitle}
               </h1>
               {gameCategory && (
@@ -175,44 +194,46 @@ export function GameHUD({
                 </span>
               )}
             </div>
-            {roundNumber && (
-              <span className="text-xs font-bold text-slate-400">
-                الجولة رقم #{roundNumber}
-              </span>
-            )}
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-400 mt-0.5">
+              {roundNumber && (
+                <span>الجولة رقم #{roundNumber}</span>
+              )}
+              {liveStatusText && (
+                <>
+                  <span className="text-slate-600">•</span>
+                  <span className="text-emerald-400 font-mono text-[11px]">{liveStatusText}</span>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="hidden sm:flex items-center gap-2">
-          {liveStatusText ? (
-            <span className="text-xs font-black text-slate-200 bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl">
-              {liveStatusText}
-            </span>
-          ) : (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-black font-mono">
-              <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
-              <span>LIVE ARENA</span>
+        {/* Center / Right: Players Telemetry & Timer */}
+        <div className="flex items-center gap-4">
+          {activePlayersCount !== undefined && (
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono font-bold text-slate-300">
+              <span>👥 المتبقون:</span>
+              <strong className="text-[#D6A84F]">{activePlayersCount}</strong>
+              {totalPlayersCount ? <span className="text-slate-500">/ {totalPlayersCount}</span> : null}
             </div>
           )}
 
-          {activePlayersCount !== undefined && (
-            <span className="text-xs font-mono font-bold text-slate-300 bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl">
-              👥 المتبقون: <strong className="text-white">{activePlayersCount}</strong>
-              {totalPlayersCount ? ' / ' + totalPlayersCount : ''}
-            </span>
-          )}
-        </div>
-
-        <div className="flex items-center gap-3">
           {timeRemainingSeconds > 0 && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <span className="text-[11px] font-mono font-bold text-slate-400 hidden md:inline">
-                الوقت المتبقي:
+                الوقت:
               </span>
               <BroadcastRadialTimer 
                 timeRemaining={timeRemainingSeconds} 
                 totalTime={totalTimeSeconds} 
               />
+            </div>
+          )}
+
+          {/* Integrated Control Buttons */}
+          {controls && (
+            <div className="flex items-center gap-2 flex-wrap">
+              {controls}
             </div>
           )}
         </div>

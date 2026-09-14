@@ -304,6 +304,7 @@ function PlayArenaContent() {
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1600px] mx-auto pb-8 select-none">
       {/* 👑 UNIVERSAL BROADCAST GAME HUD STRIP */}
+      {/* 👑 UNIVERSAL BROADCAST GAME HUD WITH UNIFIED CONTROLS (SINGLE SOVEREIGN HEADER) */}
       <GameHUD
         phase={hudPhase}
         gameTitle={activeEngineInfo.title}
@@ -313,67 +314,50 @@ function PlayArenaContent() {
         totalTimeSeconds={currentQuestion?.timeLimitSeconds || 30}
         activePlayersCount={leaderboard.length}
         liveStatusText={controlState.isPlaying ? '● الجولة المباشرة نشطة' : 'في انتظار بدء الجولة'}
+        showHomeButton={true}
+        controls={
+          <>
+            {!controlState.isPlaying ? (
+              <button
+                onClick={startRound}
+                className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#D6A84F] via-[#E5BE6C] to-[#B38734] text-slate-950 font-black text-xs flex items-center gap-2 shadow-[0_8px_25px_rgba(214,168,79,0.4)] hover:scale-105 transition-all cursor-pointer"
+              >
+                <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                <span>بدء اللعبة</span>
+              </button>
+            ) : (
+              <button
+                onClick={controlState.isTimerRunning ? pauseRound : resumeRound}
+                className="px-4 py-2.5 rounded-2xl bg-[#D6A84F] text-slate-950 font-black text-xs flex items-center gap-2 shadow-md hover:scale-105 transition-all cursor-pointer"
+              >
+                {controlState.isTimerRunning ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+                <span>{controlState.isTimerRunning ? 'إيقاف مؤقت' : 'استئناف'}</span>
+              </button>
+            )}
+
+            <button
+              onClick={() => toggleOverlay('leaderboard')}
+              className="px-3.5 py-2.5 rounded-2xl bg-[#161922] text-[#D6A84F] border border-[#232736] hover:border-[#D6A84F]/40 text-xs font-black flex items-center gap-1.5 cursor-pointer hover:bg-[#1C202F] transition-all shadow-sm"
+            >
+              <Trophy className="w-3.5 h-3.5 text-[#D6A84F]" />
+              <span className="hidden sm:inline">لوحة الصدارة</span>
+            </button>
+
+            <button
+              onClick={() => setAutoMode(!autoMode)}
+              className={`px-3.5 py-2.5 rounded-2xl text-xs font-black flex items-center gap-1.5 transition-all border cursor-pointer shadow-sm ${
+                autoMode
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40 hover:bg-emerald-500/30'
+                  : 'bg-rose-500/20 text-rose-300 border-rose-400/40 hover:bg-rose-500/30'
+              }`}
+              title={autoMode ? 'تلقائي' : 'يدوي'}
+            >
+              {autoMode ? <Zap className="w-3.5 h-3.5" /> : <Hand className="w-3.5 h-3.5" />}
+              <span className="hidden md:inline">{autoMode ? 'تلقائي' : 'يدوي'}</span>
+            </button>
+          </>
+        }
       />
-
-      {/* Top Sovereign Gold Broadcast Command Strip Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 sm:p-5 rounded-3xl glass-broadcast-panel shadow-[0_20px_50px_rgba(0,0,0,0.85)]">
-        <div className="flex items-center gap-3">
-          <Link href="/" className="px-3.5 py-2.5 rounded-2xl bg-[#161922] text-[#D6A84F] border border-white/10 hover:bg-[#1C202F] transition-all flex items-center gap-2 text-xs font-black shadow-sm">
-            <Home className="w-4 h-4" />
-            <span className="hidden sm:inline">الصفحة الرئيسية</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl sm:text-2xl font-black font-display text-white tracking-tight flex items-center gap-2">
-              {activeEngineInfo.title}
-            </h2>
-            <span className="px-3 py-1 rounded-full text-[10px] font-black bg-[#D6A84F]/15 text-[#D6A84F] border border-[#D6A84F]/40 font-mono uppercase shadow-sm">
-              {activeEngineInfo.category}
-            </span>
-          </div>
-        </div>
-
-        {/* 2026 Sovereign Gold Interactive Control Buttons */}
-        <div className="flex items-center gap-2.5 flex-wrap">
-          {!controlState.isPlaying ? (
-            <button
-              onClick={startRound}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-[#D6A84F] via-[#E5BE6C] to-[#B38734] text-slate-950 font-black text-xs flex items-center gap-2 shadow-[0_8px_30px_rgba(214,168,79,0.45)] hover:scale-105 transition-all cursor-pointer"
-            >
-              <Play className="w-4 h-4 fill-current ml-0.5" />
-              <span>بدء اللعبة</span>
-            </button>
-          ) : (
-            <button
-              onClick={controlState.isTimerRunning ? pauseRound : resumeRound}
-              className="px-5 py-3 rounded-2xl bg-[#D6A84F] text-slate-950 font-black text-xs flex items-center gap-2 shadow-lg hover:scale-105 transition-all cursor-pointer"
-            >
-              {controlState.isTimerRunning ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
-              <span>{controlState.isTimerRunning ? 'إيقاف مؤقت' : 'استئناف'}</span>
-            </button>
-          )}
-
-          <button
-            onClick={() => toggleOverlay('leaderboard')}
-            className="px-4 py-3 rounded-2xl bg-[#161922] text-[#D6A84F] border border-[#232736] hover:border-[#D6A84F]/40 text-xs font-black flex items-center gap-2 cursor-pointer hover:bg-[#1C202F] transition-all shadow-md"
-          >
-            <Trophy className="w-4 h-4 text-[#D6A84F]" />
-            <span>لوحة الصدارة</span>
-          </button>
-
-          <button
-            onClick={() => setAutoMode(!autoMode)}
-            className={`px-4 py-3 rounded-2xl text-xs font-black flex items-center gap-2 transition-all border cursor-pointer shadow-md ${
-              autoMode
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40 hover:bg-emerald-500/30'
-                : 'bg-rose-500/20 text-rose-300 border-rose-400/40 hover:bg-rose-500/30'
-            }`}
-            title={autoMode ? 'تلقائي' : 'يدوي'}
-          >
-            {autoMode ? <Zap className="w-4 h-4" /> : <Hand className="w-4 h-4" />}
-            <span>{autoMode ? 'تلقائي (AUTO)' : 'يدوي (MANUAL)'}</span>
-          </button>
-        </div>
-      </div>
 
       {/* Main Grid: Stage (3 cols) + Side Panels (1 col) */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { QuizQuestion } from '@aep/types';
-import { CheckCircle2, BookOpen } from 'lucide-react';
+import { CheckCircle2, BookOpen, Sparkles } from 'lucide-react';
 
 interface Props {
   question: QuizQuestion;
@@ -13,35 +13,35 @@ export function QuizEngineView({ question, isAnswerRevealed }: Props) {
   const hasAnswers = question && Array.isArray(question.acceptableAnswers) && question.acceptableAnswers.length > 0;
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center select-none">
       {question.options && question.options.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-3xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4.5 w-full max-w-4xl">
           {question.options.map((opt, idx) => {
             const isCorrect = isAnswerRevealed && question.acceptableAnswers?.some(ans => ans.includes(opt) || opt.includes(ans));
             const letter = String.fromCharCode(65 + idx);
             return (
               <div
                 key={idx}
-                className={`p-4 sm:p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between font-extrabold text-base sm:text-lg select-none ${
+                className={`p-4 sm:p-5 rounded-2xl transition-all duration-300 flex items-center justify-between font-extrabold text-base sm:text-lg select-none ${
                   isCorrect
-                    ? 'bg-emerald-500/25 border-emerald-400 text-emerald-200 shadow-[0_0_30px_rgba(16,185,129,0.4)] scale-[1.03] ring-2 ring-emerald-400/50'
-                    : 'glass-broadcast-panel text-white hover:border-[#D6A84F]/50 hover:bg-white/5'
+                    ? 'tv-option-card-correct scale-[1.02]'
+                    : 'tv-option-card text-white'
                 }`}
               >
                 <div className="flex items-center gap-3.5">
-                  <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-black font-mono border ${
+                  <span className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black font-mono shadow-md border ${
                     isCorrect
                       ? 'bg-emerald-400 text-slate-950 border-emerald-300'
-                      : 'bg-white/10 text-[#D6A84F] border-[#D6A84F]/30'
+                      : 'bg-gradient-to-tr from-[#1E2235] to-[#141724] text-[#D6A84F] border-[#D6A84F]/40'
                   }`}>
                     {letter}
                   </span>
-                  <span className="leading-relaxed tracking-tight">{opt}</span>
+                  <span className="leading-relaxed tracking-tight text-white font-black">{opt}</span>
                 </div>
                 {isCorrect && (
-                  <div className="flex items-center gap-1.5 text-emerald-400">
-                    <CheckCircle2 className="w-6 h-6 animate-bounce" />
-                    <span className="text-xs font-black font-mono hidden sm:inline">صح ✓</span>
+                  <div className="flex items-center gap-1.5 text-emerald-300 font-mono">
+                    <CheckCircle2 className="w-6 h-6 animate-bounce text-emerald-400" />
+                    <span className="text-xs font-black hidden sm:inline">إجابة صحيحة ✓</span>
                   </div>
                 )}
               </div>
@@ -49,16 +49,19 @@ export function QuizEngineView({ question, isAnswerRevealed }: Props) {
           })}
         </div>
       ) : hasAnswers ? (
-        <div className="w-full max-w-xl p-6 rounded-3xl glass-broadcast-panel text-center border border-white/15 shadow-2xl">
-          <p className="text-slate-400 text-xs mb-2 font-bold font-mono">الإجابة المطلوبة (اكتب في الشات مباشرة):</p>
-          <div className="py-3 px-6 rounded-2xl bg-black/40 border border-[#D6A84F]/30 inline-block">
-            <p className="text-2xl sm:text-3xl font-black text-[#D6A84F] tracking-wide">
+        <div className="w-full max-w-xl p-8 rounded-3xl tv-show-question-banner text-center shadow-[0_20px_50px_rgba(0,0,0,0.9)]">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Sparkles className="w-4 h-4 text-[#D6A84F]" />
+            <p className="text-slate-300 text-xs font-bold font-mono">اكتب إجابتك مباشرة في شات البث للفوز بالنقاط:</p>
+          </div>
+          <div className="py-4 px-8 rounded-2xl bg-black/60 border border-[#D6A84F]/40 inline-block shadow-inner">
+            <p className="text-2xl sm:text-4xl font-black text-[#D6A84F] tracking-wider">
               {isAnswerRevealed ? question.acceptableAnswers.join(' / ') : '••••••••••••••••'}
             </p>
           </div>
         </div>
       ) : (
-        <div className="w-full max-w-lg p-6 rounded-3xl glass-broadcast-panel text-center border border-amber-500/30 bg-amber-500/10 flex flex-col items-center gap-2">
+        <div className="w-full max-w-lg p-6 rounded-3xl glass-broadcast-panel text-center border border-amber-500/30 bg-amber-500/10 flex flex-col items-center gap-2 shadow-xl">
           <BookOpen className="w-8 h-8 text-amber-400 animate-pulse" />
           <p className="text-amber-300 font-bold text-sm">
             لا توجد أسئلة مضافة في قسم المسابقات الثقافية حالياً.

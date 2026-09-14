@@ -528,65 +528,75 @@ export default function CategorizedGamesCommandCenter() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════ */}
-      {/* 3. SECTION 2: المسابقات الثقافية والاجتماعية            */}
+      {/* 3. SECTION 2: المسابقات الثقافية والبرامج التلفزيونية     */}
       {/* ═══════════════════════════════════════════════════════ */}
-      <section className="flex flex-col gap-4">
-        <div className="flex items-center justify-between border-b border-[#1F2433] pb-3">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#D6A84F]/10 border border-[#D6A84F]/30 text-[#D6A84F] flex items-center justify-center font-black">
-              <Trophy className="w-5 h-5" />
+      <section className="flex flex-col gap-5">
+        <div className="flex items-center justify-between border-b border-[#2A2F45] pb-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#D6A84F] to-[#E5BE6C] text-slate-950 flex items-center justify-center font-black shadow-[0_0_25px_rgba(214,168,79,0.35)]">
+              <Trophy className="w-6 h-6 fill-current" />
             </div>
             <div>
-              <h2 className="font-display font-black text-xl text-white flex items-center gap-2">
+              <h2 className="font-display font-black text-2xl text-white flex items-center gap-3">
                 <span>المسابقات الثقافية والبرامج التلفزيونية</span>
-                <span className="px-2 py-0.5 rounded-md bg-[#D6A84F]/20 text-[#D6A84F] text-[10px] font-mono font-black uppercase">
+                <span className="px-3 py-1 rounded-full bg-[#D6A84F]/20 text-[#D6A84F] border border-[#D6A84F]/40 text-xs font-mono font-black uppercase shadow-sm">
                   ● TV QUIZ SHOWS
                 </span>
               </h2>
-              <p className="text-xs text-slate-400">تحديات أسئلة ومعلومات عامة واستطلاعات رأي شعبية مع احتساب النقاط التنافسي.</p>
+              <p className="text-xs text-slate-300 mt-0.5">تحديات أسئلة ومعلومات عامة واستطلاعات رأي كبرى بنظام استوديو البث التلفزيوني الفاخر.</p>
             </div>
           </div>
-          <span className="text-xs font-mono font-bold text-[#D6A84F]">{culturalGames.length} ألعاب</span>
+          <span className="text-xs font-mono font-black text-[#D6A84F] bg-[#D6A84F]/10 border border-[#D6A84F]/30 px-3.5 py-1.5 rounded-xl">{culturalGames.length} ألعاب تلفزيونية</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {culturalGames.map((game) => (
             <div
               key={game.id}
-              className="group relative rounded-3xl glass-broadcast-panel border border-white/10 hover:border-[#D6A84F]/70 transition-all duration-300 flex flex-col overflow-hidden shadow-xl hover:-translate-y-1.5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.8)]"
+              className="group relative rounded-3xl cultural-gold-card flex flex-col overflow-hidden shadow-2xl hover:scale-[1.02] transition-all"
             >
-              <div className="relative aspect-[16/9] w-full overflow-hidden bg-black">
+              {/* Premium TV Show Poster with Dynamic Gold Ambient */}
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-black">
                 <img
                   src={game.image}
                   alt={game.title}
-                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-70 group-hover:opacity-90"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#08090C] via-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0C12] via-[#0A0C12]/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent opacity-60" />
                 
-                <div className="absolute top-3 right-3">
-                  <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-mono font-black border backdrop-blur-md ${game.badgeColor}`}>
+                {/* Category & Points Badges */}
+                <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                  <span className="px-3 py-1 rounded-full text-[10px] font-mono font-black bg-[#D6A84F]/25 text-[#FFE79A] border border-[#D6A84F]/50 backdrop-blur-md shadow-md">
                     {game.badge}
+                  </span>
+                </div>
+
+                <div className="absolute top-3 left-3">
+                  <span className="px-2.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-black/60 text-slate-300 border border-white/10 backdrop-blur-md">
+                    LIVE ARENA
                   </span>
                 </div>
               </div>
 
-              <div className="p-5 flex flex-col justify-between flex-1 gap-3.5">
-                <div className="space-y-1.5">
-                  <span className="text-[10px] font-mono text-slate-400 font-bold uppercase block">{game.title}</span>
-                  <h3 className="font-display font-black text-base text-white group-hover:text-[#D6A84F] transition-colors leading-snug drop-shadow-sm">
+              {/* Card Body */}
+              <div className="p-5 flex flex-col justify-between flex-1 gap-4">
+                <div className="space-y-2">
+                  <span className="text-[10px] font-mono text-[#D6A84F] font-black uppercase tracking-wider block">{game.title}</span>
+                  <h3 className="font-display font-black text-lg text-white group-hover:text-[#D6A84F] transition-colors leading-snug drop-shadow-md">
                     {game.arabicTitle}
                   </h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed line-clamp-2">
                     {game.tagline}
                   </p>
                 </div>
 
                 <Link
                   href={`/play?engine=${game.id}`}
-                  className="w-full py-3 rounded-xl bg-white/5 hover:bg-gradient-to-r hover:from-[#D6A84F] hover:to-[#E5BE6C] text-white hover:text-slate-950 border border-white/10 hover:border-[#D6A84F] font-black text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
+                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#D6A84F] via-[#E5BE6C] to-[#B38734] text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-[0_8px_25px_rgba(214,168,79,0.35)] group-hover:shadow-[0_12px_30px_rgba(214,168,79,0.5)] transition-all active:scale-95 cursor-pointer"
                 >
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                  <span>بدء المسابقة الثقافية</span>
+                  <Play className="w-4 h-4 fill-current ml-0.5" />
+                  <span>دخول المسابقة فوراً</span>
                 </Link>
               </div>
             </div>
