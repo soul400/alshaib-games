@@ -8,7 +8,7 @@ import {
   ArrowLeft, Gamepad2, Brain, Flag, 
   HelpCircle, Shuffle, Grid, Smile, Image as ImageIcon, 
   Video, Volume2, Binary, Crosshair, Armchair, Bomb, Bus, Skull,
-  Radio, Compass, MessageSquare, Award, ArrowUpRight
+  Radio, Compass, MessageSquare, Award, ArrowUpRight, Lock
 } from 'lucide-react';
 
 export default function CategorizedGamesCommandCenter() {
@@ -34,40 +34,42 @@ export default function CategorizedGamesCommandCenter() {
       image: '/games/art/viewer-race.jpg',
       featured: true,
       playerCount: '1-10 متسابقين',
-      speed: 'تكبيس وتعليقات حية'
+      speed: 'تكبيس وتعليقات حية',
+      disabled: false
     },
     {
       id: 'squid-game',
       category: 'action',
       categoryName: 'أكشن وتحدي جماهيري',
-      categoryBadge: 'بقاء وإقصاء 🦑',
+      categoryBadge: 'قريباً ⏳',
       title: 'SQUID SURVIVAL',
       arabicTitle: 'لعبة الحبار 🦑',
       tagline: 'تحدي خطوات وبقاء حي للمشاهدين — اختر 1-5 في الشات وتفادَ رقم الخطر مع الدمية',
-      badge: 'بقاء مباشر 🦑',
-      badgeColor: 'bg-[#FF2E54]/20 text-[#FF2E54] border-[#FF2E54]/40',
+      badge: 'SOON • قريباً',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/50',
       accentColor: '#FF2E54',
       icon: Skull,
       image: '/games/art/squid-game.jpg',
-      featured: true,
       playerCount: 'جمهور مفتوح',
-      speed: 'إقصاء فوري'
+      speed: 'إقصاء فوري',
+      disabled: true
     },
     {
       id: 'bus-tayyibin',
       category: 'action',
       categoryName: 'أكشن وتحدي جماهيري',
-      categoryBadge: 'بث كلاسيكي 🚌',
+      categoryBadge: 'قريباً ⏳',
       title: 'BUS AL-TAYYIBIN',
       arabicTitle: 'باص الطيبين 🚌',
       tagline: 'ولد • بنت • حيوان • نبات • جماد • بلاد — التعليقات هي ورقة الإجابة المباشرة',
-      badge: 'مباشر 🚌',
-      badgeColor: 'bg-[#10B981]/20 text-[#10B981] border-[#10B981]/40',
+      badge: 'SOON • قريباً',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/50',
       accentColor: '#10B981',
       icon: Bus,
       image: '/games/art/bus-tayyibin.jpg',
       playerCount: 'شات تفاعلي',
-      speed: 'سرعة البديهة'
+      speed: 'سرعة البديهة',
+      disabled: true
     },
     {
       id: 'bomb-pass',
@@ -83,7 +85,8 @@ export default function CategorizedGamesCommandCenter() {
       icon: Bomb,
       image: '/games/art/bomb-pass.jpg',
       playerCount: '2-16 لاعب',
-      speed: 'عد تنازلي مرعب'
+      speed: 'عد تنازلي مرعب',
+      disabled: false
     },
     {
       id: 'hunter-roulette',
@@ -99,7 +102,8 @@ export default function CategorizedGamesCommandCenter() {
       icon: Crosshair,
       image: '/games/art/hunter-roulette.jpg',
       playerCount: '2-12 لاعب',
-      speed: 'دوران فيزيائي'
+      speed: 'دوران فيزيائي',
+      disabled: false
     },
     {
       id: 'mystery-roulette',
@@ -115,7 +119,8 @@ export default function CategorizedGamesCommandCenter() {
       icon: Sparkles,
       image: '/games/art/mystery-roulette.jpg',
       playerCount: '2-8 لاعبين',
-      speed: 'اختيار أعمى'
+      speed: 'اختيار أعمى',
+      disabled: false
     },
     {
       id: 'musical-chairs',
@@ -131,7 +136,8 @@ export default function CategorizedGamesCommandCenter() {
       icon: Armchair,
       image: '/games/art/musical-chairs.jpg',
       playerCount: '4-20 لاعب',
-      speed: 'استجابة سريعة'
+      speed: 'استجابة سريعة',
+      disabled: false
     },
     {
       id: 'react',
@@ -147,7 +153,8 @@ export default function CategorizedGamesCommandCenter() {
       icon: Binary,
       image: '/games/art/react.jpg',
       playerCount: 'شات مفتوح',
-      speed: 'محاولات فورية'
+      speed: 'محاولات فورية',
+      disabled: false
     },
 
     // 2. المسابقات والبرامج التلفزيونية
@@ -166,7 +173,8 @@ export default function CategorizedGamesCommandCenter() {
       image: '/games/art/quiz.jpg',
       featured: true,
       playerCount: 'كل المتابعين',
-      speed: 'نظام نقاط تلفزيوني'
+      speed: 'نظام نقاط تلفزيوني',
+      disabled: false
     },
     {
       id: 'capitals',
@@ -182,7 +190,8 @@ export default function CategorizedGamesCommandCenter() {
       icon: HelpCircle,
       image: '/games/art/capitals.jpg',
       playerCount: 'شات حي',
-      speed: 'تطابق فوري'
+      speed: 'تطابق فوري',
+      disabled: false
     },
     {
       id: 'what-do-they-say',
@@ -198,7 +207,8 @@ export default function CategorizedGamesCommandCenter() {
       icon: HelpCircle,
       image: '/games/art/what-do-they-say.jpg',
       playerCount: 'شات مفتوح',
-      speed: '200 نقطة للإجابة'
+      speed: '200 نقطة للإجابة',
+      disabled: false
     },
     {
       id: 'character',
@@ -214,7 +224,8 @@ export default function CategorizedGamesCommandCenter() {
       icon: Flag,
       image: '/games/art/character.jpg',
       playerCount: 'جمهور البث',
-      speed: 'مؤقت 30 ثانية'
+      speed: 'مؤقت 30 ثانية',
+      disabled: false
     },
 
     // 3. الألغاز والذكاء واللغة
@@ -232,7 +243,8 @@ export default function CategorizedGamesCommandCenter() {
       icon: Brain,
       image: '/games/art/memory-match.jpg',
       playerCount: 'شات حي (1-16)',
-      speed: 'تركيز فائق'
+      speed: 'تركيز فائق',
+      disabled: false
     },
     {
       id: 'mixed-words',
@@ -248,7 +260,8 @@ export default function CategorizedGamesCommandCenter() {
       icon: Shuffle,
       image: '/games/art/mixed-words.jpg',
       playerCount: 'جمهور البث',
-      speed: 'سرعة كتابة'
+      speed: 'سرعة كتابة',
+      disabled: false
     },
     {
       id: 'alphabet',
@@ -264,39 +277,42 @@ export default function CategorizedGamesCommandCenter() {
       icon: Grid,
       image: '/games/art/alphabet.jpg',
       playerCount: 'المشاهدين كافة',
-      speed: 'اختيار الحرف'
+      speed: 'اختيار الحرف',
+      disabled: false
     },
     {
       id: 'symbol-puzzle',
       category: 'puzzles',
       categoryName: 'الألغاز والذكاء واللغة',
-      categoryBadge: 'رموز وإيموجي 😀',
+      categoryBadge: 'قريباً ⏳',
       title: 'EMOJI & SYMBOL PUZZLE',
       arabicTitle: 'ألغاز الرموز والإيموجي 😀',
       tagline: 'تراكيب إيموجي مبتكرة ترمز لأسماء أفلام ومسلسلات وأمثال عربية شهيرة',
-      badge: 'فك شفرة الإيموجي',
-      badgeColor: 'bg-[#8B5CF6]/20 text-[#8B5CF6] border-[#8B5CF6]/40',
+      badge: 'SOON • قريباً',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/50',
       accentColor: '#8B5CF6',
       icon: Smile,
       image: '/games/art/symbol-puzzle.jpg',
       playerCount: 'شات تفاعلي',
-      speed: 'ذكاء وترابط'
+      speed: 'ذكاء وترابط',
+      disabled: true
     },
     {
       id: 'image-puzzle',
       category: 'puzzles',
       categoryName: 'الألغاز والذكاء واللغة',
-      categoryBadge: 'كشف بصري 🖼️',
+      categoryBadge: 'قريباً ⏳',
       title: 'VISUAL IMAGE PUZZLE',
       arabicTitle: 'ألغاز الصور والتأثيرات 🖼️',
       tagline: 'كشف تدريجي لصورة مخفية عبر إزالة تأثيرات البكسل والضبابية ثانية بثانية',
-      badge: 'تحدي بصري',
-      badgeColor: 'bg-[#10B981]/20 text-[#10B981] border-[#10B981]/40',
+      badge: 'SOON • قريباً',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/50',
       accentColor: '#10B981',
       icon: ImageIcon,
       image: '/games/art/image-puzzle.jpg',
       playerCount: 'جمهور البث',
-      speed: 'كشف تدريجي'
+      speed: 'كشف تدريجي',
+      disabled: true
     },
 
     // 4. الوسائط والصوت والفيديو
@@ -304,33 +320,35 @@ export default function CategorizedGamesCommandCenter() {
       id: 'video-challenge',
       category: 'media',
       categoryName: 'الوسائط والصوت والفيديو',
-      categoryBadge: 'تحدي سينمائي 🎬',
+      categoryBadge: 'قريباً ⏳',
       title: 'LIVE VIDEO CHALLENGES',
       arabicTitle: 'تحديات مقاطع الفيديو 🎬',
       tagline: 'بث مقاطع فيديو ومواقف كوميدية مع إيقاف مفاجئ لطرح السؤال على الشات',
-      badge: 'تحدي سينمائي',
-      badgeColor: 'bg-[#FF2E54]/20 text-[#FF2E54] border-[#FF2E54]/40',
+      badge: 'SOON • قريباً',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/50',
       accentColor: '#FF2E54',
       icon: Video,
       image: '/games/art/video-challenge.jpg',
       playerCount: 'كل المتابعين',
-      speed: 'ملاحظة دقيقة'
+      speed: 'ملاحظة دقيقة',
+      disabled: true
     },
     {
       id: 'audio-challenge',
       category: 'media',
       categoryName: 'الوسائط والصوت والفيديو',
-      categoryBadge: 'موجات صوتية 🔊',
+      categoryBadge: 'قريباً ⏳',
       title: 'AUDIO WAVES CHALLENGES',
       arabicTitle: 'التحديات والموجات الصوتية 🔊',
       tagline: 'التعرف على أصوات المشاهير، الطيور، المؤثرات والآلات عبر موجات تفاعلية',
-      badge: 'تحدي سمعي',
-      badgeColor: 'bg-[#06B6D4]/20 text-[#06B6D4] border-[#06B6D4]/40',
+      badge: 'SOON • قريباً',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/50',
       accentColor: '#06B6D4',
       icon: Volume2,
       image: '/games/art/audio-challenge.jpg',
       playerCount: 'شات البث',
-      speed: 'أذن موسيقية'
+      speed: 'أذن موسيقية',
+      disabled: true
     }
   ], []);
 
@@ -340,7 +358,7 @@ export default function CategorizedGamesCommandCenter() {
     return allGames.filter(g => g.category === selectedCategory);
   }, [allGames, selectedCategory]);
 
-  // Spotlight featured game (default to Viewer Race)
+  // Spotlight featured game (Viewer Race)
   const heroGame = allGames[0];
 
   const categories = [
@@ -537,19 +555,21 @@ export default function CategorizedGamesCommandCenter() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredGames.map((game) => {
           const Icon = game.icon;
-          return (
-            <Link
-              key={game.id}
-              href={`/play?engine=${game.id}`}
-              className="group relative rounded-3xl master-game-card flex flex-col overflow-hidden cursor-pointer"
-            >
+          const isDisabled = game.disabled;
+
+          const CardInner = (
+            <>
               {/* Cinematic Artwork Poster (Dominant 65-75% Area) */}
               <div className="relative aspect-[16/11] w-full overflow-hidden bg-[#0B0E14]">
                 <img
                   src={game.image}
                   alt={game.arabicTitle}
                   loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-85 group-hover:opacity-100"
+                  className={`w-full h-full object-cover transition-transform duration-700 ${
+                    isDisabled 
+                      ? 'opacity-35 grayscale contrast-125' 
+                      : 'group-hover:scale-110 opacity-85 group-hover:opacity-100'
+                  }`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#161B26] via-[#161B26]/30 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#0B0E14]/70 via-transparent to-transparent opacity-60" />
@@ -567,14 +587,26 @@ export default function CategorizedGamesCommandCenter() {
                   </span>
                 </div>
 
-                {/* Quick Player Specs overlay at bottom edge of artwork */}
-                <div className="absolute bottom-2.5 right-3 left-3 flex items-center justify-between text-[11px] font-mono text-[#94A3B8] bg-[#0B0E14]/70 backdrop-blur-md px-3 py-1 rounded-xl border border-[#262C3A]/60">
-                  <span className="flex items-center gap-1.5">
-                    <Users className="w-3.5 h-3.5 text-[#06B6D4]" />
-                    <span className="text-[#F8FAFC]">{game.playerCount}</span>
-                  </span>
-                  <span className="text-[#94A3B8] text-[10px]">{game.speed}</span>
-                </div>
+                {/* SOON Center Overlay Badge if Disabled */}
+                {isDisabled ? (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#0B0E14]/50 backdrop-blur-[2px]">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border-2 border-amber-500/50 flex items-center justify-center text-amber-300 shadow-[0_0_30px_rgba(245,158,11,0.4)]">
+                      <Lock className="w-6 h-6" />
+                    </div>
+                    <span className="px-4 py-1 rounded-xl bg-amber-500/25 text-amber-300 border border-amber-500/50 font-mono font-black text-sm tracking-widest shadow-lg">
+                      SOON
+                    </span>
+                  </div>
+                ) : (
+                  /* Quick Player Specs overlay at bottom edge of artwork */
+                  <div className="absolute bottom-2.5 right-3 left-3 flex items-center justify-between text-[11px] font-mono text-[#94A3B8] bg-[#0B0E14]/70 backdrop-blur-md px-3 py-1 rounded-xl border border-[#262C3A]/60">
+                    <span className="flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5 text-[#06B6D4]" />
+                      <span className="text-[#F8FAFC]">{game.playerCount}</span>
+                    </span>
+                    <span className="text-[#94A3B8] text-[10px]">{game.speed}</span>
+                  </div>
+                )}
               </div>
 
               {/* Card Meta & Bottom CTA */}
@@ -583,21 +615,53 @@ export default function CategorizedGamesCommandCenter() {
                   <span className="text-[10px] font-mono text-[#06B6D4] font-bold uppercase tracking-wider block">
                     {game.title}
                   </span>
-                  <h3 className="font-cairo font-black text-lg text-[#F8FAFC] group-hover:text-[#8B5CF6] transition-colors leading-snug drop-shadow-sm flex items-center justify-between">
+                  <h3 className={`font-cairo font-black text-lg transition-colors leading-snug drop-shadow-sm flex items-center justify-between ${
+                    isDisabled ? 'text-[#94A3B8]' : 'text-[#F8FAFC] group-hover:text-[#8B5CF6]'
+                  }`}>
                     <span>{game.arabicTitle}</span>
-                    <ArrowUpRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#8B5CF6] group-hover:translate-x-[-2px] group-hover:translate-y-[-2px] transition-all" />
+                    {!isDisabled && (
+                      <ArrowUpRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#8B5CF6] group-hover:translate-x-[-2px] group-hover:translate-y-[-2px] transition-all" />
+                    )}
                   </h3>
                   <p className="text-xs text-[#94A3B8] leading-relaxed line-clamp-2">
                     {game.tagline}
                   </p>
                 </div>
 
-                {/* Action Launch Bar */}
-                <div className="w-full py-3 rounded-2xl bg-[#0B0E14] group-hover:bg-[#8B5CF6] text-[#F8FAFC] border border-[#262C3A] group-hover:border-[#8B5CF6] font-cairo font-black text-xs flex items-center justify-center gap-2 transition-all shadow-md">
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                  <span>دخول اللعبة فوراً</span>
-                </div>
+                {/* Action Launch Bar or Disabled State */}
+                {isDisabled ? (
+                  <div className="w-full py-3 rounded-2xl bg-[#0B0E14]/60 text-amber-400/80 border border-amber-500/20 font-cairo font-black text-xs flex items-center justify-center gap-2 cursor-not-allowed">
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>قريباً في التحديث القادم (SOON)</span>
+                  </div>
+                ) : (
+                  <div className="w-full py-3 rounded-2xl bg-[#0B0E14] group-hover:bg-[#8B5CF6] text-[#F8FAFC] border border-[#262C3A] group-hover:border-[#8B5CF6] font-cairo font-black text-xs flex items-center justify-center gap-2 transition-all shadow-md">
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                    <span>دخول اللعبة فوراً</span>
+                  </div>
+                )}
               </div>
+            </>
+          );
+
+          if (isDisabled) {
+            return (
+              <div
+                key={game.id}
+                className="relative rounded-3xl master-game-card flex flex-col overflow-hidden opacity-85 border-amber-500/30 cursor-not-allowed select-none"
+              >
+                {CardInner}
+              </div>
+            );
+          }
+
+          return (
+            <Link
+              key={game.id}
+              href={`/play?engine=${game.id}`}
+              className="group relative rounded-3xl master-game-card flex flex-col overflow-hidden cursor-pointer"
+            >
+              {CardInner}
             </Link>
           );
         })}

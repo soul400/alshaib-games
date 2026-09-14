@@ -18,7 +18,7 @@ import { WinnerAnnouncementModal } from '../../components/studio/WinnerAnnouncem
 import { GameHUD, HUDPhase } from '../../components/studio/GameHUD';
 import { GAME_ENGINE_SECTIONS } from '@aep/content-library';
 import { EngineType } from '@aep/types';
-import { Play, Pause, Trophy, Zap, Hand, Home, Check, Crown, Medal, Flame, Star, Sparkles } from 'lucide-react';
+import { Play, Pause, Trophy, Zap, Hand, Home, Check, Crown, Medal, Flame, Star, Sparkles, Lock } from 'lucide-react';
 import Link from 'next/link';
 
 function PlayArenaContent() {
@@ -69,6 +69,38 @@ function PlayArenaContent() {
   }, []);
 
   // ══════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
+  // DISABLED / SOON GAMES GUARD
+  // ══════════════════════════════════════════════════════════════
+  const disabledEnginesList = ['audio-challenge', 'video-challenge', 'symbol-puzzle', 'image-puzzle', 'squid-game', 'bus-tayyibin'];
+  if (explicitEngineParam && disabledEnginesList.includes(explicitEngineParam)) {
+    return (
+      <div className="w-full min-h-screen bg-[#0B0E14] flex flex-col items-center justify-center p-6 text-center select-none font-readex" dir="rtl">
+        <div className="max-w-md w-full p-8 rounded-3xl bg-[#161B26] border border-amber-500/40 shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col items-center gap-5">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/20 border-2 border-amber-500/50 flex items-center justify-center text-amber-300 shadow-[0_0_30px_rgba(245,158,11,0.4)]">
+            <Lock className="w-8 h-8" />
+          </div>
+          <div className="space-y-2">
+            <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-mono font-black">
+              SOON • قريباً
+            </span>
+            <h2 className="font-cairo font-black text-2xl text-[#F8FAFC]">اللعبة تحت التحديث والتطوير</h2>
+            <p className="text-xs text-[#94A3B8] leading-relaxed">
+              هذا المحرك معطل حالياً وسيتوفر في التحديث القادم بتجربة تفاعلية وبصرية جديدة كلياً.
+            </p>
+          </div>
+          <Link
+            href="/"
+            className="w-full py-3.5 rounded-2xl btn-hyper-violet font-cairo font-black text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+          >
+            <Home className="w-4 h-4" />
+            <span>العودة لمكتبة الألعاب</span>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   // DEDICATED LIVE ACTION ENGINE: 🏇 VIEWER RACE GRAND PRIX (سباق المشاهدين)
   // Renders as a dedicated 100vw/100vh standalone AAA live broadcast experience!
   // ══════════════════════════════════════════════════════════════
