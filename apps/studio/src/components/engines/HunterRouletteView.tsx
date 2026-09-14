@@ -1020,71 +1020,109 @@ export function HunterRouletteView({ question }: Props) {
         </div>
       )}
 
-      {/* 🔴 PAGE 4: CINEMATIC HUNTER SCENE (مشهد الصياد والرمي السينمائي VEO 3) */}
+      {/* 🔴 PAGE 4: AAA CINEMATIC HUNTER DUEL ARENA (مشهد الصياد السينمائي عالي الدقة) */}
       {(phase === 'HUNTER_SCENE' || phase === 'SURVIVED' || phase === 'ELIMINATED') && currentTarget && (
-        <div className="w-full flex-1 flex flex-col items-center justify-between gap-6 py-6 relative overflow-hidden">
+        <div className="w-full flex-1 flex flex-col items-center justify-between gap-6 py-4 relative overflow-hidden select-none">
           
-          {/* Top Weapon Status & Live Counters */}
-          <div className="flex items-center justify-between w-full border-b border-[#1E2038] pb-3 z-10 flex-wrap gap-2">
-            <span className="font-black text-rose-400 font-mono text-base uppercase flex items-center gap-2">
-              <Crosshair className="w-5 h-5 animate-pulse" />
-              <span>مشهد الصياد والتنفيذ السينمائي</span>
-            </span>
+          {/* Full-Screen Dynamic Atmosphere Shockwave FX */}
+          {phase === 'ELIMINATED' && (
+            <div className="absolute inset-0 pointer-events-none z-50 animate-shockwave-flash" />
+          )}
+          {phase === 'SURVIVED' && (
+            <div className="absolute inset-0 pointer-events-none z-50 animate-shield-flash" />
+          )}
 
-            <div className="flex items-center gap-2 flex-wrap">
-              {/* 🎯 6-Chamber Revolver Cylinder HUD */}
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/50 border border-amber-400/30">
-                <span className="text-[11px] font-mono text-amber-300 font-bold ml-1">مخزن السلاح:</span>
-                {[0, 1, 2, 3, 4, 5].map((idx) => {
-                  const isCurrent = cylinderChamber === idx;
-                  return (
-                    <span
-                      key={idx}
-                      title={`حجرة #${idx + 1}`}
-                      className={`w-3 h-3 rounded-full border transition-all ${
-                        isCurrent
-                          ? 'bg-amber-400 border-white shadow-[0_0_8px_#F59E0B] scale-110'
-                          : idx < cylinderChamber
-                          ? 'bg-rose-500/60 border-rose-400'
-                          : 'bg-white/20 border-white/30'
-                      }`}
-                    />
-                  );
-                })}
+          {/* Top Weapon Tactical Header & 6-Chamber Revolver Cylinder HUD */}
+          <div className="flex items-center justify-between w-full border-b border-[#262C3A] pb-3 z-10 flex-wrap gap-3 bg-[#0B0E14]/70 backdrop-blur-md px-4 py-2.5 rounded-2xl">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400">
+                <Crosshair className="w-4 h-4 animate-spin-slow" />
+              </div>
+              <div className="flex flex-col text-right">
+                <span className="font-cairo font-black text-sm text-white tracking-wide flex items-center gap-2">
+                  <span>مواجهة الصياد والتنفيذ التكتيكي</span>
+                  <span className="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-400 text-[10px] font-mono font-bold">
+                    AAA ARENA
+                  </span>
+                </span>
+                <span className="text-[10px] font-mono text-slate-400">LIVE HIGH-STAKES DUEL</span>
+              </div>
+            </div>
+
+            {/* Chamber HUD & Telemetry Badges */}
+            <div className="flex items-center gap-2.5 flex-wrap">
+              {/* 🎯 6-Chamber Revolver Mechanical Cylinder */}
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#161B26] border border-[#262C3A] shadow-inner">
+                <span className="text-[11px] font-mono text-amber-300 font-bold ml-1">مخزن الذخيرة:</span>
+                <div className="flex items-center gap-1.5">
+                  {[0, 1, 2, 3, 4, 5].map((idx) => {
+                    const isCurrent = cylinderChamber === idx;
+                    const isPassed = idx < cylinderChamber;
+                    return (
+                      <div
+                        key={idx}
+                        title={`حجرة #${idx + 1}`}
+                        className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-all duration-300 ${
+                          isCurrent
+                            ? 'bg-amber-400 border-white shadow-[0_0_12px_#F59E0B] scale-125 z-10'
+                            : isPassed
+                            ? 'bg-rose-600/50 border-rose-500'
+                            : 'bg-slate-800 border-slate-700'
+                        }`}
+                      >
+                        {isCurrent && <span className="w-1 h-1 rounded-full bg-slate-950 animate-ping" />}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
-              <span className="px-3 py-1 rounded-xl bg-purple-500/20 text-purple-300 text-xs font-mono font-black border border-purple-500/30">
-                المشاركون: {totalCount}
-              </span>
-              <span className="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-300 text-xs font-mono font-black border border-emerald-500/30">
-                الأحياء: {aliveCount}
-              </span>
-              <span className="px-3 py-1 rounded-xl bg-rose-500/20 text-rose-300 text-xs font-mono font-black border border-rose-500/30">
-                المقصيون: {eliminatedCount}
-              </span>
-              <span className="px-4 py-1 rounded-full text-xs font-black bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono">
-                {isLoadedShot === true ? '🔴 طلقة محملة' : isLoadedShot === false ? '⚪ بندقية فارغة' : '⏳ جاري التوجيه...'}
+              {/* Status Pill */}
+              <span className={`px-4 py-1.5 rounded-xl text-xs font-black font-cairo border shadow-md flex items-center gap-1.5 ${
+                phase === 'ELIMINATED'
+                  ? 'bg-rose-500/25 text-rose-300 border-rose-500/60 animate-pulse'
+                  : phase === 'SURVIVED'
+                  ? 'bg-emerald-500/25 text-emerald-300 border-emerald-500/60 animate-pulse'
+                  : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+              }`}>
+                {phase === 'ELIMINATED' && <span>💥 تم إطلاق النار</span>}
+                {phase === 'SURVIVED' && <span>🛡️ البندقية فارغة (نجاة)</span>}
+                {phase === 'HUNTER_SCENE' && <span>⏳ حبس الأنفاس... سحب الزناد</span>}
               </span>
             </div>
           </div>
 
-          {/* Cinematic Duel Display with VEO 3 Style Animations */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center w-full flex-1 my-4 relative">
+          {/* ═══════════════════════════════════════════════════════ */}
+          {/* CINEMATIC DUEL STAGE (الصياد في اليمين • الضحية في اليسار) */}
+          {/* ═══════════════════════════════════════════════════════ */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center w-full flex-1 my-3 relative px-2 sm:px-6">
             
-            {/* Flying Bullet Visual FX (عند الإطلاق والطلقة محملة) */}
+            {/* ⚡ High-Velocity Lethal Bullet Flight Laser Beam */}
             {phase === 'ELIMINATED' && (
-              <div className="absolute top-1/2 left-1/4 right-1/4 h-2 z-30 pointer-events-none flex items-center justify-end">
-                <div className="w-12 h-3 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 rounded-full shadow-[0_0_20px_#F59E0B] animate-bullet-flight" />
+              <div className="hidden md:flex absolute top-1/2 left-[30%] right-[30%] h-1 z-40 pointer-events-none items-center justify-end">
+                <div className="w-full h-1.5 bg-gradient-to-r from-transparent via-amber-300 to-rose-500 rounded-full shadow-[0_0_25px_#FF2E54] animate-bullet-flight" />
+                <div className="absolute right-0 w-8 h-8 rounded-full bg-amber-300 blur-sm animate-ping" />
               </div>
             )}
 
-            {/* Hunter Side with Official Character Image (Flipped Horizontally to face Victim on Left) */}
-            <div className="flex flex-col items-center text-center gap-4 p-6 rounded-3xl bg-[#16172E] border border-[#202242] shadow-2xl relative overflow-hidden group">
-              <div className="relative w-64 h-64 flex items-center justify-center">
+            {/* 🤠 1. HUNTER ARENA CARD */}
+            <div className="flex flex-col items-center text-center gap-4 p-6 rounded-3xl bg-[#161B26] border border-[#262C3A] shadow-2xl relative overflow-hidden group">
+              
+              {/* Hunter Role Badges */}
+              <div className="flex items-center justify-between w-full pb-2 border-b border-white/5">
+                <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 text-xs font-mono font-black flex items-center gap-1.5">
+                  <Crosshair className="w-3.5 h-3.5" />
+                  <span>الصياد المسلح</span>
+                </span>
+                <span className="text-xs font-mono text-slate-400">سلاح الصيد 12-GAUGE</span>
+              </div>
+
+              {/* Hunter Visual Character Frame with High Recoil Physics */}
+              <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
                 <img
                   src="/hunter-character.png"
                   alt="الصياد"
-                  className={`w-full h-full object-contain filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)] -scale-x-100 transition-transform ${
+                  className={`w-full h-full object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.95)] -scale-x-100 transition-transform ${
                     phase === 'ELIMINATED'
                       ? 'animate-recoil'
                       : phase === 'SURVIVED'
@@ -1093,87 +1131,144 @@ export function HunterRouletteView({ question }: Props) {
                   }`}
                 />
                 
-                {/* Muzzle Flash FX on Rifle Barrel (Left Side since image is flipped) */}
+                {/* 💥 Hyper Explosive Muzzle Blast Flare on Fatal Shot */}
                 {phase === 'ELIMINATED' && (
-                  <div className="absolute top-16 left-2 w-20 h-20 bg-gradient-to-r from-amber-400 via-red-500 to-yellow-300 rounded-full blur-sm animate-ping opacity-90 z-20" />
+                  <div className="absolute top-16 left-2 w-28 h-28 rounded-full pointer-events-none z-30 flex items-center justify-center">
+                    <div className="w-24 h-24 bg-gradient-to-r from-yellow-300 via-amber-500 to-rose-600 rounded-full blur-md animate-muzzle-blast" />
+                    <div className="absolute w-12 h-12 bg-white rounded-full blur-xs animate-ping" />
+                  </div>
                 )}
                 
-                {/* Blank Click Smoke FX */}
+                {/* 💨 Blank Click Smoke Cloud FX on Survived */}
                 {phase === 'SURVIVED' && (
-                  <div className="absolute top-16 left-2 text-xs font-mono font-black text-slate-400 bg-white/10 backdrop-blur-md px-2 py-1 rounded-full animate-bounce">
-                    💨 *Click*
+                  <div className="absolute top-16 left-2 flex items-center gap-1 text-xs font-mono font-black text-slate-300 bg-[#0B0E14]/90 border border-slate-600/60 backdrop-blur-md px-3 py-1.5 rounded-full animate-bounce shadow-lg z-30">
+                    <span>💨 *CLICK!* فارغة</span>
                   </div>
                 )}
               </div>
 
-              <div>
-                <h3 className="font-black text-white text-xl">الصياد {currentShooter?.displayName}</h3>
-                <span className="text-xs text-amber-400 font-extrabold block mt-1">
-                  {phase === 'HUNTER_SCENE' && 'يوجه البندقية بدقة نحو الضحية...'}
-                  {phase === 'ELIMINATED' && '🔥 أطلق النار وحصل الانفجار!'}
-                  {phase === 'SURVIVED' && '💨 ضغط الزناد والبندقية كانت فارغة!'}
+              {/* Hunter Name and Narrative */}
+              <div className="space-y-1">
+                <h3 className="font-cairo font-black text-white text-xl">{currentShooter?.displayName}</h3>
+                <span className="text-xs text-amber-400 font-extrabold block font-cairo">
+                  {phase === 'HUNTER_SCENE' && 'يوجه الفوهة ويسحب الزناد في اللحظة الحاسمة...'}
+                  {phase === 'ELIMINATED' && '🔥 انطلقت الرصاصة الحية وحصل الإقصاء الفوري!'}
+                  {phase === 'SURVIVED' && '💨 نقرة زناد فارغة! البندقية لم تكن محملة بالرصاص!'}
                 </span>
               </div>
             </div>
 
-            {/* Target Side */}
-            <div className={`flex flex-col items-center text-center gap-4 p-8 rounded-3xl transition-all shadow-2xl relative ${
+            {/* 🎯 2. VICTIM ARENA CARD */}
+            <div className={`flex flex-col items-center text-center gap-4 p-6 sm:p-8 rounded-3xl transition-all duration-500 shadow-2xl relative overflow-hidden ${
               phase === 'ELIMINATED'
-                ? 'bg-rose-950/60 border-2 border-rose-600 animate-shake'
+                ? 'bg-rose-950/40 border-2 border-rose-500 shadow-[0_0_50px_rgba(244,63,94,0.4)] animate-shake'
                 : phase === 'SURVIVED'
-                ? 'bg-emerald-950/60 border-2 border-emerald-500'
-                : 'bg-[#16172E] border border-[#202242]'
+                ? 'bg-emerald-950/40 border-2 border-emerald-500 shadow-[0_0_50px_rgba(16,185,129,0.4)]'
+                : 'bg-[#161B26] border border-[#262C3A]'
             }`}>
-              <div className="relative">
+              
+              {/* Target Header */}
+              <div className="flex items-center justify-between w-full pb-2 border-b border-white/5">
+                <span className={`px-3 py-1 rounded-full text-xs font-mono font-black flex items-center gap-1.5 ${
+                  phase === 'ELIMINATED'
+                    ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40'
+                    : phase === 'SURVIVED'
+                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                    : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40'
+                }`}>
+                  <Target className="w-3.5 h-3.5" />
+                  <span>الهدف في المرمى</span>
+                </span>
+                <span className="text-xs font-mono text-slate-400">@{currentTarget.username.replace('@', '')}</span>
+              </div>
+
+              {/* Avatar Centerpiece with Scope/Explosion/Shield Layering */}
+              <div className="relative my-3">
+                
+                {/* Player Profile Image */}
                 <img
                   src={currentTarget.avatarUrl}
                   alt={currentTarget.displayName}
-                  className={`w-32 h-32 rounded-full object-cover border-4 transition-all ${
-                    phase === 'ELIMINATED' ? 'border-rose-600 scale-95' : 'border-rose-500 shadow-2xl'
+                  className={`w-36 h-36 sm:w-40 sm:h-40 rounded-3xl object-cover border-4 transition-all duration-500 shadow-2xl ${
+                    phase === 'ELIMINATED' 
+                      ? 'border-rose-600 grayscale contrast-125 scale-95' 
+                      : phase === 'SURVIVED'
+                      ? 'border-emerald-400 shadow-[0_0_40px_rgba(16,185,129,0.5)]'
+                      : 'border-[#262C3A]'
                   }`}
                 />
                 
-                {/* Target Scope Ring Overlay */}
+                {/* 🎯 Laser Scope Crosshair Tracking Overlay */}
                 {phase === 'HUNTER_SCENE' && (
-                  <div className="absolute inset-0 border-4 border-dashed border-rose-500 rounded-full animate-spin-slow" />
+                  <div className="absolute inset-0 rounded-3xl border-3 border-dashed border-rose-500 flex items-center justify-center animate-laser-lock pointer-events-none">
+                    <div className="w-8 h-8 rounded-full border-2 border-rose-400 flex items-center justify-center animate-ping">
+                      <div className="w-2 h-2 rounded-full bg-rose-500" />
+                    </div>
+                  </div>
                 )}
 
-                {/* Explosion FX */}
+                {/* 💥 Fatal Explosion Shatter Overlay on Eliminated */}
                 {phase === 'ELIMINATED' && (
-                  <div className="absolute inset-0 bg-black/85 rounded-full flex flex-col items-center justify-center text-5xl text-rose-500 animate-pulse border-2 border-rose-500">
-                    💥
-                    <span className="text-[10px] font-black text-rose-400 font-mono mt-1">DESTROYED</span>
+                  <div className="absolute inset-0 bg-slate-950/85 rounded-3xl flex flex-col items-center justify-center gap-1 text-5xl text-rose-500 border-2 border-rose-500 shadow-[0_0_35px_rgba(244,63,94,0.7)] animate-in zoom-in-75 duration-300">
+                    <span className="animate-bounce">💥</span>
+                    <span className="text-xs font-black text-rose-400 font-mono tracking-widest">ELIMINATED</span>
+                    <span className="text-[10px] font-bold text-slate-400">تم الإقصاء</span>
                   </div>
                 )}
 
-                {/* Shield FX on Survived */}
+                {/* 🛡️ Holographic Energy Shield FX on Survived */}
                 {phase === 'SURVIVED' && (
-                  <div className="absolute -top-2 -right-2 bg-emerald-500 text-white p-2 rounded-full shadow-lg animate-bounce">
-                    <ShieldCheck className="w-6 h-6" />
-                  </div>
+                  <>
+                    <div className="absolute inset-0 rounded-3xl border-3 border-emerald-400 animate-energy-shield pointer-events-none bg-emerald-500/15 backdrop-blur-[1px]" />
+                    <div className="absolute -top-3 -right-3 bg-gradient-to-tr from-emerald-600 to-emerald-400 text-slate-950 p-2.5 rounded-2xl shadow-[0_0_20px_rgba(16,185,129,0.7)] animate-bounce border-2 border-white">
+                      <ShieldCheck className="w-7 h-7 stroke-[2.5]" />
+                    </div>
+                  </>
                 )}
               </div>
 
-              <div>
-                <h3 className="font-black text-white text-xl">{currentTarget.displayName}</h3>
-                <span className="text-xs font-mono text-slate-400 block">@{currentTarget.username}</span>
+              {/* Target Name & Outcome Verdict */}
+              <div className="space-y-1 w-full">
+                <h3 className="font-cairo font-black text-white text-xl truncate">{currentTarget.displayName}</h3>
+                
+                {phase === 'SURVIVED' && (
+                  <div className="px-4 py-2 rounded-2xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-cairo font-black text-sm flex items-center justify-center gap-2 animate-in zoom-in shadow-md">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    <span>درع الأمان فعال! نجا من الإقصاء بصمود تام 🛡️</span>
+                  </div>
+                )}
+
+                {phase === 'ELIMINATED' && (
+                  <div className="px-4 py-2 rounded-2xl bg-rose-500/20 text-rose-300 border border-rose-500/40 font-cairo font-black text-sm flex items-center justify-center gap-2 animate-in zoom-in shadow-md">
+                    <Skull className="w-4 h-4 text-rose-400" />
+                    <span>أصيبت الضحية مباشرة! تم الإقصاء والمغادرة 💀</span>
+                  </div>
+                )}
+
+                {phase === 'HUNTER_SCENE' && (
+                  <span className="text-xs font-mono text-slate-400 block">
+                    احتمالية الخطر مرتفعة جداً... بانتظار نتيجة الزناد
+                  </span>
+                )}
               </div>
+
             </div>
 
           </div>
 
-          {/* Shot Outcome Banner */}
-          {phase === 'SURVIVED' && (
-            <div className="w-full py-4 rounded-2xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xl font-black text-center animate-in zoom-in shadow-lg">
-              💨 لقد نجوت! البندقية كانت فارغة من الرصاص!
-            </div>
-          )}
-
-          {phase === 'ELIMINATED' && (
-            <div className="w-full py-4 rounded-2xl bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xl font-black text-center animate-in zoom-in shadow-lg">
-              💀 تم إقصاء اللاعب {currentTarget.displayName} وتدمير البروفايل!
-            </div>
-          )}
+          {/* Bottom Broadcast Result Ticker */}
+          <div className="w-full flex items-center justify-center">
+            {phase === 'SURVIVED' && (
+              <div className="px-6 py-3 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-cairo font-black text-sm sm:text-base text-center shadow-lg animate-in zoom-in flex items-center gap-3">
+                <span>💨 نجاة أسطورية! رصاصة فارغة — {currentTarget.displayName} يستمر في المنافسة</span>
+              </div>
+            )}
+            {phase === 'ELIMINATED' && (
+              <div className="px-6 py-3 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-300 font-cairo font-black text-sm sm:text-base text-center shadow-lg animate-in zoom-in flex items-center gap-3">
+                <span>💀 رصاصة قاتلة! إقصاء {currentTarget.displayName} رسمياً من حلبة الصمود</span>
+              </div>
+            )}
+          </div>
 
         </div>
       )}

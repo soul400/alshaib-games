@@ -301,3 +301,124 @@ h1, h2, h3, h4, h5, h6, .font-display, .font-cairo {
 .animate-shake {
   animation: shake 0.6s ease-in-out;
 }
+
+
+/* ══════════════════════════════════════════════════════════════ */
+/* 5. AAA HUNTER CINEMATIC ANIMATIONS                             */
+/* ══════════════════════════════════════════════════════════════ */
+
+/* Rifle Recoil */
+@keyframes rifle-recoil {
+  0% { transform: scaleX(-1) translateX(0) rotate(0deg); }
+  15% { transform: scaleX(-1) translateX(-35px) rotate(8deg) scale(1.06); }
+  40% { transform: scaleX(-1) translateX(-15px) rotate(-3deg); }
+  70% { transform: scaleX(-1) translateX(-5px) rotate(1deg); }
+  100% { transform: scaleX(-1) translateX(0) rotate(0deg); }
+}
+.animate-recoil {
+  animation: rifle-recoil 0.75s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+/* Blank Click Dry Fire */
+@keyframes click-recoil {
+  0% { transform: scaleX(-1) translateX(0); }
+  25% { transform: scaleX(-1) translateX(-6px) rotate(1.5deg); }
+  50% { transform: scaleX(-1) translateX(3px) rotate(-0.5deg); }
+  100% { transform: scaleX(-1) translateX(0) rotate(0deg); }
+}
+.animate-click-recoil {
+  animation: click-recoil 0.4s ease-out;
+}
+
+/* High-Velocity Bullet Flight */
+@keyframes bullet-flight {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scaleX(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(-40%) scaleX(1.8);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-120%) scaleX(2.5);
+  }
+}
+.animate-bullet-flight {
+  animation: bullet-flight 0.35s cubic-bezier(0.11, 0, 0.5, 0) forwards;
+}
+
+/* Muzzle Flare Burst */
+@keyframes muzzle-blast {
+  0% {
+    transform: scale(0.3) rotate(0deg);
+    opacity: 1;
+  }
+  35% {
+    transform: scale(2.2) rotate(45deg);
+    opacity: 0.95;
+    filter: brightness(2.5) drop-shadow(0 0 35px #FF2E54);
+  }
+  100% {
+    transform: scale(3.2) rotate(90deg);
+    opacity: 0;
+    filter: brightness(1);
+  }
+}
+.animate-muzzle-blast {
+  animation: muzzle-blast 0.45s ease-out forwards;
+}
+
+/* Target Crosshair Lock Pulse */
+@keyframes laser-lock {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.08) rotate(180deg);
+    opacity: 1;
+    box-shadow: 0 0 45px rgba(255, 46, 84, 0.8), inset 0 0 25px rgba(255, 46, 84, 0.4);
+  }
+}
+.animate-laser-lock {
+  animation: laser-lock 2s infinite ease-in-out;
+}
+
+/* Holographic Energy Shield Active */
+@keyframes energy-shield-pulse {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.5), inset 0 0 20px rgba(16, 185, 129, 0.4);
+    border-color: #10B981;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 65px rgba(16, 185, 129, 0.85), inset 0 0 35px rgba(16, 185, 129, 0.7);
+    border-color: #34D399;
+    transform: scale(1.04);
+  }
+}
+.animate-energy-shield {
+  animation: energy-shield-pulse 1.4s infinite ease-in-out;
+}
+
+/* Screen Shockwave Flash on Fatal Shot */
+@keyframes shockwave-flash {
+  0% { opacity: 0; }
+  15% { opacity: 0.85; background: radial-gradient(circle, rgba(255, 46, 84, 0.6) 0%, rgba(255, 0, 0, 0.2) 60%, transparent 100%); }
+  100% { opacity: 0; }
+}
+.animate-shockwave-flash {
+  animation: shockwave-flash 0.8s ease-out forwards;
+}
+
+/* Screen Flash for Shield Deflection */
+@keyframes shield-flash {
+  0% { opacity: 0; }
+  20% { opacity: 0.75; background: radial-gradient(circle, rgba(16, 185, 129, 0.6) 0%, rgba(5, 150, 105, 0.2) 60%, transparent 100%); }
+  100% { opacity: 0; }
+}
+.animate-shield-flash {
+  animation: shield-flash 0.9s ease-out forwards;
+}
