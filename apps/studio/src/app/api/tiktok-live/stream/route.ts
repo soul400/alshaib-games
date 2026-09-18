@@ -1,9 +1,8 @@
 import { NextRequest } from 'next/server';
+import { TikTokConnectionManager } from '@/server/tiktok-gateway';
+import type { AEPRealtimeEvent } from '@/server/tiktok-gateway';
 
 export const dynamic = 'force-dynamic';
-
-// Global active TikTok connector connections cache to prevent zombie sockets across page refreshes
-const globalActiveConnections = new Map<string, { disconnect: () => void; close: () => void }>();
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -20,237 +19,143 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  // If previous connections exist, disconnect them immediately to free sockets
-  globalActiveConnections.forEach((conn, key) => {
-    try {
-      conn.disconnect();
-      conn.close();
-    } catch (_) {}
-    globalActiveConnections.delete(key);
+  const manager = TikTokConnectionManager.getInstance();
+
+  // Trigger background connect if not already connected
+  manager.connect(username).catch((err) => {
+    console.warn('[SSE Route] Background connect error:', err.message);
   });
 
   const encoder = new TextEncoder();
-  let cleanupFn: (() => void) | null = null;
+  let unsubscribe: (() => void) | null = null;
+  let isStreamClosed = false;
 
   const stream = new ReadableStream({
-    async start(controller) {
-      let isStreamClosed = false;
-
-      const sendEvent = (event: string, data: any) => {
+    start(controller) {
+      // Helper to enqueue SSE formatted message
+      const sendRaw = (eventName: string, data: any) => {
         if (isStreamClosed) return;
         try {
           controller.enqueue(
-            encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`)
+            encoder.encode(`event: ${eventName}\ndata: ${JSON.stringify(data)}\n\n`)
           );
         } catch (_) {
           isStreamClosed = true;
+          if (unsubscribe) unsubscribe();
         }
       };
 
-      const sendPing = () => {
+      // Helper to map normalized events to both unified and legacy events
+      const handleEvent = (event: AEPRealtimeEvent) => {
         if (isStreamClosed) return;
-        try {
-          controller.enqueue(encoder.encode(`: ping ${Date.now()}\n\n`));
-        } catch (_) {
-          isStreamClosed = true;
-          if (cleanupFn) cleanupFn();
+
+        // 1. Send the unified normalized event
+        sendRaw('aep_event', event);
+
+        // 2. Send legacy event format for backward compatibility with existing components
+        switch (event.type) {
+          case 'chat':
+            sendRaw('comment', {
+              id: event.id,
+              userId: event.payload.userId,
+              username: event.payload.uniqueId,
+              displayName: event.payload.nickname,
+              avatarUrl: event.payload.avatarUrl,
+              comment: event.payload.comment,
+              timestamp: event.timestamp,
+            });
+            break;
+
+          case 'gift':
+            sendRaw('gift', {
+              id: event.id,
+              userId: event.payload.userId,
+              username: event.payload.uniqueId,
+              displayName: event.payload.nickname,
+              avatarUrl: event.payload.avatarUrl,
+              giftName: event.payload.giftName,
+              diamondCount: event.payload.diamondCount,
+              repeatCount: event.payload.repeatCount,
+              totalDiamonds: event.payload.totalDiamonds,
+              timestamp: event.timestamp,
+            });
+            break;
+
+          case 'viewer_update':
+            sendRaw('roomInfo', {
+              viewerCount: event.payload.viewerCount,
+              timestamp: event.timestamp,
+            });
+            break;
+
+          case 'connection_state':
+            sendRaw('status', {
+              type: event.payload.currentState.toLowerCase(),
+              username: event.payload.broadcasterUsername,
+              roomId: event.payload.roomId,
+              isOnline:
+                event.payload.currentState === 'CONNECTED' ||
+                event.payload.currentState === 'STREAMING',
+              message: event.payload.message,
+              timestamp: event.timestamp,
+            });
+            break;
+
+          case 'room_update':
+            sendRaw('roomInfo', {
+              roomId: event.payload.roomId,
+              viewerCount: event.payload.viewerCount,
+              totalLikes: event.payload.totalLikes,
+              isLive: event.payload.isLive,
+              timestamp: event.timestamp,
+            });
+            break;
         }
       };
 
-      // Heartbeat interval every 10 seconds to keep connection alive and detect dropped sockets quickly
-      const pingInterval = setInterval(sendPing, 10000);
+      // Subscribe to event dispatcher (Fanout)
+      unsubscribe = manager.subscribe('*', handleEvent);
 
-      try {
-        const { TikTokLiveConnection } = await import('tiktok-live-connector');
-        
-        const tiktokLive = new TikTokLiveConnection(username, {
-          processInitialData: true,
-          enableExtendedGiftInfo: false,
-          requestPollingIntervalMs: 1500,
-          clientParams: {
-            app_language: 'ar-SA',
-            webcast_language: 'ar-SA',
-          },
-          requestOptions: {
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-              'Accept-Language': 'ar-SA,ar;q=0.9,en-US;q=0.8,en;q=0.7',
-              'Cache-Control': 'no-cache',
-            },
-            timeout: 6000,
-          }
-        });
+      // Send initial status immediately so client knows current state
+      const health = manager.getHealth();
+      sendRaw('status', {
+        type: health.status.toLowerCase(),
+        username: health.broadcasterUsername || username,
+        roomId: health.roomId,
+        isOnline: health.isOnline,
+        message: health.isOnline
+          ? `🟢 متصل ببث @${health.broadcasterUsername}`
+          : `⏳ حالة الاتصال: ${health.status}`,
+        timestamp: Date.now(),
+      });
 
-        // Cleanup handler for this instance
-        cleanupFn = () => {
-          if (isStreamClosed) return;
-          isStreamClosed = true;
-          clearInterval(pingInterval);
-          globalActiveConnections.delete(username);
-          try {
-            tiktokLive.disconnect();
-          } catch (_) {}
-          try {
-            controller.close();
-          } catch (_) {}
-        };
+      // Hydrate with recent 25 events from buffer
+      const recent = manager.getRecentEvents(25);
+      for (const ev of recent) {
+        handleEvent(ev);
+      }
 
-        // Register in active connections
-        globalActiveConnections.set(username, {
-          disconnect: () => {
-            try { tiktokLive.disconnect(); } catch (_) {}
-          },
-          close: () => {
-            isStreamClosed = true;
-            clearInterval(pingInterval);
-            try { controller.close(); } catch (_) {}
-          }
-        });
+      // Handle client disconnect (abort signal)
+      // IMPORTANT: Does NOT disconnect the upstream TikTok session! Only removes this tab's subscriber.
+      request.signal.addEventListener('abort', () => {
+        isStreamClosed = true;
+        if (unsubscribe) {
+          unsubscribe();
+          unsubscribe = null;
+        }
+        try {
+          controller.close();
+        } catch (_) {}
+      });
+    },
 
-        // Initial connecting notice
-        sendEvent('status', {
-          type: 'connecting',
-          username,
-          isOnline: false,
-          message: `⏳ جاري الاتصال ببث @${username}...`,
-          timestamp: Date.now(),
-        });
-
-        // Connection established
-        tiktokLive.on('connected', (state: any) => {
-          sendEvent('status', {
-            type: 'connected',
-            username,
-            roomId: state?.roomId || tiktokLive.roomId || `room-${Date.now()}`,
-            isOnline: true,
-            message: `🟢 متصل ببث @${username} بنجاح!`,
-            timestamp: Date.now(),
-          });
-        });
-
-        // Room info & viewer count
-        tiktokLive.on('roomUser', (data: any) => {
-          const count = data?.viewerCount || data?.userCount || 0;
-          sendEvent('roomInfo', {
-            viewerCount: count,
-            timestamp: Date.now(),
-          });
-        });
-
-        // Chat / Comments
-        tiktokLive.on('chat', (data: any) => {
-          const userObj = data?.user || {};
-          const commentText = data?.comment || data?.content || '';
-          
-          const rawUniqueId = data?.uniqueId || userObj?.uniqueId || userObj?.displayId || userObj?.idStr || '';
-          const cleanUsername = rawUniqueId ? `@${rawUniqueId}` : '@anonymous';
-          const displayName = data?.nickname || userObj?.nickname || cleanUsername;
-          
-          const avatarUrl = 
-            data?.profilePictureUrl || 
-            userObj?.avatarThumb?.urlList?.[0] || 
-            userObj?.avatarMedium?.urlList?.[0] || 
-            userObj?.avatarLarge?.urlList?.[0] || 
-            'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80';
-
-          if (commentText) {
-            sendEvent('comment', {
-              id: `tt-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-              userId: userObj?.userId || rawUniqueId || `user-${Date.now()}`,
-              username: cleanUsername,
-              displayName: displayName,
-              avatarUrl: avatarUrl,
-              comment: commentText,
-              timestamp: Date.now(),
-            });
-          }
-        });
-
-        // Gifts
-        tiktokLive.on('gift', (data: any) => {
-          const userObj = data?.user || {};
-          const rawUniqueId = data?.uniqueId || userObj?.uniqueId || userObj?.displayId || '';
-          sendEvent('gift', {
-            userId: userObj?.userId || rawUniqueId,
-            username: rawUniqueId ? `@${rawUniqueId}` : '@anonymous',
-            displayName: data?.nickname || userObj?.nickname || rawUniqueId,
-            giftName: data?.giftName || 'هدية',
-            diamondCount: data?.diamondCount || 1,
-            repeatCount: data?.repeatCount || 1,
-            timestamp: Date.now(),
-          });
-        });
-
-        // Stream ended
-        tiktokLive.on('streamEnd', () => {
-          sendEvent('status', {
-            type: 'ended',
-            username,
-            isOnline: false,
-            message: `🔴 انتهى بث @${username}`,
-            timestamp: Date.now(),
-          });
-        });
-
-        // Disconnected
-        tiktokLive.on('disconnected', () => {
-          sendEvent('status', {
-            type: 'disconnected',
-            username,
-            isOnline: false,
-            message: `⚠️ انقطع الاتصال ببث @${username}`,
-            timestamp: Date.now(),
-          });
-        });
-
-        // Error handler
-        tiktokLive.on('error', (err: any) => {
-          sendEvent('status', {
-            type: 'error',
-            username,
-            isOnline: false,
-            message: `⚠️ البث غير نشط حالياً لـ @${username}. يمكنك تشغيل "البث التجريبي" للتدريب والإعداد!`,
-            timestamp: Date.now(),
-          });
-        });
-
-        // Connect with a 6-second timeout to prevent hanging
-        const connectPromise = tiktokLive.connect();
-        const timeoutPromise = new Promise<never>((_, reject) => 
-          setTimeout(() => reject(new Error('Connection timeout')), 6000)
-        );
-
-        const state: any = await Promise.race([connectPromise, timeoutPromise]);
-        
-        sendEvent('status', {
-          type: 'connected',
-          username,
-          roomId: state?.roomId || `room-${Date.now()}`,
-          isOnline: true,
-          message: `🟢 أونلاين - متصل بالبث المباشر (Room: ${state?.roomId})`,
-          timestamp: Date.now(),
-        });
-
-        // Handle browser client disconnect
-        request.signal.addEventListener('abort', () => {
-          if (cleanupFn) cleanupFn();
-        });
-
-      } catch (err: any) {
-        sendEvent('status', {
-          type: 'offline',
-          username,
-          isOnline: false,
-          message: `🔴 الحساب @${username} غير متصل ببث كشاف حالياً. اضغط "تشغيل البث التجريبي" لتجربة الألعاب والشات مجاناً!`,
-          timestamp: Date.now(),
-        });
+    cancel() {
+      isStreamClosed = true;
+      if (unsubscribe) {
+        unsubscribe();
+        unsubscribe = null;
       }
     },
-    cancel(reason) {
-      if (cleanupFn) {
-        cleanupFn();
-      }
-    }
   });
 
   return new Response(stream, {

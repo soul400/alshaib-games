@@ -8,7 +8,8 @@ import {
   TikTokLiveComment, 
   WinnerAnnouncement,
   AnyQuestion,
-  EngineType
+  EngineType,
+  GameRound
 } from '@aep/types';
 import { TikTokLiveEngine } from '@aep/tiktok-live';
 import { soundFX, triggerVisualEffect } from '@aep/audio-visual-fx';

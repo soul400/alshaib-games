@@ -761,7 +761,10 @@ export type AnyQuestion =
   | BombPassQuestion
   | ReactQuestion
   | MemoryMatchQuestion
-  | CapitalsQuestion;
+  | CapitalsQuestion
+  | BusQuestion
+  | SquidGameQuestion
+  | ViewerRaceQuestion;
 
 
 export interface GameRound {
@@ -801,6 +804,7 @@ export interface EntertainmentShow {
 
 export interface PlayerScore {
   id: string;
+  userId?: string;
   username: string;
   displayName: string;
   avatarUrl?: string;
@@ -1159,6 +1163,147 @@ export interface ViewerRaceQuestion extends BaseQuestion {
   engineType: 'viewer-race';
   config: ViewerRaceConfig;
 }
+
+// ══════════════════════════════════════════════════════════════
+// 📡 AEP TIKTOK LIVE GATEWAY & REAL-TIME EVENT BUS INTERFACES
+// ══════════════════════════════════════════════════════════════
+
+export type TikTokConnectionState =
+  | 'IDLE'
+  | 'RESOLVING_ROOM'
+  | 'CONNECTING'
+  | 'CONNECTED'
+  | 'STREAMING'
+  | 'DEGRADED'
+  | 'RECONNECTING'
+  | 'BACKOFF'
+  | 'DISCONNECTING'
+  | 'DISCONNECTED'
+  | 'FAILED';
+
+export type AEPEventType =
+  | 'chat'
+  | 'gift'
+  | 'like'
+  | 'follow'
+  | 'share'
+  | 'viewer_update'
+  | 'room_update'
+  | 'connection_state'
+  | 'error'
+  | 'ping';
+
+export interface AEPRealtimeEvent<T = any> {
+  id: string;
+  seq: number;
+  type: AEPEventType;
+  timestamp: number;
+  payload: T;
+  broadcasterUsername: string;
+  roomId?: string;
+}
+
+export interface AEPChatPayload {
+  userId: string;
+  uniqueId: string;
+  nickname: string;
+  comment: string;
+  normalizedComment: string;
+  avatarUrl: string;
+  isModerator?: boolean;
+  isSubscriber?: boolean;
+  followRole?: number;
+  userBadges?: string[];
+  timestamp: number;
+}
+
+export interface AEPGiftPayload {
+  userId: string;
+  uniqueId: string;
+  nickname: string;
+  avatarUrl: string;
+  giftId: number | string;
+  giftName: string;
+  giftPictureUrl?: string;
+  diamondCount: number;
+  repeatCount: number;
+  comboCount?: number;
+  totalDiamonds: number;
+  timestamp: number;
+}
+
+export interface AEPLikePayload {
+  userId: string;
+  uniqueId: string;
+  nickname: string;
+  avatarUrl: string;
+  likeCount: number;
+  totalLikes: number;
+  timestamp: number;
+}
+
+export interface AEPFollowPayload {
+  userId: string;
+  uniqueId: string;
+  nickname: string;
+  avatarUrl: string;
+  timestamp: number;
+}
+
+export interface AEPSharePayload {
+  userId: string;
+  uniqueId: string;
+  nickname: string;
+  avatarUrl: string;
+  timestamp: number;
+}
+
+export interface AEPViewerUpdatePayload {
+  viewerCount: number;
+  timestamp: number;
+}
+
+export interface AEPRoomUpdatePayload {
+  roomId: string;
+  title: string;
+  broadcasterUsername: string;
+  viewerCount: number;
+  totalLikes: number;
+  isLive: boolean;
+  coverUrl?: string;
+  timestamp: number;
+}
+
+export interface AEPConnectionStatePayload {
+  previousState: TikTokConnectionState;
+  currentState: TikTokConnectionState;
+  broadcasterUsername: string;
+  roomId?: string;
+  attempt: number;
+  message: string;
+  timestamp: number;
+}
+
+export interface AEPGatewayHealthMetrics {
+  status: TikTokConnectionState;
+  broadcasterUsername: string;
+  roomId?: string;
+  isOnline: boolean;
+  uptimeSeconds: number;
+  reconnectAttempts: number;
+  totalEventsReceived: number;
+  totalEventsEmitted: number;
+  eventsPerSecond: number;
+  activeSubscribers: number;
+  lastEventTimestamp: number;
+  lastEventAgeMs: number;
+  stalenessWarning: boolean;
+  bufferSize: number;
+  dedupCacheSize: number;
+  memoryUsageMb: number;
+  startedAt: number;
+}
+
 
 
 

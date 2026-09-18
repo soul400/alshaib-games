@@ -17,7 +17,7 @@ export function WinnerAnnouncementModal({ winner, onClose }: Props) {
       winner={{
         displayName: player.displayName,
         username: player.username,
-        avatarUrl: player.avatarUrl,
+        avatarUrl: player.avatarUrl || '',
         points: pointsEarned
       }}
       title={`إجابة صحيحة: ${correctAnswer}`}

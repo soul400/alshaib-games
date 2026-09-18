@@ -1,10 +1,25 @@
-import { PlayerScore, TikTokLiveComment, WinnerAnnouncement } from '@aep/types';
+import {
+  PlayerScore,
+  TikTokLiveComment,
+  WinnerAnnouncement,
+  AEPRealtimeEvent,
+  AEPGiftPayload,
+  AEPLikePayload,
+  AEPFollowPayload,
+  AEPSharePayload,
+  TikTokConnectionState,
+} from '@aep/types';
 import { isAnswerMatch } from '@aep/game-engines';
 
 export type TikTokCommentCallback = (comment: TikTokLiveComment) => void;
 export type WinnerCallback = (winner: WinnerAnnouncement) => void;
 export type StreamStatusCallback = (status: LiveRoomStatus) => void;
 export type CorrectAnswerCallback = (data: { player: PlayerScore; pointsEarned: number; rank: number }) => void;
+export type AEPRealtimeEventCallback = (event: AEPRealtimeEvent) => void;
+export type AEPGiftCallback = (gift: AEPGiftPayload) => void;
+export type AEPLikeCallback = (like: AEPLikePayload) => void;
+export type AEPFollowCallback = (follow: AEPFollowPayload) => void;
+export type AEPShareCallback = (share: AEPSharePayload) => void;
 
 export interface LiveRoomStatus {
   isOnline: boolean;
@@ -15,16 +30,37 @@ export interface LiveRoomStatus {
   avatarUrl?: string;
   statusText: string;
   lastCheckedTime: number;
+  connectionState?: TikTokConnectionState;
 }
 
 /**
- * TikTok Live Engine - Real WebSocket Connection via SSE API Route
+ * Client-side Arabic text normalizer for answer matching
+ */
+function normalizeArabic(text: string): string {
+  if (!text) return '';
+  let s = text.trim();
+  // Strip tashkeel
+  s = s.replace(/[\u064B-\u0652\u0670]/g, '');
+  // Strip tatweel
+  s = s.replace(/\u0640/g, '');
+  // Convert Eastern numerals
+  const easternDigits: Record<string, string> = {
+    '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+    '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9',
+  };
+  s = s.replace(/[٠-٩]/g, (d) => easternDigits[d] || d);
+  // Normalize alifs, tah marbutah, alif maqsura
+  s = s.replace(/[أإآٱ]/g, 'ا');
+  s = s.replace(/ة/g, 'ه');
+  s = s.replace(/ى/g, 'ي');
+  return s.replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+/**
+ * TikTok Live Engine - Persistent Real-Time Bridge
  * 
- * Connects to TikTok Live streams through a Next.js server-side SSE endpoint
- * that uses tiktok-live-connector (Node.js WebSocket) under the hood.
- * 
- * Architecture:
- *   Browser → EventSource(/api/tiktok-live/stream?username=X) → Next.js API Route → TikTok Webcast
+ * Connects to TikTok Live streams via the Next.js server-side SSE Gateway
+ * which maintains a persistent, authoritative session with multi-client fanout.
  */
 export class TikTokLiveEngine {
   private isConnected: boolean = false;
@@ -33,13 +69,21 @@ export class TikTokLiveEngine {
     isOnline: false,
     username: '',
     statusText: 'غير متصل (Offline)',
-    lastCheckedTime: Date.now()
+    lastCheckedTime: Date.now(),
+    connectionState: 'IDLE',
   };
 
+  // Listeners
   private commentListeners: Set<TikTokCommentCallback> = new Set();
   private winnerListeners: Set<WinnerCallback> = new Set();
   private statusListeners: Set<StreamStatusCallback> = new Set();
   private correctAnswerListeners: Set<CorrectAnswerCallback> = new Set();
+  private eventListeners: Set<AEPRealtimeEventCallback> = new Set();
+  private giftListeners: Set<AEPGiftCallback> = new Set();
+  private likeListeners: Set<AEPLikeCallback> = new Set();
+  private followListeners: Set<AEPFollowCallback> = new Set();
+  private shareListeners: Set<AEPShareCallback> = new Set();
+
   private eventSource: EventSource | null = null;
   private simulationInterval: any = null;
   private liveCommentsList: TikTokLiveComment[] = [];
@@ -74,9 +118,14 @@ export class TikTokLiveEngine {
         if (saved) {
           const list: PlayerScore[] = JSON.parse(saved);
           if (Array.isArray(list)) {
-            list.forEach(p => {
-              if (p && p.userId) {
-                this.leaderboard.set(p.userId, p);
+            list.forEach((p) => {
+              const key = p.userId || p.id;
+              if (key) {
+                this.leaderboard.set(key, {
+                  ...p,
+                  id: p.id || key,
+                  userId: p.userId || key,
+                });
               }
             });
             this.updateRanks();
@@ -100,41 +149,57 @@ export class TikTokLiveEngine {
   }
 
   /**
-   * Award points directly to a player (e.g. from WhatDoTheySay, Roulette, The Vault) and persist immediately
+   * Award points directly to a player and persist immediately
    */
-  public awardPoints(playerInfo: { userId: string; username: string; displayName?: string; avatarUrl?: string; points: number }): PlayerScore {
-    let player = this.leaderboard.get(playerInfo.userId);
+  public awardPoints(playerInfo: {
+    userId: string;
+    username: string;
+    displayName?: string;
+    avatarUrl?: string;
+    points: number;
+  }): PlayerScore {
+    const key = playerInfo.userId;
+    let player = this.leaderboard.get(key);
     if (!player) {
       player = {
-        userId: playerInfo.userId,
+        id: key,
+        userId: key,
         username: playerInfo.username,
         displayName: playerInfo.displayName || playerInfo.username,
         avatarUrl: playerInfo.avatarUrl || '',
         score: 0,
         correctAnswersCount: 0,
-        rank: this.leaderboard.size + 1
+        rank: this.leaderboard.size + 1,
       };
     }
 
     player.score += playerInfo.points;
     player.correctAnswersCount += 1;
-    this.leaderboard.set(playerInfo.userId, player);
+    this.leaderboard.set(key, player);
     this.updateRanks();
     this.persistLeaderboard();
 
-    this.correctAnswerListeners.forEach(cb => cb({ player: { ...player! }, pointsEarned: playerInfo.points, rank: player!.rank }));
+    const finalPlayer = { ...player };
+    this.correctAnswerListeners.forEach((cb) =>
+      cb({ player: finalPlayer, pointsEarned: playerInfo.points, rank: finalPlayer.rank })
+    );
 
-    return { ...player };
+    return finalPlayer;
   }
 
   /**
-   * Connect to TikTok Live Stream via SSE API Route (Real Connection)
+   * Connect to TikTok Live Stream via SSE Gateway
    */
   public async connect(channelName: string): Promise<LiveRoomStatus> {
     const cleanUsername = channelName.trim().replace(/^@/, '');
 
     // Reuse existing active connection if already connected to this channel
-    if (this.isConnected && this.channelName === cleanUsername && this.eventSource && this.eventSource.readyState !== EventSource.CLOSED) {
+    if (
+      this.isConnected &&
+      this.channelName === cleanUsername &&
+      this.eventSource &&
+      this.eventSource.readyState !== EventSource.CLOSED
+    ) {
       return this.roomStatus;
     }
 
@@ -148,13 +213,14 @@ export class TikTokLiveEngine {
       isOnline: false,
       username: cleanUsername,
       statusText: '⏳ جاري الاتصال بالبث المباشر...',
-      lastCheckedTime: Date.now()
+      lastCheckedTime: Date.now(),
+      connectionState: 'CONNECTING',
     };
-    this.statusListeners.forEach(cb => cb(this.roomStatus));
+    this.statusListeners.forEach((cb) => cb(this.roomStatus));
 
     return new Promise<LiveRoomStatus>((resolve) => {
       const sseUrl = `/api/tiktok-live/stream?username=${encodeURIComponent(cleanUsername)}`;
-      
+
       this.eventSource = new EventSource(sseUrl);
       this.isConnected = true;
 
@@ -166,6 +232,24 @@ export class TikTokLiveEngine {
         }
       };
 
+      // Listen for unified AEP realtime events
+      this.eventSource.addEventListener('aep_event', (event) => {
+        try {
+          const aepEv: AEPRealtimeEvent = JSON.parse(event.data);
+          this.eventListeners.forEach((cb) => cb(aepEv));
+
+          if (aepEv.type === 'gift') {
+            this.giftListeners.forEach((cb) => cb(aepEv.payload));
+          } else if (aepEv.type === 'like') {
+            this.likeListeners.forEach((cb) => cb(aepEv.payload));
+          } else if (aepEv.type === 'follow') {
+            this.followListeners.forEach((cb) => cb(aepEv.payload));
+          } else if (aepEv.type === 'share') {
+            this.shareListeners.forEach((cb) => cb(aepEv.payload));
+          }
+        } catch (_) {}
+      });
+
       // Listen for status events
       this.eventSource.addEventListener('status', (event) => {
         try {
@@ -176,12 +260,22 @@ export class TikTokLiveEngine {
             roomId: data.roomId,
             statusText: data.message || (data.isOnline ? '🟢 أونلاين' : '🔴 أوفلاين'),
             viewerCount: data.viewerCount,
-            lastCheckedTime: Date.now()
+            lastCheckedTime: Date.now(),
+            connectionState: data.type ? data.type.toUpperCase() : undefined,
           };
-          this.statusListeners.forEach(cb => cb(this.roomStatus));
-          
+          this.statusListeners.forEach((cb) => cb(this.roomStatus));
+
           // Resolve promise on first definitive status
-          if (data.type === 'live' || data.type === 'connected' || data.type === 'offline' || data.type === 'ended' || data.type === 'disconnected' || data.type === 'error') {
+          if (
+            data.type === 'live' ||
+            data.type === 'connected' ||
+            data.type === 'streaming' ||
+            data.type === 'offline' ||
+            data.type === 'ended' ||
+            data.type === 'disconnected' ||
+            data.type === 'error' ||
+            data.type === 'failed'
+          ) {
             resolveOnce(this.roomStatus);
           }
         } catch (e) {
@@ -195,12 +289,12 @@ export class TikTokLiveEngine {
           const data = JSON.parse(event.data);
           const comment: TikTokLiveComment = {
             id: data.id || `tt-${Date.now()}`,
-            userId: data.userId,
+            userId: String(data.userId),
             username: data.username,
             displayName: data.displayName,
             avatarUrl: data.avatarUrl || '',
             comment: data.comment,
-            timestamp: data.timestamp || Date.now()
+            timestamp: data.timestamp || Date.now(),
           };
           this.processComment(comment);
         } catch (e) {
@@ -212,48 +306,33 @@ export class TikTokLiveEngine {
       this.eventSource.addEventListener('roomInfo', (event) => {
         try {
           const data = JSON.parse(event.data);
-          this.roomStatus.viewerCount = data.viewerCount;
+          if (typeof data.viewerCount === 'number') {
+            this.roomStatus.viewerCount = data.viewerCount;
+          }
+          if (data.roomId) {
+            this.roomStatus.roomId = data.roomId;
+          }
           this.roomStatus.lastCheckedTime = Date.now();
-          this.statusListeners.forEach(cb => cb(this.roomStatus));
+          this.statusListeners.forEach((cb) => cb(this.roomStatus));
         } catch (e) {}
       });
 
-      // Listen for errors
-      this.eventSource.addEventListener('error', (event) => {
-        // If it's a MessageEvent with data (custom error), parse it
-        if (event instanceof MessageEvent && event.data) {
-          try {
-            const data = JSON.parse(event.data);
-            console.warn('TikTok Live SSE error:', data.message);
-            this.roomStatus = {
-              isOnline: false,
-              username: cleanUsername,
-              statusText: `🔴 خطأ: ${data.message}`,
-              lastCheckedTime: Date.now()
-            };
-            this.statusListeners.forEach(cb => cb(this.roomStatus));
-            resolveOnce(this.roomStatus);
-          } catch (_) {}
-        }
-      });
-
-      // Handle EventSource connection errors (e.g., server down or temporary stream drop)
+      // Handle EventSource connection errors
       this.eventSource.onerror = (e: Event) => {
         if (e) {
           try {
             if (typeof (e as any).preventDefault === 'function') (e as any).preventDefault();
             if (typeof (e as any).stopPropagation === 'function') (e as any).stopPropagation();
-            if (typeof (e as any).stopImmediatePropagation === 'function') (e as any).stopImmediatePropagation();
           } catch (_) {}
         }
         this.roomStatus = {
           isOnline: false,
           username: cleanUsername,
-          statusText: '🔴 أوفلاين (البث غير متصل)',
-          lastCheckedTime: Date.now()
+          statusText: '🔴 تعذر الاتصال ببوابة الأحداث',
+          lastCheckedTime: Date.now(),
+          connectionState: 'DEGRADED',
         };
-        this.isConnected = false;
-        this.statusListeners.forEach(cb => cb(this.roomStatus));
+        this.statusListeners.forEach((cb) => cb(this.roomStatus));
         resolveOnce(this.roomStatus);
 
         if (this.eventSource) {
@@ -263,50 +342,42 @@ export class TikTokLiveEngine {
           } catch (_) {}
         }
 
-        // Auto-reconnect after 8 seconds cleanly
+        // Clean auto-reconnect after 6 seconds
         if (this.channelName) {
           if (this.reconnectTimeout) clearTimeout(this.reconnectTimeout);
           this.reconnectTimeout = setTimeout(() => {
             if (!this.isConnected && this.channelName) {
               this.connect(this.channelName).catch(() => {});
             }
-          }, 8000);
+          }, 6000);
         }
       };
 
-      // Timeout: resolve if no response within 15 seconds
+      // Timeout fallback after 15 seconds
       setTimeout(() => {
         if (!resolved) {
           this.roomStatus = {
             isOnline: false,
             username: cleanUsername,
             statusText: '🔴 انتهت مهلة الاتصال - تأكد أن البث نشط',
-            lastCheckedTime: Date.now()
+            lastCheckedTime: Date.now(),
+            connectionState: 'FAILED',
           };
-          this.statusListeners.forEach(cb => cb(this.roomStatus));
+          this.statusListeners.forEach((cb) => cb(this.roomStatus));
           resolveOnce(this.roomStatus);
         }
       }, 15000);
     });
   }
 
-  /**
-   * Check real live status (uses the SSE connect internally)
-   */
   public async checkRealLiveStatus(username: string): Promise<LiveRoomStatus> {
     return this.connect(username);
   }
 
-  /**
-   * Generates Direct Web Play Link for running directly on the website
-   */
   public getDirectWebPlayUrl(baseUrl: string = 'http://localhost:3020'): string {
     return `${baseUrl}/play?channel=${encodeURIComponent(this.channelName)}`;
   }
 
-  /**
-   * Disconnect from TikTok Live Stream
-   */
   public disconnect(): void {
     this.isConnected = false;
     if (this.reconnectTimeout) {
@@ -314,7 +385,9 @@ export class TikTokLiveEngine {
       this.reconnectTimeout = null;
     }
     if (this.eventSource) {
-      this.eventSource.close();
+      try {
+        this.eventSource.close();
+      } catch (_) {}
       this.eventSource = null;
     }
     this.stopSimulation();
@@ -332,11 +405,12 @@ export class TikTokLiveEngine {
     return this.roomStatus;
   }
 
-  /**
-   * Set the active question and engine type for scoring
-   * Resets per-question user deduplication map
-   */
-  public setActiveQuestion(questionTitle: string, acceptableAnswers: string[], points: number, engineType: string = 'quiz'): void {
+  public setActiveQuestion(
+    questionTitle: string,
+    acceptableAnswers: string[],
+    points: number,
+    engineType: string = 'quiz'
+  ): void {
     this.currentQuestionTitle = questionTitle;
     this.currentAcceptableAnswers = acceptableAnswers;
     this.currentQuestionPoints = points;
@@ -344,17 +418,14 @@ export class TikTokLiveEngine {
     this.roundWinnerDeclared = false;
     this.correctAnswerCountThisQuestion = 0;
     this.answeredUserIdsThisQuestion = new Set();
-    this.isAcceptingAnswers = true; // Re-open answers for new question
+    this.isAcceptingAnswers = true;
   }
 
-  /**
-   * Control whether the engine accepts and scores answers.
-   * Call with false when timer expires or answer is revealed.
-   */
   public setAcceptingAnswers(accepting: boolean): void {
     this.isAcceptingAnswers = accepting;
   }
 
+  // Event Listeners Registration
   public onComment(callback: TikTokCommentCallback): void {
     this.commentListeners.add(callback);
   }
@@ -387,15 +458,50 @@ export class TikTokLiveEngine {
     this.correctAnswerListeners.delete(callback);
   }
 
+  public onEvent(callback: AEPRealtimeEventCallback): void {
+    this.eventListeners.add(callback);
+  }
+
+  public offEvent(callback: AEPRealtimeEventCallback): void {
+    this.eventListeners.delete(callback);
+  }
+
+  public onGift(callback: AEPGiftCallback): void {
+    this.giftListeners.add(callback);
+  }
+
+  public offGift(callback: AEPGiftCallback): void {
+    this.giftListeners.delete(callback);
+  }
+
+  public onLike(callback: AEPLikeCallback): void {
+    this.likeListeners.add(callback);
+  }
+
+  public offLike(callback: AEPLikeCallback): void {
+    this.likeListeners.delete(callback);
+  }
+
+  public onFollow(callback: AEPFollowCallback): void {
+    this.followListeners.add(callback);
+  }
+
+  public offFollow(callback: AEPFollowCallback): void {
+    this.followListeners.delete(callback);
+  }
+
+  public onShare(callback: AEPShareCallback): void {
+    this.shareListeners.add(callback);
+  }
+
+  public offShare(callback: AEPShareCallback): void {
+    this.shareListeners.delete(callback);
+  }
+
   public getComments(): TikTokLiveComment[] {
     return [...this.liveCommentsList];
   }
 
-  /**
-   * Calculate points based on engine type and answer order:
-   * - alphabet: Only 1st answer gets 1 point, then roundWinnerDeclared = true
-   * - all others: 1st=5, 2nd=4, 3rd=3, 4th=2, 5th=1, after 5th=0 (no more points)
-   */
   private calculatePoints(answerOrder: number): number {
     if (this.currentEngineType === 'alphabet') {
       return answerOrder === 1 ? 1 : 0;
@@ -405,26 +511,47 @@ export class TikTokLiveEngine {
   }
 
   public processComment(comment: TikTokLiveComment): void {
-    // Automatically set isConnected to true when receiving live comments
     this.isConnected = true;
 
-    // Store in global engine comments list
+    // Store in global engine comments list (last 100)
     this.liveCommentsList = [comment, ...this.liveCommentsList.slice(0, 99)];
 
-    this.commentListeners.forEach(cb => cb(comment));
+    this.commentListeners.forEach((cb) => cb(comment));
 
-    // Standalone Interactive Engines (viewer-race, squid-game, hunter-roulette, mystery-roulette, musical-chairs, the-vault, bomb-pass, react, what-do-they-say, memory-match) manage their own scoring & flow
-    if (this.currentEngineType === 'viewer-race' || this.currentEngineType === 'squid-game' || this.currentEngineType === 'hunter-roulette' || this.currentEngineType === 'mystery-roulette' || this.currentEngineType === 'musical-chairs' || this.currentEngineType === 'the-vault' || this.currentEngineType === 'bomb-pass' || this.currentEngineType === 'react' || this.currentEngineType === 'what-do-they-say' || this.currentEngineType === 'memory-match') {
+    // Standalone Interactive Engines manage their own scoring & flow
+    if (
+      this.currentEngineType === 'viewer-race' ||
+      this.currentEngineType === 'squid-game' ||
+      this.currentEngineType === 'hunter-roulette' ||
+      this.currentEngineType === 'mystery-roulette' ||
+      this.currentEngineType === 'musical-chairs' ||
+      this.currentEngineType === 'the-vault' ||
+      this.currentEngineType === 'bomb-pass' ||
+      this.currentEngineType === 'react' ||
+      this.currentEngineType === 'what-do-they-say' ||
+      this.currentEngineType === 'memory-match'
+    ) {
       return;
     }
 
     if (this.currentAcceptableAnswers.length > 0 && this.isAcceptingAnswers) {
-      if (isAnswerMatch(comment.comment, this.currentAcceptableAnswers)) {
+      const isMatch =
+        isAnswerMatch(comment.comment, this.currentAcceptableAnswers) ||
+        this.currentAcceptableAnswers.some((ans) => {
+          const normAns = normalizeArabic(ans);
+          const normComm = normalizeArabic(comment.comment);
+          return normAns === normComm || normComm.includes(normAns);
+        });
+
+      if (isMatch) {
         const userKey = String(comment.userId || comment.username || '').toLowerCase().trim();
         const usernameKey = String(comment.username || '').toLowerCase().trim();
 
-        if (this.answeredUserIdsThisQuestion.has(userKey) || (usernameKey && this.answeredUserIdsThisQuestion.has(usernameKey))) {
-          return; // Already scored on this question
+        if (
+          this.answeredUserIdsThisQuestion.has(userKey) ||
+          (usernameKey && this.answeredUserIdsThisQuestion.has(usernameKey))
+        ) {
+          return;
         }
         this.answeredUserIdsThisQuestion.add(userKey);
         if (usernameKey) this.answeredUserIdsThisQuestion.add(usernameKey);
@@ -438,46 +565,47 @@ export class TikTokLiveEngine {
         if (this.currentEngineType !== 'alphabet' && answerOrder > 5) return;
 
         if (pointsEarned > 0) {
-          let player = this.leaderboard.get(comment.userId);
+          const key = comment.userId || comment.username;
+          let player = this.leaderboard.get(key);
           if (!player) {
             player = {
-              id: comment.userId,
+              id: key,
+              userId: key,
               username: comment.username,
               displayName: comment.displayName,
               avatarUrl: comment.avatarUrl,
               score: 0,
               correctAnswersCount: 0,
-              rank: this.leaderboard.size + 1
+              rank: this.leaderboard.size + 1,
             };
           }
 
           player.score += pointsEarned;
           player.correctAnswersCount += 1;
           player.lastCorrectAnswer = comment.comment;
-          this.leaderboard.set(comment.userId, player);
+          this.leaderboard.set(key, player);
           this.updateRanks();
           this.persistLeaderboard();
 
-          this.correctAnswerListeners.forEach(cb => cb({ player: { ...player! }, pointsEarned, rank: answerOrder }));
+          const finalPlayer = { ...player };
+          this.correctAnswerListeners.forEach((cb) =>
+            cb({ player: finalPlayer, pointsEarned, rank: answerOrder })
+          );
         }
 
         if (answerOrder === 1) {
           this.roundWinnerDeclared = true;
-
-          const player = this.leaderboard.get(comment.userId)!;
+          const key = comment.userId || comment.username;
+          const player = this.leaderboard.get(key)!;
           const winnerAnnouncement: WinnerAnnouncement = {
             player: { ...player },
             questionTitle: this.currentQuestionTitle,
             correctAnswer: this.currentAcceptableAnswers[0],
             pointsEarned,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           };
 
-          this.winnerListeners.forEach(cb => cb(winnerAnnouncement));
-        }
-
-        if (this.currentEngineType === 'alphabet') {
-          return;
+          this.winnerListeners.forEach((cb) => cb(winnerAnnouncement));
         }
       }
     }
@@ -491,17 +619,17 @@ export class TikTokLiveEngine {
       { username: 'gamer_sa', name: 'سارة خالد', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80' },
       { username: 'faisal_live', name: 'فيصل العتيبي', avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&q=80' },
       { username: 'reem_tech', name: 'ريم الشمري', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&q=80' },
-      { username: 'king_quiz', name: 'محمد الدوسري', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80' }
+      { username: 'king_quiz', name: 'محمد الدوسري', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80' },
     ];
 
     const randomFillerComments = [
-      'مستعدين!!', 'منور البث يا غالي', 'يا رب أفوز اليوم 🔥', 'سؤال صعب شوي',
-      'كفوو المذيع 🔥🔥', 'تحية من الرياض ✨', 'أنا أعرف الإجابة'
+      'مستعدين!! 🔥', 'منور البث يا أسطورة', 'يا رب أفوز اليوم ✨', 'سؤال قوي والله',
+      'كفوو المذيع 🔥🔥', 'تحية من الرياض ✨', 'أنا أعرف الإجابة', 'العب 1',
     ];
 
     this.simulationInterval = setInterval(() => {
       const user = mockUsers[Math.floor(Math.random() * mockUsers.length)];
-      
+
       let commentText = '';
       if (this.currentAcceptableAnswers.length > 0 && Math.random() < 0.25) {
         commentText = this.currentAcceptableAnswers[0];
@@ -510,13 +638,13 @@ export class TikTokLiveEngine {
       }
 
       const comment: TikTokLiveComment = {
-        id: `tt-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        id: `tt-sim-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
         userId: user.username,
         username: `@${user.username}`,
         displayName: user.name,
         avatarUrl: user.avatar,
         comment: commentText,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
 
       this.processComment(comment);
