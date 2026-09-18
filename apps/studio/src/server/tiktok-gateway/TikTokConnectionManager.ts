@@ -51,6 +51,13 @@ export class TikTokConnectionManager {
   }
 
   public static getInstance(): TikTokConnectionManager {
+    if (typeof globalThis !== 'undefined') {
+      const g = globalThis as any;
+      if (!g.__aep_tiktok_connection_manager) {
+        g.__aep_tiktok_connection_manager = new TikTokConnectionManager();
+      }
+      return g.__aep_tiktok_connection_manager;
+    }
     if (!TikTokConnectionManager.instance) {
       TikTokConnectionManager.instance = new TikTokConnectionManager();
     }
@@ -141,7 +148,7 @@ export class TikTokConnectionManager {
 
       const client = new TikTokLiveConnection(username, {
         processInitialData: true,
-        enableExtendedGiftInfo: true,
+        enableExtendedGiftInfo: false,
         clientParams: {
           app_language: 'ar-SA',
           webcast_language: 'ar-SA',
@@ -153,7 +160,7 @@ export class TikTokConnectionManager {
             'Accept-Language': 'ar-SA,ar;q=0.9,en-US;q=0.8,en;q=0.7',
             'Cache-Control': 'no-cache',
           },
-          timeout: 8000,
+          timeout: 10000,
         },
       } as any);
 
