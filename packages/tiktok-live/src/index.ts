@@ -232,6 +232,26 @@ export class TikTokLiveEngine {
         }
       };
 
+      // When EventSource (re)connects successfully, clear grace timer and restore status
+      this.eventSource.onopen = () => {
+        // Clear any pending degraded-status grace timer
+        if (this.reconnectTimeout) {
+          clearTimeout(this.reconnectTimeout);
+          this.reconnectTimeout = null;
+        }
+        // If we were showing DEGRADED from a transient blip, restore to STREAMING
+        if (this.roomStatus.connectionState === 'DEGRADED') {
+          this.roomStatus = {
+            ...this.roomStatus,
+            isOnline: true,
+            statusText: '🟢 متصل بالبث المباشر',
+            connectionState: 'STREAMING',
+            lastCheckedTime: Date.now(),
+          };
+          this.statusListeners.forEach((cb) => cb(this.roomStatus));
+        }
+      };
+
       // Listen for unified AEP realtime events
       this.eventSource.addEventListener('aep_event', (event) => {
         try {
@@ -325,16 +345,46 @@ export class TikTokLiveEngine {
             if (typeof (e as any).stopPropagation === 'function') (e as any).stopPropagation();
           } catch (_) {}
         }
+
+        const es = this.eventSource;
+        if (!es) return;
+
+        // CASE 1: Browser is auto-reconnecting (readyState === CONNECTING = 0)
+        // Do NOT close the EventSource! The browser will reconnect natively in 1-2s.
+        // Set a grace timer to show DEGRADED only if it stays disconnected for 6s.
+        if (es.readyState === EventSource.CONNECTING) {
+          // Only start grace timer once (avoid stacking)
+          if (!this.reconnectTimeout) {
+            this.reconnectTimeout = setTimeout(() => {
+              this.reconnectTimeout = null;
+              // After grace period, check if still struggling
+              if (this.eventSource && this.eventSource.readyState === EventSource.CONNECTING) {
+                this.roomStatus = {
+                  ...this.roomStatus,
+                  statusText: '🟡 إعادة الاتصال...',
+                  connectionState: 'DEGRADED',
+                  lastCheckedTime: Date.now(),
+                };
+                this.statusListeners.forEach((cb) => cb(this.roomStatus));
+              }
+            }, 6000);
+          }
+          return; // Let browser reconnect natively — do NOT close or resolve
+        }
+
+        // CASE 2: EventSource is fully CLOSED (readyState === 2) — genuine disconnect
         this.roomStatus = {
           isOnline: false,
           username: cleanUsername,
-          statusText: '🔴 تعذر الاتصال ببوابة الأحداث',
+          statusText: '🔴 انقطع الاتصال - جاري إعادة الاتصال...',
           lastCheckedTime: Date.now(),
           connectionState: 'DEGRADED',
         };
         this.statusListeners.forEach((cb) => cb(this.roomStatus));
         resolveOnce(this.roomStatus);
 
+        // Clean up the dead EventSource
+        this.isConnected = false;
         if (this.eventSource) {
           try {
             this.eventSource.close();
@@ -342,14 +392,15 @@ export class TikTokLiveEngine {
           } catch (_) {}
         }
 
-        // Clean auto-reconnect after 6 seconds
+        // Manual reconnect after 3 seconds
         if (this.channelName) {
           if (this.reconnectTimeout) clearTimeout(this.reconnectTimeout);
           this.reconnectTimeout = setTimeout(() => {
+            this.reconnectTimeout = null;
             if (!this.isConnected && this.channelName) {
               this.connect(this.channelName).catch(() => {});
             }
-          }, 6000);
+          }, 3000);
         }
       };
 

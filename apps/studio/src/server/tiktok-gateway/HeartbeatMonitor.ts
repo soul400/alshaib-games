@@ -9,7 +9,7 @@ export class HeartbeatMonitor {
 
   constructor(
     pingIntervalMs: number = 10000,
-    stalenessThresholdMs: number = 120000
+    stalenessThresholdMs: number = 300000
   ) {
     this.pingIntervalMs = pingIntervalMs;
     this.stalenessThresholdMs = stalenessThresholdMs;

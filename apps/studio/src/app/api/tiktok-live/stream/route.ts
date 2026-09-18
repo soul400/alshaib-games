@@ -3,6 +3,7 @@ import { TikTokConnectionManager } from '@/server/tiktok-gateway';
 import type { AEPRealtimeEvent } from '@/server/tiktok-gateway';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 300;
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -28,10 +29,23 @@ export async function GET(request: NextRequest) {
 
   const encoder = new TextEncoder();
   let unsubscribe: (() => void) | null = null;
+  let keepAliveTimer: NodeJS.Timeout | null = null;
   let isStreamClosed = false;
 
   const stream = new ReadableStream({
     start(controller) {
+      // Periodic HTTP keep-alive ping to prevent Vercel/proxy idle timeout
+      keepAliveTimer = setInterval(() => {
+        if (isStreamClosed) return;
+        try {
+          controller.enqueue(encoder.encode(`: keepalive ${Date.now()}\n\n`));
+        } catch (_) {
+          isStreamClosed = true;
+          if (keepAliveTimer) clearInterval(keepAliveTimer);
+          if (unsubscribe) unsubscribe();
+        }
+      }, 4000);
+
       // Helper to enqueue SSE formatted message
       const sendRaw = (eventName: string, data: any) => {
         if (isStreamClosed) return;
@@ -41,6 +55,7 @@ export async function GET(request: NextRequest) {
           );
         } catch (_) {
           isStreamClosed = true;
+          if (keepAliveTimer) clearInterval(keepAliveTimer);
           if (unsubscribe) unsubscribe();
         }
       };
@@ -139,6 +154,10 @@ export async function GET(request: NextRequest) {
       // IMPORTANT: Does NOT disconnect the upstream TikTok session! Only removes this tab's subscriber.
       request.signal.addEventListener('abort', () => {
         isStreamClosed = true;
+        if (keepAliveTimer) {
+          clearInterval(keepAliveTimer);
+          keepAliveTimer = null;
+        }
         if (unsubscribe) {
           unsubscribe();
           unsubscribe = null;
@@ -151,6 +170,10 @@ export async function GET(request: NextRequest) {
 
     cancel() {
       isStreamClosed = true;
+      if (keepAliveTimer) {
+        clearInterval(keepAliveTimer);
+        keepAliveTimer = null;
+      }
       if (unsubscribe) {
         unsubscribe();
         unsubscribe = null;
