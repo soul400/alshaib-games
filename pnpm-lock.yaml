@@ -47,8 +47,8 @@ importers:
         specifier: ^0.186.0
         version: 0.186.0
       tiktok-live-connector:
-        specifier: ^2.4.3
-        version: 2.4.4
+        specifier: ^2.5.0
+        version: 2.5.0
       xlsx:
         specifier: ^0.18.5
         version: 0.18.5
@@ -1029,8 +1029,8 @@ packages:
     resolution: {integrity: sha512-rnd6hczshMsWdVSAuyG+YSRL2EmL3iagK6y/wkVwmbnB2vRHnleKvD5JS/ZtxlRvgSLL5SnNNyoUHzKyesv8Bg==}
     engines: {node: '>=10.0.0'}
 
-  tiktok-live-connector@2.4.4:
-    resolution: {integrity: sha512-wQa8cDqf0NhLyJB3zGzrDcyubsqswUqJqCr3yT58Fzpz6sgn78arN0z7Pk06PFCYYdj8JEMbhW+SErqyzwH3gw==}
+  tiktok-live-connector@2.5.0:
+    resolution: {integrity: sha512-Ncm91ciPSvPToUnL4DZpmxNuJb4no3XhDxSICRvDMBwpLFf+1Cai6Qu/rwctHOGHAiv2gyxxR8J8mN1RG+uZ+g==}
     engines: {node: '>=20.0.0'}
 
   tiktok-live-proto@0.2.4:
@@ -1855,7 +1855,7 @@ snapshots:
       - debug
       - supports-color
 
-  tiktok-live-connector@2.4.4:
+  tiktok-live-connector@2.5.0:
     dependencies:
       '@bufbuild/protobuf': 2.14.1
       got: 15.1.0
