@@ -393,6 +393,19 @@ export function MusicalChairsView({ question }: Props) {
     processedCommentIds.current.add(commentId);
 
     const rawText = (c.comment || c.commentText || '').trim();
+    
+    // Strict validation: comment must be INTENTIONALLY a seat number claim
+    // Accept: pure numbers ("5", "١٢"), or seat keywords + number ("كرسي 5", "chair 3", "رقم 7")
+    const normalizedForCheck = rawText.replace(/[٠-٩]/g, (ch: string) => {
+      const map: Record<string, string> = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'};
+      return map[ch] || ch;
+    });
+    const strippedText = normalizedForCheck.replace(/[\s\u200B\u200C\u200D\uFEFF]/g, '').replace(/[🪑💺🔥⚡❤️🎵✅👍🏻👍]/gu, '');
+    const isPureNumber = /^[0-9]{1,2}$/.test(strippedText);
+    const hasSeatKeyword = /كرسي|مقعد|seat|chair|رقم|اجلس|ابغى|ابي|أبي|أبغى/i.test(normalizedForCheck);
+    
+    if (!isPureNumber && !hasSeatKeyword) return; // Not a seat claim, ignore
+    
     const extractedNumbers = extractAllSeatNumbersFromComment(rawText);
     if (!extractedNumbers || extractedNumbers.length === 0) return;
 
@@ -502,14 +515,18 @@ export function MusicalChairsView({ question }: Props) {
   useEffect(() => {
     if (phase !== 'SEAT_CLAIMING') return;
 
-    liveComments.forEach(c => handleProcessClaimComment(c));
+    // Only process comments that arrived AFTER the claiming window opened
+    const claimWindowStart = claimStartTime || Date.now();
+    liveComments
+      .filter(c => (c.timestamp || 0) >= claimWindowStart)
+      .forEach(c => handleProcessClaimComment(c));
 
     if (tiktokEngine) {
       const handleEngineComment = (c: any) => handleProcessClaimComment(c);
       tiktokEngine.onComment(handleEngineComment);
       return () => tiktokEngine.offComment(handleEngineComment);
     }
-  }, [phase, liveComments, tiktokEngine, handleProcessClaimComment]);
+  }, [phase, liveComments, tiktokEngine, handleProcessClaimComment, claimStartTime]);
 
   // ══════════════════════════════════════════════════════════════
   // 8. LOCK SEATS & ELIMINATION ENGINE
@@ -523,7 +540,10 @@ export function MusicalChairsView({ question }: Props) {
     // Find the player who did not get a seat
     const seatedPlayerIds = new Set(seatsRef.current.filter(s => s.status === 'CLAIMED' && s.playerId).map(s => s.playerId));
     const activeRemaining = playersRef.current.filter(p => p.status !== 'ELIMINATED');
-    const unseatedPlayer = activeRemaining.find(p => !seatedPlayerIds.has(p.id)) || activeRemaining[activeRemaining.length - 1];
+    const unseatedPlayers = activeRemaining.filter(p => !seatedPlayerIds.has(p.id));
+    // Only eliminate if exactly one player is unseated (normal case: chairs = players - 1)
+    const unseatedPlayer = unseatedPlayers.length === 1 ? unseatedPlayers[0] : 
+      unseatedPlayers.length > 1 ? unseatedPlayers[unseatedPlayers.length - 1] : null;
 
     setTimeout(() => {
       if (unseatedPlayer) {
