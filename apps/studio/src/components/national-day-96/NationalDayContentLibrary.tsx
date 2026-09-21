@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { NationalDayQuestion, NationalDay96ActivityId } from '@aep/types';
 import { 
   Sparkles, Layers, Plus, Check, Trash2, Edit3, 
-  HelpCircle, Search, Filter, Bot, ShieldAlert, CheckCircle2, Clock 
+  HelpCircle, Search, Filter, Bot, ShieldAlert, CheckCircle2, Clock,
+  Image as ImageIcon, Upload, Link2, X, Save
 } from 'lucide-react';
 import { NATIONAL_DAY_ACTIVITIES } from './NationalDayActivityGrid';
 
@@ -34,14 +35,18 @@ export function NationalDayContentLibrary({
   const [aiCount, setAiCount] = useState<number>(3);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
-  // Manual Add Form state
+  // Manual Add / Edit Form state
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
+  const [editingQuestion, setEditingQuestion] = useState<NationalDayQuestion | null>(null);
   const [newQuestionText, setNewQuestionText] = useState<string>('');
   const [newAnswer, setNewAnswer] = useState<string>('');
   const [newAlternatives, setNewAlternatives] = useState<string>('');
   const [newCategory, setNewCategory] = useState<string>('تاريخ الملوك');
   const [newPoints, setNewPoints] = useState<number>(10);
   const [newActivityId, setNewActivityId] = useState<NationalDay96ActivityId>('saudi-great');
+  const [newMediaUrl, setNewMediaUrl] = useState<string>('');
+  const [imageUploadMode, setImageUploadMode] = useState<'url' | 'file'>('url');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Filtered lists
   const filtered = questions.filter(q => {
@@ -55,6 +60,12 @@ export function NationalDayContentLibrary({
   });
 
   const reviewCount = questions.filter(q => q.status === 'REVIEW').length;
+
+  // Activity counts for sidebar
+  const activityCounts = NATIONAL_DAY_ACTIVITIES.map(a => ({
+    ...a,
+    count: questions.filter(q => q.activityId === a.id && q.status === 'ACTIVE').length
+  }));
 
   // AI Question Generation Simulation into REVIEW Queue
   const handleGenerateAI = () => {
@@ -97,16 +108,63 @@ export function NationalDayContentLibrary({
     }, 900);
   };
 
-  const handleManualAddSubmit = (e: React.FormEvent) => {
+  // Open Add Modal
+  const openAddModal = () => {
+    setEditingQuestion(null);
+    setNewQuestionText('');
+    setNewAnswer('');
+    setNewAlternatives('');
+    setNewCategory('تاريخ الملوك');
+    setNewPoints(10);
+    setNewActivityId('saudi-great');
+    setNewMediaUrl('');
+    setImageUploadMode('url');
+    setShowAddModal(true);
+  };
+
+  // Open Edit Modal
+  const openEditModal = (q: NationalDayQuestion) => {
+    setEditingQuestion(q);
+    setNewQuestionText(q.question);
+    setNewAnswer(q.correctAnswer);
+    setNewAlternatives(q.acceptableAnswers.filter(a => a !== q.correctAnswer).join('، '));
+    setNewCategory(q.category);
+    setNewPoints(q.points);
+    setNewActivityId(q.activityId);
+    setNewMediaUrl(q.mediaUrl || '');
+    setImageUploadMode(q.mediaUrl ? 'url' : 'url');
+    setShowAddModal(true);
+  };
+
+  // Handle file upload → convert to base64 data URL
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      alert('يرجى اختيار ملف صورة (PNG, JPG, WEBP)');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert('حجم الصورة كبير جداً (الحد الأقصى 5 ميجابايت)');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setNewMediaUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmitForm = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newQuestionText.trim() || !newAnswer.trim()) return;
 
     const alts = newAlternatives
-      .split(',')
+      .split(/[,،]/)
       .map(s => s.trim())
       .filter(Boolean);
 
-    onAddQuestion({
+    const questionData: Partial<NationalDayQuestion> = {
       activityId: newActivityId,
       category: newCategory,
       question: newQuestionText.trim(),
@@ -115,14 +173,26 @@ export function NationalDayContentLibrary({
       difficulty: 'medium',
       points: Number(newPoints) || 10,
       timeLimitSeconds: 15,
+      mediaUrl: newMediaUrl.trim() || undefined,
+      mediaType: newMediaUrl.trim() ? 'image' : undefined,
       status: 'ACTIVE',
       usedCount: 0,
       createdAt: Date.now()
-    });
+    };
+
+    if (editingQuestion) {
+      // Update existing question
+      onUpdateQuestion(editingQuestion.id, questionData);
+    } else {
+      // Add new question
+      onAddQuestion(questionData);
+    }
 
     setNewQuestionText('');
     setNewAnswer('');
     setNewAlternatives('');
+    setNewMediaUrl('');
+    setEditingQuestion(null);
     setShowAddModal(false);
   };
 
@@ -150,7 +220,7 @@ export function NationalDayContentLibrary({
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setShowAddModal(true)}
+            onClick={openAddModal}
             className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#006C35] to-[#00A859] text-white font-black text-xs flex items-center gap-2 shadow-md hover:scale-105 transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" />
@@ -224,6 +294,23 @@ export function NationalDayContentLibrary({
         </div>
       </div>
 
+      {/* Activity Quick Stats */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2">
+        {activityCounts.filter(a => a.count > 0).map(a => (
+          <button
+            key={a.id}
+            onClick={() => setSelectedActivity(a.id === selectedActivity ? 'all' : a.id)}
+            className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-[11px] font-black border transition-all cursor-pointer ${
+              selectedActivity === a.id
+                ? 'bg-[#006C35] text-white border-[#00A859] shadow-md'
+                : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
+            }`}
+          >
+            {a.title} ({a.count})
+          </button>
+        ))}
+      </div>
+
       {/* Tabs & Filters */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-2 bg-[#081B10] p-1.5 rounded-2xl border border-[#006C35]/50">
@@ -251,14 +338,25 @@ export function NationalDayContentLibrary({
           </button>
         </div>
 
-        {/* Filter by Activity */}
+        {/* Search */}
         <div className="flex items-center gap-2">
+          <div className="relative">
+            <Search className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="بحث في الأسئلة..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="pr-9 pl-3 py-2 rounded-xl bg-[#081B10] border border-white/10 text-white text-xs font-bold outline-none w-48 focus:border-[#00A859]"
+            />
+          </div>
+
           <select
             value={selectedActivity}
             onChange={e => setSelectedActivity(e.target.value)}
             className="px-3 py-2 rounded-xl bg-[#081B10] border border-white/10 text-white text-xs font-bold outline-none"
           >
-            <option value="all">جميع الفعاليات (8)</option>
+            <option value="all">جميع الفعاليات</option>
             {NATIONAL_DAY_ACTIVITIES.map(a => (
               <option key={a.id} value={a.id}>{a.title}</option>
             ))}
@@ -274,32 +372,47 @@ export function NationalDayContentLibrary({
               key={q.id}
               className="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-white/5 transition-colors"
             >
-              <div className="flex flex-col gap-1.5 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#004D25] text-[#00A859] border border-[#00A859]/30">
-                    {q.category}
-                  </span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/5 text-slate-300">
-                    {q.difficulty} • +{q.points} نقطة
-                  </span>
-                  {q.status === 'REVIEW' && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                      بانتظار المراجعة
-                    </span>
-                  )}
-                </div>
+              <div className="flex gap-3 flex-1">
+                {/* Image thumbnail */}
+                {q.mediaUrl && (
+                  <div className="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border border-[#00A859]/40">
+                    <img src={q.mediaUrl} alt="" className="w-full h-full object-cover" />
+                  </div>
+                )}
 
-                <h4 className="text-base font-black text-white">
-                  {q.question}
-                </h4>
-
-                <div className="flex items-center gap-2 text-xs text-[#E2D4B7]/80 font-bold flex-wrap">
-                  <span className="text-[#00A859]">الإجابة النموذجية: {q.correctAnswer}</span>
-                  {q.acceptableAnswers?.length > 1 && (
-                    <span className="text-slate-400">
-                      (البدائل: {q.acceptableAnswers.filter(a => a !== q.correctAnswer).join(' ، ')})
+                <div className="flex flex-col gap-1.5 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#004D25] text-[#00A859] border border-[#00A859]/30">
+                      {q.category}
                     </span>
-                  )}
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/5 text-slate-300">
+                      {q.difficulty} • +{q.points} نقطة
+                    </span>
+                    {q.mediaUrl && (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 flex items-center gap-1">
+                        <ImageIcon className="w-3 h-3" />
+                        صورة
+                      </span>
+                    )}
+                    {q.status === 'REVIEW' && (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                        بانتظار المراجعة
+                      </span>
+                    )}
+                  </div>
+
+                  <h4 className="text-base font-black text-white">
+                    {q.question}
+                  </h4>
+
+                  <div className="flex items-center gap-2 text-xs text-[#E2D4B7]/80 font-bold flex-wrap">
+                    <span className="text-[#00A859]">الإجابة النموذجية: {q.correctAnswer}</span>
+                    {q.acceptableAnswers?.length > 1 && (
+                      <span className="text-slate-400">
+                        (البدائل: {q.acceptableAnswers.filter(a => a !== q.correctAnswer).join(' ، ')})
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -314,6 +427,14 @@ export function NationalDayContentLibrary({
                     <span>قبول ونشر</span>
                   </button>
                 )}
+
+                <button
+                  onClick={() => openEditModal(q)}
+                  className="p-2 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/30 transition-all cursor-pointer"
+                  title="تعديل السؤال"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                </button>
 
                 <button
                   onClick={() => onDeleteQuestion(q.id)}
@@ -334,13 +455,23 @@ export function NationalDayContentLibrary({
         </div>
       </div>
 
-      {/* Manual Add Question Modal */}
+      {/* Add / Edit Question Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="p-6 rounded-3xl bg-[#081B10] border border-[#00A859]/60 max-w-lg w-full flex flex-col gap-4 shadow-2xl">
-            <h3 className="text-base font-black text-white">إضافة سؤال وطني جديد</h3>
+          <div className="p-6 rounded-3xl bg-[#081B10] border border-[#00A859]/60 max-w-lg w-full flex flex-col gap-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-black text-white">
+                {editingQuestion ? '✏️ تعديل السؤال' : '➕ إضافة سؤال وطني جديد'}
+              </h3>
+              <button
+                onClick={() => { setShowAddModal(false); setEditingQuestion(null); }}
+                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 transition-all cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
-            <form onSubmit={handleManualAddSubmit} className="flex flex-col gap-3">
+            <form onSubmit={handleSubmitForm} className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-bold text-[#E2D4B7]">الفعالية</label>
                 <select
@@ -352,6 +483,17 @@ export function NationalDayContentLibrary({
                     <option key={a.id} value={a.id}>{a.title}</option>
                   ))}
                 </select>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-[#E2D4B7]">التصنيف</label>
+                <input
+                  type="text"
+                  value={newCategory}
+                  onChange={e => setNewCategory(e.target.value)}
+                  placeholder="مثال: تاريخ الملوك، رؤية 2030، جغرافيا..."
+                  className="px-3 py-2 rounded-xl bg-[#020D06] border border-white/10 text-white text-xs font-bold outline-none"
+                />
               </div>
 
               <div className="flex flex-col gap-1">
@@ -389,19 +531,115 @@ export function NationalDayContentLibrary({
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-bold text-[#E2D4B7]">النقاط</label>
+                  <input
+                    type="number"
+                    min={5}
+                    max={50}
+                    value={newPoints}
+                    onChange={e => setNewPoints(Number(e.target.value))}
+                    className="px-3 py-2 rounded-xl bg-[#020D06] border border-white/10 text-white text-xs font-bold outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* 🖼️ Image Upload Section */}
+              <div className="flex flex-col gap-2 p-3 rounded-2xl bg-[#020D06] border border-white/10">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-[#E2D4B7] flex items-center gap-1.5">
+                    <ImageIcon className="w-3.5 h-3.5 text-[#C69214]" />
+                    صورة مع السؤال (اختياري)
+                  </label>
+                  <div className="flex items-center gap-1 bg-white/5 p-0.5 rounded-lg">
+                    <button
+                      type="button"
+                      onClick={() => setImageUploadMode('url')}
+                      className={`px-2.5 py-1 rounded-md text-[10px] font-black transition-all ${
+                        imageUploadMode === 'url' ? 'bg-[#006C35] text-white' : 'text-slate-400'
+                      }`}
+                    >
+                      <Link2 className="w-3 h-3 inline ml-1" />
+                      رابط
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setImageUploadMode('file')}
+                      className={`px-2.5 py-1 rounded-md text-[10px] font-black transition-all ${
+                        imageUploadMode === 'file' ? 'bg-[#006C35] text-white' : 'text-slate-400'
+                      }`}
+                    >
+                      <Upload className="w-3 h-3 inline ml-1" />
+                      من الجهاز
+                    </button>
+                  </div>
+                </div>
+
+                {imageUploadMode === 'url' ? (
+                  <input
+                    type="url"
+                    placeholder="الصق رابط الصورة هنا... (https://...)"
+                    value={newMediaUrl}
+                    onChange={e => setNewMediaUrl(e.target.value)}
+                    className="px-3 py-2 rounded-xl bg-[#030F08] border border-white/10 text-white text-xs font-bold outline-none focus:border-[#00A859]"
+                    dir="ltr"
+                  />
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full py-3 rounded-xl border-2 border-dashed border-white/20 hover:border-[#00A859]/50 text-xs font-bold text-slate-300 flex items-center justify-center gap-2 transition-all cursor-pointer hover:bg-white/5"
+                    >
+                      <Upload className="w-4 h-4 text-[#C69214]" />
+                      <span>اضغط لاختيار صورة من الجهاز</span>
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                    <span className="text-[10px] text-slate-500 font-mono">PNG, JPG, WEBP • الحد الأقصى 5 ميجابايت</span>
+                  </div>
+                )}
+
+                {/* Image Preview */}
+                {newMediaUrl && (
+                  <div className="relative mt-1">
+                    <img
+                      src={newMediaUrl}
+                      alt="معاينة الصورة"
+                      className="w-full max-h-40 object-contain rounded-xl border border-[#00A859]/40"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setNewMediaUrl('')}
+                      className="absolute top-2 left-2 p-1 rounded-full bg-rose-500/80 text-white hover:bg-rose-600 transition-all cursor-pointer"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <div className="flex items-center justify-end gap-2 mt-2">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={() => { setShowAddModal(false); setEditingQuestion(null); }}
                   className="px-4 py-2 rounded-xl bg-white/10 text-slate-300 text-xs font-bold cursor-pointer"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#006C35] to-[#00A859] text-white font-black text-xs cursor-pointer shadow-md"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#006C35] to-[#00A859] text-white font-black text-xs cursor-pointer shadow-md flex items-center gap-1.5"
                 >
-                  حفظ ونشر
+                  <Save className="w-3.5 h-3.5" />
+                  <span>{editingQuestion ? 'حفظ التعديلات' : 'حفظ ونشر'}</span>
                 </button>
               </div>
             </form>

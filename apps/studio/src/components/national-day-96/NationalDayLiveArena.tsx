@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { 
   NationalDayQuestion, NationalDay96ActivityId, TikTokLiveComment 
 } from '@aep/types';
@@ -29,6 +29,16 @@ interface Props {
   onExitArena: () => void;
 }
 
+/** Fisher-Yates shuffle — returns a NEW shuffled array */
+function shuffleArray<T>(arr: T[]): T[] {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export function NationalDayLiveArena({
   activityId,
   activityTitle,
@@ -37,7 +47,12 @@ export function NationalDayLiveArena({
   onWinnerClaim,
   onExitArena
 }: Props) {
+  // Shuffle questions once on mount / when questions array changes
+  const shuffledQuestions = useMemo(() => shuffleArray(questions), [questions]);
+
   const [currentIdx, setCurrentIdx] = useState<number>(0);
+  const [usedQuestionIds, setUsedQuestionIds] = useState<Set<string>>(new Set());
+  const [isAllQuestionsFinished, setIsAllQuestionsFinished] = useState<boolean>(false);
   const [timeRemaining, setTimeRemaining] = useState<number>(15);
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
   const [isAnswerRevealed, setIsAnswerRevealed] = useState<boolean>(false);
@@ -53,17 +68,24 @@ export function NationalDayLiveArena({
   const [testComment, setTestComment] = useState<string>('');
   const [testUser, setTestUser] = useState<string>('متسابق البث التجريبي');
 
-  const currentQ = questions[currentIdx] || questions[0];
+  const currentQ = shuffledQuestions[currentIdx] || null;
+
+  // Mark current question as used on mount
+  useEffect(() => {
+    if (currentQ && !usedQuestionIds.has(currentQ.id)) {
+      setUsedQuestionIds(prev => new Set(prev).add(currentQ.id));
+    }
+  }, [currentQ]);
 
   // Initialize timer on question change
   useEffect(() => {
-    if (!currentQ) return;
+    if (!currentQ || isAllQuestionsFinished) return;
     setTimeRemaining(currentQ.timeLimitSeconds || 15);
     setIsAnswerRevealed(false);
     setIsTimerRunning(true);
     setCurrentWinner(null);
     soundFX.play('round_start');
-  }, [currentIdx, currentQ]);
+  }, [currentIdx, isAllQuestionsFinished]);
 
   // Timer Tick
   useEffect(() => {
@@ -89,7 +111,7 @@ export function NationalDayLiveArena({
 
   // Listen to Live TikTok Comments
   useEffect(() => {
-    if (!currentQ || isAnswerRevealed || currentWinner || liveComments.length === 0) return;
+    if (!currentQ || isAnswerRevealed || currentWinner || liveComments.length === 0 || isAllQuestionsFinished) return;
 
     const latestComment = liveComments[0];
     if (!latestComment || !latestComment.comment) return;
@@ -103,7 +125,7 @@ export function NationalDayLiveArena({
         points: currentQ.points
       });
     }
-  }, [liveComments, currentQ, isAnswerRevealed, currentWinner]);
+  }, [liveComments, currentQ, isAnswerRevealed, currentWinner, isAllQuestionsFinished]);
 
   const handleDeclareWinner = (winnerData: {
     userId: string;
@@ -112,6 +134,7 @@ export function NationalDayLiveArena({
     avatarUrl: string;
     points: number;
   }) => {
+    if (!currentQ) return;
     setIsTimerRunning(false);
     setIsAnswerRevealed(true);
     setCurrentWinner(winnerData);
@@ -137,20 +160,79 @@ export function NationalDayLiveArena({
     setTestComment('');
   };
 
-  const handleNextQuestion = () => {
-    if (currentIdx < questions.length - 1) {
-      setCurrentIdx(prev => prev + 1);
-    } else {
-      setCurrentIdx(0);
+  const handleNextQuestion = useCallback(() => {
+    const nextIdx = currentIdx + 1;
+    if (nextIdx >= shuffledQuestions.length) {
+      // All questions finished!
+      setIsAllQuestionsFinished(true);
+      setIsTimerRunning(false);
+      soundFX.play('show_end');
+      return;
     }
-  };
+    setCurrentIdx(nextIdx);
+  }, [currentIdx, shuffledQuestions.length]);
 
   const handlePrevQuestion = () => {
     if (currentIdx > 0) {
       setCurrentIdx(prev => prev - 1);
+      setIsAllQuestionsFinished(false);
     }
   };
 
+  // Progress stats
+  const totalQuestions = shuffledQuestions.length;
+  const questionsAnswered = usedQuestionIds.size;
+  const progressPercent = totalQuestions > 0 ? Math.round((questionsAnswered / totalQuestions) * 100) : 0;
+
+  // ══════════════════════════════════════════════════
+  // 🏆 ALL QUESTIONS FINISHED SCREEN
+  // ══════════════════════════════════════════════════
+  if (isAllQuestionsFinished) {
+    return (
+      <div className="w-full flex flex-col items-center gap-6 my-8">
+        <div className="w-full max-w-3xl p-10 rounded-3xl bg-gradient-to-b from-[#041D0F] via-[#082915] to-[#041D0F] border-2 border-[#00A859]/60 shadow-[0_20px_80px_rgba(0,168,89,0.3)] flex flex-col items-center text-center gap-6">
+          
+          {/* Trophy */}
+          <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#C69214] via-[#FFE79A] to-[#C69214] flex items-center justify-center shadow-[0_0_60px_rgba(198,146,20,0.5)] animate-bounce">
+            <Trophy className="w-12 h-12 text-slate-900" />
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FFE79A] via-white to-[#FFE79A]">
+            🏆 تم الانتهاء من جميع الأسئلة!
+          </h2>
+          
+          <p className="text-base text-[#E2D4B7] font-bold leading-relaxed max-w-md">
+            أحسنتم! تمت الإجابة على جميع أسئلة مسابقة <strong className="text-[#00A859]">{activityTitle}</strong> بنجاح.
+            <br />
+            عدد الأسئلة الكلي: <strong className="text-[#FFE79A]">{totalQuestions} سؤال</strong>
+          </p>
+
+          <div className="flex items-center gap-3 flex-wrap justify-center mt-2">
+            <button
+              onClick={() => {
+                setCurrentIdx(0);
+                setUsedQuestionIds(new Set());
+                setIsAllQuestionsFinished(false);
+              }}
+              className="px-8 py-3 rounded-2xl bg-gradient-to-r from-[#006C35] to-[#00A859] text-white font-black text-sm flex items-center gap-2 shadow-lg hover:scale-105 transition-all cursor-pointer"
+            >
+              <RotateCcw className="w-5 h-5" />
+              <span>إعادة المسابقة من البداية</span>
+            </button>
+
+            <button
+              onClick={onExitArena}
+              className="px-6 py-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-bold text-sm cursor-pointer transition-all"
+            >
+              العودة للقائمة
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // No questions available
   if (!currentQ) {
     return (
       <div className="w-full py-20 text-center text-white flex flex-col items-center gap-4">
@@ -180,8 +262,18 @@ export function NationalDayLiveArena({
               {activityTitle}
             </span>
             <span className="text-xs font-black text-white font-mono">
-              سؤال #{currentIdx + 1} من {questions.length}
+              سؤال #{currentIdx + 1} من {totalQuestions}
             </span>
+            {/* Progress bar */}
+            <div className="hidden sm:flex items-center gap-1.5">
+              <div className="w-24 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                <div 
+                  className="h-full rounded-full bg-gradient-to-r from-[#00A859] to-[#C69214] transition-all duration-500"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+              <span className="text-[10px] font-mono text-slate-400">{progressPercent}%</span>
+            </div>
           </div>
         </div>
 
@@ -251,13 +343,13 @@ export function NationalDayLiveArena({
         {/* 2. CENTER STAGE: QUESTION & MEDIA DISPLAY */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center max-w-5xl mx-auto my-auto gap-4 w-full h-full flex-1">
           
-          {/* 🗺️ SPLIT SCREEN FOR MAP CHALLENGE (نصفين: الخريطة في جانب والسؤال في الجانب الآخر) */}
+          {/* 🗺️ SPLIT SCREEN FOR MAP CHALLENGE */}
           {currentQ.mediaType === 'map-province' ? (
             <div className={`w-full h-full flex items-center justify-between gap-6 animate-in zoom-in-95 ${
               aspectRatio === '16:9' ? 'flex-row' : 'flex-col'
             }`}>
               
-              {/* النصف الأول: الخريطة الجغرافية الكاملة للمملكة */}
+              {/* Map half */}
               <div className={`flex items-center justify-center relative p-3 rounded-3xl bg-[#04190D]/80 border border-[#006C35]/60 shadow-xl ${
                 aspectRatio === '16:9' ? 'w-1/2 h-full max-h-[420px]' : 'w-full aspect-[800/650]'
               }`}>
@@ -267,12 +359,11 @@ export function NationalDayLiveArena({
                 />
               </div>
 
-              {/* النصف الثاني: بطاقة السؤال الكبيرة والواضحة */}
+              {/* Question half */}
               <div className={`flex flex-col justify-center items-center text-right p-6 sm:p-8 rounded-3xl bg-[#052110]/95 border-2 border-[#00A859]/70 shadow-[0_15px_45px_rgba(0,0,0,0.9)] backdrop-blur-xl gap-4 ${
                 aspectRatio === '16:9' ? 'w-1/2 min-h-[320px]' : 'w-full'
               }`}>
                 
-                {/* Header Badges */}
                 <div className="w-full flex items-center justify-between border-b border-[#00A859]/30 pb-3">
                   <div className="flex items-center gap-2">
                     <span className="px-3 py-1 rounded-full bg-[#004D25] text-[#00A859] border border-[#00A859]/40 text-xs font-black font-mono">
@@ -284,12 +375,10 @@ export function NationalDayLiveArena({
                   </span>
                 </div>
 
-                {/* Big Question Text */}
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-[#E2D4B7] to-[#FFE79A] leading-relaxed drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)] text-center my-auto">
                   {currentQ.question}
                 </h2>
 
-                {/* Answer Banner when Revealed */}
                 {isAnswerRevealed ? (
                   <div className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#006C35] to-[#00A859] border-2 border-[#FFE79A] shadow-[0_0_30px_rgba(0,168,89,0.7)] text-white text-base sm:text-lg font-black font-mono text-center animate-bounce">
                     ✓ الإجابة: {currentQ.correctAnswer}
@@ -306,15 +395,15 @@ export function NationalDayLiveArena({
           ) : (
             /* 🏆 STANDARD QUESTION LAYOUT */
             <div className="flex flex-col items-center justify-center gap-4 w-full">
-              {/* Question Text in Majestic Calligraphy Style */}
+              {/* Question Text */}
               <h2 className="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-[#E2D4B7] to-[#FFE79A] leading-relaxed drop-shadow-[0_4px_15px_rgba(0,0,0,0.8)]">
                 {currentQ.question}
               </h2>
 
-              {/* Media: Image Landmarks */}
+              {/* Media: Image below question */}
               {currentQ.mediaType === 'image' && currentQ.mediaUrl && (
                 <div className="relative w-full max-w-md h-52 rounded-2xl overflow-hidden border-2 border-[#00A859]/60 shadow-2xl animate-in zoom-in-95">
-                  <img src={currentQ.mediaUrl} alt="Landmark" className="w-full h-full object-cover" />
+                  <img src={currentQ.mediaUrl} alt="صورة السؤال" className="w-full h-full object-cover" />
                 </div>
               )}
 
@@ -329,7 +418,7 @@ export function NationalDayLiveArena({
 
         </div>
 
-        {/* 3. ARENA BOTTOM HUD: STREAM CHAT TICKER BANNER */}
+        {/* 3. ARENA BOTTOM HUD */}
         <div className="w-full flex items-center justify-between z-10 pt-4 border-t border-white/10 flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono font-black text-[#00A859] flex items-center gap-1">
@@ -373,7 +462,7 @@ export function NationalDayLiveArena({
             </button>
 
             <button
-              onClick={() => setTimeRemaining(currentQ.timeLimitSeconds || 15)}
+              onClick={() => setTimeRemaining(currentQ?.timeLimitSeconds || 15)}
               className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 transition-all cursor-pointer"
               title="إعادة ضبط الوقت"
             >
@@ -395,7 +484,7 @@ export function NationalDayLiveArena({
               onClick={handleNextQuestion}
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#006C35] to-[#00A859] text-white text-xs font-black flex items-center gap-1 shadow-md hover:scale-105 transition-all cursor-pointer"
             >
-              <span>السؤال التالي</span>
+              <span>{currentIdx >= totalQuestions - 1 ? 'إنهاء المسابقة' : 'السؤال التالي'}</span>
               <ChevronLeft className="w-4 h-4" />
             </button>
           </div>
@@ -422,7 +511,7 @@ export function NationalDayLiveArena({
       </div>
 
       {/* 🏆 WINNER CROWNING MODAL */}
-      {currentWinner && (
+      {currentWinner && currentQ && (
         <NationalDayWinnerModal
           winner={currentWinner}
           question={currentQ}

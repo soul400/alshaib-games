@@ -128,6 +128,19 @@ export default function SaudiNationalDay96Page() {
   const [dedications, setDedications] = useState<NationalDayDedication[]>(INITIAL_DEDICATIONS);
   const [leaderboard, setLeaderboard] = useState<NationalDayLeaderboardEntry[]>(INITIAL_LEADERBOARD);
 
+  // Load custom questions from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('aep_nd96_custom_questions');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setQuestions(parsed);
+        }
+      }
+    } catch (_) {}
+  }, []);
+
   // Play Sound FX on Tab Switch
   const handleSelectTab = (tab: string) => {
     setActiveTab(tab);
@@ -209,7 +222,7 @@ export default function SaudiNationalDay96Page() {
     setDedications(prev => prev.filter(d => d.id !== id));
   };
 
-  // Question Management Handlers
+  // Question Management Handlers with LocalStorage persistence
   const handleAddQuestion = (q: Partial<NationalDayQuestion>) => {
     const newQ: NationalDayQuestion = {
       id: `nd96-q-${Date.now()}`,
@@ -221,23 +234,41 @@ export default function SaudiNationalDay96Page() {
       difficulty: q.difficulty || 'medium',
       points: q.points || 10,
       timeLimitSeconds: q.timeLimitSeconds || 15,
+      mediaUrl: q.mediaUrl,
+      mediaType: q.mediaType,
       status: q.status || 'ACTIVE',
       usedCount: 0,
       createdAt: Date.now()
     };
-    setQuestions(prev => [newQ, ...prev]);
+    setQuestions(prev => {
+      const updated = [newQ, ...prev];
+      try { localStorage.setItem('aep_nd96_custom_questions', JSON.stringify(updated)); } catch (_) {}
+      return updated;
+    });
   };
 
   const handleUpdateQuestion = (id: string, updates: Partial<NationalDayQuestion>) => {
-    setQuestions(prev => prev.map(q => q.id === id ? { ...q, ...updates } : q));
+    setQuestions(prev => {
+      const updated = prev.map(q => q.id === id ? { ...q, ...updates } : q);
+      try { localStorage.setItem('aep_nd96_custom_questions', JSON.stringify(updated)); } catch (_) {}
+      return updated;
+    });
   };
 
   const handleDeleteQuestion = (id: string) => {
-    setQuestions(prev => prev.filter(q => q.id !== id));
+    setQuestions(prev => {
+      const updated = prev.filter(q => q.id !== id);
+      try { localStorage.setItem('aep_nd96_custom_questions', JSON.stringify(updated)); } catch (_) {}
+      return updated;
+    });
   };
 
   const handleApproveReviewQuestion = (id: string) => {
-    setQuestions(prev => prev.map(q => q.id === id ? { ...q, status: 'ACTIVE' } : q));
+    setQuestions(prev => {
+      const updated = prev.map(q => q.id === id ? { ...q, status: 'ACTIVE' as const } : q);
+      try { localStorage.setItem('aep_nd96_custom_questions', JSON.stringify(updated)); } catch (_) {}
+      return updated;
+    });
     soundFX.play('card_match');
   };
 
