@@ -122,7 +122,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     badgeColor: 'bg-[#E2D4B7]/20 text-[#E2D4B7] border-[#E2D4B7]/40',
     icon: Flame,
     image: '/national-day-96/saudi-heritage-full.png',
-    questionsCount: 0,
+    questionsCount: 80,
     pointsPerCorrect: 15,
     modeDescription: 'مسابقة في التراث الشعبي والعادات والتقاليد والأكلات والموروث الشعبي.'
   }

@@ -1127,6 +1127,570 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     mediaUrl: '/national-day-96/landscapes/ls-038.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 20, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
+
+  // ══════════════════════════════════════════════════════════════
+  // 🐎 تراثنا الأصيل — الخيل والإبل والقهوة والزي (80 سؤال)
+  // ══════════════════════════════════════════════════════════════
+  {
+    id: 'sh-001', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما اسم المهرجان السعودي السنوي الذي يُعنى بجمال الإبل وثقافتها؟',
+    correctAnswer: 'مهرجان الملك عبدالعزيز للإبل',
+    acceptableAnswers: ["مهرجان الملك عبدالعزيز للإبل", "الملك عبدالعزيز للإبل", "مهرجان الملك عبدالعزيز للابل", "الملك عبدالعزيز للابل", "مهرجان الملك عبدالعزيز", "مهرجان الإبل", "مهرجان الابل", "مزاين الملك عبدالعزيز"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-002', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ماذا تسمى المسابقات التي يتم فيها تقييم جمال الإبل؟',
+    correctAnswer: 'مزاين الإبل',
+    acceptableAnswers: ["مزاين الإبل", "مزاين الابل"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-003', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما اسم المسابقة التي تعتمد على قدرة الإبل على قطع المسافات؟',
+    correctAnswer: 'الهجيج',
+    acceptableAnswers: ["الهجيج", "هجيج"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-004', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما اسم السباقات التي تتنافس فيها الإبل على السرعة؟',
+    correctAnswer: 'سباقات الهجن',
+    acceptableAnswers: ["سباقات الهجن"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-005', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما اللون الذي يُطلق على الإبل البيضاء في مسابقات المزاين؟',
+    correctAnswer: 'الوضح',
+    acceptableAnswers: ["الوضح", "وضح"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-006', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما الاسم الذي يطلق على الإبل ذات اللون الداكن في فئات المزاين؟',
+    correctAnswer: 'المجاهيم',
+    acceptableAnswers: ["المجاهيم", "مجاهيم"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-007', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما اسم المسابقة التي تعتمد على تجميع النقاط من نتائج المنافسات المختلفة؟',
+    correctAnswer: 'الشداد',
+    acceptableAnswers: ["الشداد", "شداد"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-008', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما الاسم الذي يطلق على الجمل الذي يُستخدم للتناسل وإنتاج الإبل؟',
+    correctAnswer: 'الفحل',
+    acceptableAnswers: ["الفحل", "فحل"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-009', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما اسم الموقع الذي يقام فيه مهرجان الملك عبدالعزيز للإبل؟',
+    correctAnswer: 'الصياهد',
+    acceptableAnswers: ["الصياهد", "صياهد"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-010', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما اسم الجهة السعودية المتخصصة بالإبل وتنظم مهرجان الملك عبدالعزيز للإبل؟',
+    correctAnswer: 'نادي الإبل',
+    acceptableAnswers: ["نادي الإبل", "نادي الابل"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-011', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما الاسم الذي أطلق سابقًا على منافسات جمال الإبل قبل تغيير اسم المهرجان؟',
+    correctAnswer: 'جائزة الملك عبدالعزيز لمزايين الإبل',
+    acceptableAnswers: ["جائزة الملك عبدالعزيز لمزايين الإبل", "جائزة الملك عبدالعزيز لمزايين الابل"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-012', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما الفئة التي تكون المشاركة فيها برأس واحد؟',
+    correctAnswer: 'الفردي',
+    acceptableAnswers: ["الفردي", "فردي"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-013', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما الاسم الذي يطلق على الإبل الصغيرة من فئات المشاركة؟',
+    correctAnswer: 'المفاريد',
+    acceptableAnswers: ["المفاريد", "مفاريد"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-014', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما الاسم الذي يطلق على فئة من أعمار الإبل المشاركة في المهرجان؟',
+    correctAnswer: 'دق',
+    acceptableAnswers: ["دق"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-015', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما الاسم الذي يطلق على الفئة العمرية الأكبر في تصنيف الإبل؟',
+    correctAnswer: 'جل',
+    acceptableAnswers: ["جل"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-016', activityId: 'saudi-heritage', category: 'الخيل والفروسية',
+    question: 'ماذا يسمى الشخص الذي يمتطي الخيل ويمارس هذه الرياضة؟',
+    correctAnswer: 'الفارس',
+    acceptableAnswers: ["الفارس", "فارس"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-017', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما اسم الرياضة التي يتجاوز فيها الفارس حواجز مرتفعة بواسطة جواده؟',
+    correctAnswer: 'قفز الحواجز',
+    acceptableAnswers: ["قفز الحواجز"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-018', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما اسم الرياضة التي يؤدي فيها الجواد حركات محددة بدقة وانضباط؟',
+    correctAnswer: 'الترويض',
+    acceptableAnswers: ["الترويض", "ترويض"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-019', activityId: 'saudi-heritage', category: 'الخيل والفروسية',
+    question: 'ما اسم الرياضة التي يجمع فيها الفارس بين ركوب الخيل واستخدام السلاح للرماية؟',
+    correctAnswer: 'الرماية على ظهر الخيل',
+    acceptableAnswers: ["الرماية على ظهر الخيل", "رماية على ظهر الخيل", "الرماية علي ظهر الخيل", "رماية علي ظهر الخيل"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-020', activityId: 'saudi-heritage', category: 'الخيل والفروسية',
+    question: 'ما الاسم الذي يطلق على السلالة الأصيلة المشهورة بتاريخها الطويل في الجزيرة العربية؟',
+    correctAnswer: 'الخيل العربي',
+    acceptableAnswers: ["الخيل العربي", "خيل العربي"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-021', activityId: 'saudi-heritage', category: 'الخيل والفروسية',
+    question: 'ما اسم الجهة السعودية التي تنظم سباقات الخيل؟',
+    correctAnswer: 'نادي سباقات الخيل',
+    acceptableAnswers: ["نادي سباقات الخيل"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-022', activityId: 'saudi-heritage', category: 'الخيل والفروسية',
+    question: 'ما الاسم السابق للجهة السعودية المنظمة لسباقات الخيل قبل تغيير مسماها؟',
+    correctAnswer: 'نادي الفروسية',
+    acceptableAnswers: ["نادي الفروسية", "نادي الفروسيه"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-023', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما اسم السباق الدولي الكبير الذي يقام في الرياض؟',
+    correctAnswer: 'كأس السعودية',
+    acceptableAnswers: ["كأس السعودية", "كأس السعوديه", "كاس السعودية"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-024', activityId: 'saudi-heritage', category: 'الخيل والفروسية',
+    question: 'ما اسم الكأس المرتبط بالملك المؤسس ويعد من أبرز سباقات الخيل السعودية؟',
+    correctAnswer: 'كأس المؤسس',
+    acceptableAnswers: ["كأس المؤسس", "كاس المؤسس"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-025', activityId: 'saudi-heritage', category: 'الخيل والفروسية',
+    question: 'ما اسم الميدان الرئيسي الذي تقام عليه أبرز سباقات الخيل في الرياض؟',
+    correctAnswer: 'ميدان الملك عبدالعزيز',
+    acceptableAnswers: ["ميدان الملك عبدالعزيز"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-026', activityId: 'saudi-heritage', category: 'الخيل والفروسية',
+    question: 'في أي مدينة يقع الميدان الآخر الذي يستضيف سباقات نادي سباقات الخيل؟',
+    correctAnswer: 'الطائف',
+    acceptableAnswers: ["الطائف", "طائف"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-027', activityId: 'saudi-heritage', category: 'الخيل والفروسية',
+    question: 'ما اسم الرياضة التي تستخدم فيها الخيل للتنقل والمنافسة مع المحافظة على التحكم والدقة؟',
+    correctAnswer: 'الفروسية',
+    acceptableAnswers: ["الفروسية", "فروسية", "الفروسيه", "فروسيه"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-028', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ماذا يسمى الشخص المتخصص في تربية الصقور وتدريبها؟',
+    correctAnswer: 'الصقار',
+    acceptableAnswers: ["الصقار", "صقار"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-029', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ماذا تسمى رحلات الصيد باستخدام الطيور الجارحة المدربة؟',
+    correctAnswer: 'المقناص',
+    acceptableAnswers: ["المقناص", "مقناص"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-030', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما اسم المرحلة التي يتم فيها تجهيز الطير وتأهيله قبل موسم الصيد؟',
+    correctAnswer: 'الدعو',
+    acceptableAnswers: ["الدعو", "دعو"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-031', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما الاسم الذي يطلق على فترة بقاء الطير لدى صاحبه خارج موسم الصيد؟',
+    correctAnswer: 'المقيض',
+    acceptableAnswers: ["المقيض", "مقيض"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-032', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما الأداة التي توضع على رأس الصقر لحجب الرؤية؟',
+    correctAnswer: 'البرقع',
+    acceptableAnswers: ["البرقع", "برقع"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-033', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما الأداة التي تربط بها رجل الصقر أثناء التعامل معه؟',
+    correctAnswer: 'السبوق',
+    acceptableAnswers: ["السبوق", "سبوق"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-034', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما الاسم الذي يطلق على المكان الذي يقف عليه الصقر؟',
+    correctAnswer: 'الوكر',
+    acceptableAnswers: ["الوكر", "وكر"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-035', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما الأداة التي يستخدمها الصقار لتدريب الطير على الانقضاض والعودة؟',
+    correctAnswer: 'الملواح',
+    acceptableAnswers: ["الملواح", "ملواح"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-036', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما الاسم الذي يطلق على الأداة المستخدمة لتثبيت الصقر أثناء بعض مراحل التعامل معه؟',
+    correctAnswer: 'الدس',
+    acceptableAnswers: ["الدس"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-037', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما اسم المهرجان السعودي المتخصص بالصقور؟',
+    correctAnswer: 'مهرجان الملك عبدالعزيز للصقور',
+    acceptableAnswers: ["مهرجان الملك عبدالعزيز للصقور", "الملك عبدالعزيز للصقور"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-038', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما اسم التراث الذي أدرجته اليونسكو عام 2021 ويرتبط بتدريب الطيور الجارحة والصيد بها؟',
+    correctAnswer: 'الصقارة',
+    acceptableAnswers: ["الصقارة", "صقارة", "الصقاره", "صقاره"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-039', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما اسم الأداة التي يستخدمها الصقار لحمل مستلزمات القنص؟',
+    correctAnswer: 'المخلا',
+    acceptableAnswers: ["المخلا", "مخلا"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-040', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما اسم الوعاء التقليدي الذي تُحضّر وتُقدّم فيه القهوة؟',
+    correctAnswer: 'الدلة',
+    acceptableAnswers: ["الدلة", "دلة", "الدله", "دله"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-041', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما اسم الوعاء الصغير الذي تقدم فيه القهوة للضيف؟',
+    correctAnswer: 'الفنجان',
+    acceptableAnswers: ["الفنجان", "فنجان"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-042', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما الأداة التي تستخدم لتحميص حبوب القهوة؟',
+    correctAnswer: 'المحماس',
+    acceptableAnswers: ["المحماس", "محماس"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-043', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما الأداة التي تستخدم لطحن حبوب القهوة يدويًا؟',
+    correctAnswer: 'النجر',
+    acceptableAnswers: ["النجر", "نجر"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-044', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما الأداة التي تستخدم لدق حبوب القهوة وإصدار الصوت المعروف في المجلس؟',
+    correctAnswer: 'المهباش',
+    acceptableAnswers: ["المهباش", "مهباش"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-045', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما الأداة التي تستخدم لتنقية القهوة من بقايا البن؟',
+    correctAnswer: 'المصفاة',
+    acceptableAnswers: ["المصفاة", "مصفاة", "المصفاه", "مصفاه"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-046', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما الأداة التي تستخدم لتبريد حبوب القهوة بعد تحميصها؟',
+    correctAnswer: 'المبرد',
+    acceptableAnswers: ["المبرد", "مبرد"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-047', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما الاسم الذي يطلق على مجموعة الأدوات المستخدمة في إعداد القهوة؟',
+    correctAnswer: 'المعاميل',
+    acceptableAnswers: ["المعاميل", "معاميل"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-048', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما الوعاء الذي تستخدمه بعض طرق إعداد القهوة في مراحل الطبخ؟',
+    correctAnswer: 'المطباخة',
+    acceptableAnswers: ["المطباخة", "مطباخة", "المطباخه", "مطباخه"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-049', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما الأداة التي تحفظ فيها مكونات مرتبطة بإعداد القهوة؟',
+    correctAnswer: 'المبهارة',
+    acceptableAnswers: ["المبهارة", "مبهارة", "المبهاره", "مبهاره"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-050', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما الاسم الذي يطلق على أشهر رمز من رموز الكرم وحسن الضيافة في تقديم القهوة؟',
+    correctAnswer: 'الدلة',
+    acceptableAnswers: ["الدلة", "دلة", "الدله", "دله"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-051', activityId: 'saudi-heritage', category: 'القهوة السعودية',
+    question: 'ما الاسم الذي أطلقته السعودية رسميًا على مشروبها التراثي المرتبط بالضيافة؟',
+    correctAnswer: 'القهوة السعودية',
+    acceptableAnswers: ["القهوة السعودية", "قهوة السعودية", "القهوة السعوديه", "قهوة السعوديه", "القهوة", "قهوة سعودية", "قهوة عربية", "القهوة العربية"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-052', activityId: 'saudi-heritage', category: 'الفنون الشعبية',
+    question: 'ما اسم المسكن التقليدي المرتبط بحياة البادية والمصنوع من المنسوجات التقليدية؟',
+    correctAnswer: 'بيت الشعر',
+    acceptableAnswers: ["بيت الشعر"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-053', activityId: 'saudi-heritage', category: 'الحرف والأسواق',
+    question: 'ما اسم الحرفة التقليدية التي تستخدم في نسج المنسوجات البدوية؟',
+    correctAnswer: 'السدو',
+    acceptableAnswers: ["السدو", "سدو", "حرفة السدو", "نسيج السدو"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-054', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما اسم الأداة الخشبية التي تستخدم في عملية النسيج التقليدي؟',
+    correctAnswer: 'النول',
+    acceptableAnswers: ["النول", "نول"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-055', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما الأداة الخشبية التي تُلف حولها الألياف قبل استخدامها في النسج؟',
+    correctAnswer: 'التغزالة',
+    acceptableAnswers: ["التغزالة", "تغزالة", "التغزاله", "تغزاله"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-056', activityId: 'saudi-heritage', category: 'الإبل والمزاين',
+    question: 'ما المادة الحيوانية التي يمكن أن تستخدم في صناعة بعض منسوجات بيت الشعر؟',
+    correctAnswer: 'وبر الإبل',
+    acceptableAnswers: ["وبر الإبل", "وبر الابل"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-057', activityId: 'saudi-heritage', category: 'الحرف والأسواق',
+    question: 'ما الاسم الذي يطلق على المرأة التي تمارس حرفة النسج التقليدية؟',
+    correctAnswer: 'ناسجة السدو',
+    acceptableAnswers: ["ناسجة السدو", "سدو", "حرفة السدو", "نسيج السدو"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-058', activityId: 'saudi-heritage', category: 'الحرف والأسواق',
+    question: 'ما المنظمة الدولية التي أدرجت السدو ضمن التراث الثقافي غير المادي؟',
+    correctAnswer: 'اليونسكو',
+    acceptableAnswers: ["اليونسكو", "يونسكو"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-059', activityId: 'saudi-heritage', category: 'الحرف والأسواق',
+    question: 'في أي عام أدرج السدو ضمن قائمة التراث الثقافي غير المادي؟',
+    correctAnswer: '2020',
+    acceptableAnswers: ["2020"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-060', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما غطاء الرأس الذي يثبت عادة بواسطة العقال؟',
+    correctAnswer: 'الغترة',
+    acceptableAnswers: ["الغترة", "غترة", "الغتره", "غتره"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-061', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما القطعة التي توضع فوق غطاء الرأس لتثبيته؟',
+    correctAnswer: 'العقال',
+    acceptableAnswers: ["العقال", "عقال"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-062', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما اللباس الرجالي الفضفاض الذي يرتدى فوق الملابس في المناسبات؟',
+    correctAnswer: 'البشت',
+    acceptableAnswers: ["البشت", "بشت"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-063', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما الاسم الآخر الشائع للبشت في عدد من مناطق السعودية؟',
+    correctAnswer: 'المشلح',
+    acceptableAnswers: ["المشلح", "مشلح"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-064', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما اللباس الذي يشبه الثوب ويتميز بفتحة أمامية وأحيانًا بفتحتين جانبيتين؟',
+    correctAnswer: 'الدقلة',
+    acceptableAnswers: ["الدقلة", "دقلة", "الدقله", "دقله"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-065', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما الاسم الآخر للدقلة في بعض المناطق؟',
+    correctAnswer: 'الزبون',
+    acceptableAnswers: ["الزبون", "زبون"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-066', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما اللباس الشتوي المصنوع من فراء الأغنام أو الماعز؟',
+    correctAnswer: 'الفروة',
+    acceptableAnswers: ["الفروة", "فروة", "الفروه", "فروه"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-067', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما اسم اللباس الذي كان يلبس فوق الثوب وله أكمام طويلة مثلثة في وسط المملكة؟',
+    correctAnswer: 'المردون',
+    acceptableAnswers: ["المردون", "مردون"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-068', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما اسم الرداء الذي يرتديه قارعو الطبول ضمن الزي التقليدي للعرضة؟',
+    correctAnswer: 'الفرملية - الدامر',
+    acceptableAnswers: ["الفرملية - الدامر", "الفرملية", "الدامر", "فرملية - الدامر", "الفرمليه"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-069', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما اسم الرداء الأبيض الخفيف المرتبط بزي العرضة وبعض المرافقين؟',
+    correctAnswer: 'الصاية',
+    acceptableAnswers: ["الصاية", "صاية", "الصايه", "صايه"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-070', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما اسم الزي النسائي الجنوبي الذي يغطي كامل الجسد ويُطرز بألوان مختلفة؟',
+    correctAnswer: 'الصدرة - السدرة',
+    acceptableAnswers: ["الصدرة - السدرة", "الصدرة", "السدرة", "صدرة - السدرة", "الصدرة - السدره", "الصدره", "السدره", "صدرة - السدره"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-071', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما اسم غطاء الرأس النسائي المعروف في عدد من مناطق المملكة؟',
+    correctAnswer: 'الشيلة',
+    acceptableAnswers: ["الشيلة", "شيلة", "الشيله", "شيله"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-072', activityId: 'saudi-heritage', category: 'تراث وأصالة',
+    question: 'ما اسم المنديل النسائي الأسود الذي يطوى بشكل مثلث؟',
+    correctAnswer: 'المقرونة',
+    acceptableAnswers: ["المقرونة", "مقرونة", "المقرونه", "مقرونه"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-073', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما اسم غطاء الرأس النسائي الذي كان معروفًا في بعض أزياء شمال المملكة؟',
+    correctAnswer: 'الشمبر',
+    acceptableAnswers: ["الشمبر", "شمبر"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-074', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما اسم اللباس النسائي الذي كان معروفًا في المنطقة الوسطى ويصنع من القماش الشفاف للصغيرات؟',
+    correctAnswer: 'المخنق',
+    acceptableAnswers: ["المخنق", "مخنق"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-075', activityId: 'saudi-heritage', category: 'الحرف والأسواق',
+    question: 'ما اسم المهرجان التراثي والثقافي الذي ارتبط تاريخيًا بقرية الجنادرية؟',
+    correctAnswer: 'مهرجان الجنادرية',
+    acceptableAnswers: ["مهرجان الجنادرية", "الجنادرية", "مهرجان الجنادريه", "الجنادريه"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-076', activityId: 'saudi-heritage', category: 'الحرف والأسواق',
+    question: 'ما اسم السوق التاريخي الذي تحول إلى فعالية ثقافية وتراثية شهيرة في السعودية؟',
+    correctAnswer: 'سوق عكاظ',
+    acceptableAnswers: ["سوق عكاظ", "عكاظ", "سوق عكاظ التاريخي"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-077', activityId: 'saudi-heritage', category: 'الفنون الشعبية',
+    question: 'ما اسم الفن الشعبي الذي يجمع الشعر والطبول والرقص بالسيوف؟',
+    correctAnswer: 'العرضة السعودية',
+    acceptableAnswers: ["العرضة السعودية", "عرضة السعودية", "العرضة السعوديه", "عرضة السعوديه", "العرضة", "العرضه", "عرضة سعودية", "العرضة النجدية"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-078', activityId: 'saudi-heritage', category: 'الفنون الشعبية',
+    question: 'ما الاسم الآخر المعروف للفن الشعبي الذي نشأ في نجد ويؤدى في المناسبات؟',
+    correctAnswer: 'العرضة النجدية',
+    acceptableAnswers: ["العرضة النجدية", "عرضة النجدية", "العرضة النجديه", "عرضة النجديه"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-079', activityId: 'saudi-heritage', category: 'الأزياء التراثية',
+    question: 'ما اسم الفن الشعبي الحجازي الذي يعتمد على الطبول والعصي؟',
+    correctAnswer: 'المزمار',
+    acceptableAnswers: ["المزمار", "مزمار", "فن المزمار", "لعبة المزمار"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sh-080', activityId: 'saudi-heritage', category: 'الفنون الشعبية',
+    question: 'ما اسم الفن المرتبط بزخرفة الجدران الداخلية في منطقة عسير؟',
+    correctAnswer: 'القط العسيري',
+    acceptableAnswers: ["القط العسيري", "قط العسيري", "القط", "قط عسيري", "فن القط", "النقش العسيري"],
+    difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
 ];
 
 /**
