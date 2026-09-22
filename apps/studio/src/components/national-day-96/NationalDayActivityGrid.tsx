@@ -19,6 +19,7 @@ export interface ActivityCardInfo {
   questionsCount: number;
   pointsPerCorrect: number;
   modeDescription: string;
+  hidden?: boolean;
 }
 
 export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
@@ -98,7 +99,8 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     image: '/national-day-96/memory-archive-full.png',
     questionsCount: 0,
     pointsPerCorrect: 20,
-    modeDescription: 'أسئلة أرشيفية وثائقية نادرة بأسلوب تلفزيوني توثيقي راقٍ.'
+    modeDescription: 'أسئلة أرشيفية وثائقية نادرة بأسلوب تلفزيوني توثيقي راقٍ.',
+    hidden: true
   },
   {
     id: 'challenge-96',
@@ -133,6 +135,8 @@ interface Props {
 }
 
 export function NationalDayActivityGrid({ onSelectActivity }: Props) {
+  const visibleActivities = NATIONAL_DAY_ACTIVITIES.filter(act => !act.hidden);
+
   return (
     <div className="w-full flex flex-col gap-6 my-6">
       
@@ -146,7 +150,7 @@ export function NationalDayActivityGrid({ onSelectActivity }: Props) {
             <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
               <span>فعاليات ومسابقات اليوم الوطني 96</span>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#C69214]/20 text-[#E2D4B7] border border-[#C69214]/40 font-mono">
-                8 ACTIVITIES
+                {visibleActivities.length} ACTIVITIES
               </span>
             </h2>
             <span className="text-xs text-[#E2D4B7]/70 font-bold">
@@ -156,9 +160,9 @@ export function NationalDayActivityGrid({ onSelectActivity }: Props) {
         </div>
       </div>
 
-      {/* Grid of the 8 Custom Authentic Cards (4 Columns) */}
+      {/* Grid of the Custom Authentic Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {NATIONAL_DAY_ACTIVITIES.map((act) => {
+        {visibleActivities.map((act) => {
           return (
             <div
               key={act.id}

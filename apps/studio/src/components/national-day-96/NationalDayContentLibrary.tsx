@@ -62,7 +62,7 @@ export function NationalDayContentLibrary({
   const reviewCount = questions.filter(q => q.status === 'REVIEW').length;
 
   // Activity counts for sidebar
-  const activityCounts = NATIONAL_DAY_ACTIVITIES.map(a => ({
+  const activityCounts = NATIONAL_DAY_ACTIVITIES.filter(a => !a.hidden).map(a => ({
     ...a,
     count: questions.filter(q => q.activityId === a.id && q.status === 'ACTIVE').length
   }));
@@ -251,7 +251,7 @@ export function NationalDayContentLibrary({
               onChange={e => setAiActivity(e.target.value as NationalDay96ActivityId)}
               className="px-3 py-2 rounded-xl bg-[#020D06] border border-white/10 text-white text-xs font-bold focus:border-[#00A859] outline-none"
             >
-              {NATIONAL_DAY_ACTIVITIES.map(a => (
+              {NATIONAL_DAY_ACTIVITIES.filter(a => !a.hidden).map(a => (
                 <option key={a.id} value={a.id}>{a.title}</option>
               ))}
             </select>
@@ -357,7 +357,7 @@ export function NationalDayContentLibrary({
             className="px-3 py-2 rounded-xl bg-[#081B10] border border-white/10 text-white text-xs font-bold outline-none"
           >
             <option value="all">جميع الفعاليات</option>
-            {NATIONAL_DAY_ACTIVITIES.map(a => (
+            {NATIONAL_DAY_ACTIVITIES.filter(a => !a.hidden).map(a => (
               <option key={a.id} value={a.id}>{a.title}</option>
             ))}
           </select>
@@ -479,7 +479,7 @@ export function NationalDayContentLibrary({
                   onChange={e => setNewActivityId(e.target.value as NationalDay96ActivityId)}
                   className="px-3 py-2 rounded-xl bg-[#020D06] border border-white/10 text-white text-xs font-bold outline-none"
                 >
-                  {NATIONAL_DAY_ACTIVITIES.map(a => (
+                  {NATIONAL_DAY_ACTIVITIES.filter(a => !a.hidden).map(a => (
                     <option key={a.id} value={a.id}>{a.title}</option>
                   ))}
                 </select>
