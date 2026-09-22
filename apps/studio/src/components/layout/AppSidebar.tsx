@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
   Tv, Gamepad2, Layers, Database, Sliders, Trophy, 
-  Users, BarChart3, Settings, Volume2, Plus, Sparkles, ChevronLeft
+  Users, BarChart3, Settings, Volume2, Plus, Sparkles, ChevronLeft, Flag
 } from 'lucide-react';
 
 export function AppSidebar() {
@@ -17,6 +17,7 @@ export function AppSidebar() {
       title: 'STUDIO',
       items: [
         { href: '/', label: 'الرئيسية (Command Center)', icon: Tv, exact: true },
+        { href: '/national-day-96', label: 'فعاليات اليوم الوطني 96 🇸🇦', icon: Flag, badge: '96' },
         { href: '/play', label: 'الألعاب والمسابقات', icon: Gamepad2 },
         { href: '/shows', label: 'إدارة العروض', icon: Layers },
         { href: '/library', label: 'بنك الأسئلة والمحتوى', icon: Database },

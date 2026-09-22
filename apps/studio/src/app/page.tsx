@@ -502,6 +502,47 @@ export default function CategorizedGamesCommandCenter() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════ */}
+      {/* 🇸🇦 SPECIAL FESTIVAL SHOWCASE: SAUDI NATIONAL DAY 96     */}
+      {/* ═══════════════════════════════════════════════════════ */}
+      <div className="relative w-full rounded-3xl overflow-hidden border-2 border-[#00A859]/70 bg-gradient-to-r from-[#03150A] via-[#072B17] to-[#04190D] shadow-[0_20px_60px_rgba(0,168,89,0.35)] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        {/* Ambient Glow */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#00A859]/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#C69214]/15 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex items-center gap-5">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-[#004D25] via-[#006C35] to-[#00A859] border-2 border-[#FFE79A] shadow-[0_0_30px_rgba(0,168,89,0.6)] flex items-center justify-center text-3xl sm:text-4xl shrink-0">
+            🇸🇦
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-3 py-0.5 rounded-full bg-[#FFE79A]/20 text-[#FFE79A] border border-[#FFE79A]/40 text-xs font-black font-mono">
+                موسم اليوم الوطني 96
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#004D25] text-[#00A859] border border-[#00A859]/40 text-xs font-mono font-bold">
+                8 فعاليات وطنية كبرى 🏆
+              </span>
+            </div>
+            <h2 className="font-cairo font-black text-2xl sm:text-3xl text-white">
+              قسم فعاليات اليوم الوطني السعودي 96
+            </h2>
+            <p className="text-xs sm:text-sm text-[#E2D4B7] font-bold leading-relaxed max-w-xl">
+              السعودية العظمى (78) • أرقام الوطن (37) • صور ربوع بلادي (38) • تراثنا الأصيل (80) • باقة الإهداءات التلفزيونية والتحديات المباشرة.
+            </p>
+          </div>
+        </div>
+
+        <div className="relative z-10 flex items-center gap-3 shrink-0 flex-wrap">
+          <Link
+            href="/national-day-96"
+            className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#006C35] via-[#00A859] to-[#006C35] text-white font-black text-sm flex items-center gap-2 shadow-[0_0_25px_rgba(0,168,89,0.5)] hover:scale-105 transition-all border border-[#FFE79A]/30 cursor-pointer"
+          >
+            <span>دخول قسم الفعاليات</span>
+            <ArrowLeft className="w-4 h-4 text-[#FFE79A]" />
+          </Link>
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════ */}
       {/* 2. CATEGORY DISCOVERY NAVIGATION                        */}
       {/* ═══════════════════════════════════════════════════════ */}
       <div className="flex flex-col gap-4 border-b border-[#262C3A] pb-4">

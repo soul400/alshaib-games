@@ -85,6 +85,17 @@ export function TopHeaderLiveBar() {
             <span className="text-slate-500 text-xs font-mono">/</span>
             <span className="text-xs text-slate-300 font-bold">Studio Command</span>
           </Link>
+
+          {/* 🇸🇦 NATIONAL DAY 96 QUICK LINK */}
+          <Link
+            href="/national-day-96"
+            className="flex items-center gap-2 px-3 py-1 rounded-xl bg-gradient-to-r from-[#006C35] to-[#00A859] border border-[#FFE79A]/40 text-white hover:border-[#FFE79A] shadow-[0_0_15px_rgba(0,168,89,0.4)] transition-all hover:scale-105"
+          >
+            <span className="text-xs font-black">اليوم الوطني 96 🇸🇦</span>
+            <span className="px-1.5 py-0.2 rounded-md bg-[#C69214] text-slate-950 font-mono font-black text-[9px]">
+              فعاليات
+            </span>
+          </Link>
         </div>
 
         {/* CENTER & RIGHT: TIKTOK LIVE CONNECTION & DIRECT CONTROLS */}
