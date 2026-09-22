@@ -42,7 +42,7 @@ export function NationalDayContentLibrary({
   const [newAnswer, setNewAnswer] = useState<string>('');
   const [newAlternatives, setNewAlternatives] = useState<string>('');
   const [newCategory, setNewCategory] = useState<string>('تاريخ الملوك');
-  const [newPoints, setNewPoints] = useState<number>(10);
+  const [newPoints, setNewPoints] = useState<number>(1);
   const [newActivityId, setNewActivityId] = useState<NationalDay96ActivityId>('saudi-great');
   const [newMediaUrl, setNewMediaUrl] = useState<string>('');
   const [imageUploadMode, setImageUploadMode] = useState<'url' | 'file'>('url');
@@ -79,7 +79,7 @@ export function NationalDayContentLibrary({
           correctAnswer: 'المملكة العربية السعودية',
           acceptableAnswers: ['المملكة العربية السعودية', 'السعودية', 'Saudi Arabia'],
           difficulty: aiDifficulty,
-          points: aiDifficulty === 'easy' ? 10 : aiDifficulty === 'medium' ? 15 : 20,
+          points: 1,
           timeLimitSeconds: 15,
           explanation: 'تم التوليد بواسطة الذكاء الاصطناعي للمراجعة والاعتماد.',
           status: 'REVIEW',
@@ -93,7 +93,7 @@ export function NationalDayContentLibrary({
           correctAnswer: 'الاستدامة والابتكار',
           acceptableAnswers: ['الاستدامة', 'الابتكار', 'الاستدامة والابتكار'],
           difficulty: aiDifficulty,
-          points: 15,
+          points: 1,
           timeLimitSeconds: 15,
           explanation: 'تم التوليد آلياً لمراجعة المسؤول.',
           status: 'REVIEW',
@@ -115,7 +115,7 @@ export function NationalDayContentLibrary({
     setNewAnswer('');
     setNewAlternatives('');
     setNewCategory('تاريخ الملوك');
-    setNewPoints(10);
+    setNewPoints(1);
     setNewActivityId('saudi-great');
     setNewMediaUrl('');
     setImageUploadMode('url');
@@ -171,7 +171,7 @@ export function NationalDayContentLibrary({
       correctAnswer: newAnswer.trim(),
       acceptableAnswers: [newAnswer.trim(), ...alts],
       difficulty: 'medium',
-      points: Number(newPoints) || 10,
+      points: Number(newPoints) || 1,
       timeLimitSeconds: 15,
       mediaUrl: newMediaUrl.trim() || undefined,
       mediaType: newMediaUrl.trim() ? 'image' : undefined,
@@ -275,9 +275,9 @@ export function NationalDayContentLibrary({
               onChange={e => setAiDifficulty(e.target.value as any)}
               className="px-3 py-2 rounded-xl bg-[#020D06] border border-white/10 text-white text-xs font-bold focus:border-[#00A859] outline-none"
             >
-              <option value="easy">سهل (10 نقاط)</option>
-              <option value="medium">متوسط (15 نقطة)</option>
-              <option value="hard">صعب (20 نقطة)</option>
+              <option value="easy">سهل (نقطة واحدة)</option>
+              <option value="medium">متوسط (نقطة واحدة)</option>
+              <option value="hard">صعب (نقطة واحدة)</option>
             </select>
           </div>
 
@@ -536,7 +536,7 @@ export function NationalDayContentLibrary({
                   <label className="text-xs font-bold text-[#E2D4B7]">النقاط</label>
                   <input
                     type="number"
-                    min={5}
+                    min={1}
                     max={50}
                     value={newPoints}
                     onChange={e => setNewPoints(Number(e.target.value))}

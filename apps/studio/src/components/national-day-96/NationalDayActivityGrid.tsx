@@ -33,7 +33,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     icon: Trophy,
     image: '/national-day-96/saudi-great-full.png',
     questionsCount: 78,
-    pointsPerCorrect: 10,
+    pointsPerCorrect: 1,
     modeDescription: 'السؤال يظهر على الشاشة والإجابة الأولى من تعليقات البث تكسب النقاط مباشرة.'
   },
   {
@@ -46,7 +46,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     icon: Binary,
     image: '/national-day-96/saudi-numbers-full.png',
     questionsCount: 37,
-    pointsPerCorrect: 15,
+    pointsPerCorrect: 1,
     modeDescription: 'تطبيع الأرقام الذكي (٩٦ / 96 / 1932) يضمن احتساب الإجابة الصحيحة بأي لغة.'
   },
   {
@@ -59,7 +59,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     icon: Heart,
     image: '/national-day-96/national-dedications-full.png',
     questionsCount: 12,
-    pointsPerCorrect: 20,
+    pointsPerCorrect: 1,
     modeDescription: 'باقة بث تلفزيونية كاملة تعرض رسائل المتابعين كفواصل احتفالية 8-12 ثانية.'
   },
   {
@@ -72,7 +72,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     icon: ImageIcon,
     image: '/national-day-96/landscapes-full.png',
     questionsCount: 38,
-    pointsPerCorrect: 20,
+    pointsPerCorrect: 1,
     modeDescription: 'صور عالية الدقة تظهر تدريجياً، وأسرع مشاهد يكتب اسم المعلم يكسب النقاط.'
   },
   {
@@ -85,7 +85,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     icon: Map,
     image: '/national-day-96/national-map-full.png',
     questionsCount: 0,
-    pointsPerCorrect: 15,
+    pointsPerCorrect: 1,
     modeDescription: 'تمييز بصري لمناطق الـ 13 على خريطة المملكة مع اختبارات للمدن والمواقع.'
   },
   {
@@ -98,7 +98,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     icon: Archive,
     image: '/national-day-96/memory-archive-full.png',
     questionsCount: 0,
-    pointsPerCorrect: 20,
+    pointsPerCorrect: 1,
     modeDescription: 'أسئلة أرشيفية وثائقية نادرة بأسلوب تلفزيوني توثيقي راقٍ.',
     hidden: true
   },
@@ -112,7 +112,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     icon: Zap,
     image: '/national-day-96/challenge-96-full.png',
     questionsCount: 0,
-    pointsPerCorrect: 5,
+    pointsPerCorrect: 1,
     modeDescription: 'جولات خاطفة وسريعة تشتعل فيها التعليقات خلال ثوانٍ معدودة.'
   },
   {
@@ -125,7 +125,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     icon: Flame,
     image: '/national-day-96/saudi-heritage-full.png',
     questionsCount: 80,
-    pointsPerCorrect: 15,
+    pointsPerCorrect: 1,
     modeDescription: 'مسابقة في التراث الشعبي والعادات والتقاليد والأكلات والموروث الشعبي.'
   }
 ];

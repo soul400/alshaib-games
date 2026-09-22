@@ -135,7 +135,9 @@ export default function SaudiNationalDay96Page() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setQuestions(parsed);
+          // Guarantee 1 point for all questions
+          setQuestions(parsed.map(q => ({ ...q, points: 1 })));
+          return;
         }
       }
     } catch (_) {}
@@ -232,7 +234,7 @@ export default function SaudiNationalDay96Page() {
       correctAnswer: q.correctAnswer || '',
       acceptableAnswers: q.acceptableAnswers || [q.correctAnswer || ''],
       difficulty: q.difficulty || 'medium',
-      points: q.points || 10,
+      points: 1,
       timeLimitSeconds: q.timeLimitSeconds || 15,
       mediaUrl: q.mediaUrl,
       mediaType: q.mediaType,
