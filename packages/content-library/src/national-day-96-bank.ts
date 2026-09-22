@@ -556,6 +556,269 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     acceptableAnswers: ['روشن', 'ROSHN'],
     difficulty: 'hard', points: 10, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
+
+  // ══════════════════════════════════════════════════════════════
+  // 🔢 أرقام الوطن — مسابقة الأرقام والتواريخ (37 سؤال)
+  // ══════════════════════════════════════════════════════════════
+  {
+    id: 'sn-001', activityId: 'saudi-numbers', category: 'أرقام وتواريخ',
+    question: 'في أي عام أُعلنت المملكة العربية السعودية بهذا الاسم؟',
+    correctAnswer: '1932م',
+    acceptableAnswers: ["1932م", "1932", "١٩٣٢", "عام 1932", "سنة 1932"],
+    numberAnswer: 1932, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-002', activityId: 'saudi-numbers', category: 'أرقام وتواريخ',
+    question: 'في أي عام استعاد الملك عبدالعزيز مدينة الرياض؟',
+    correctAnswer: '1902م',
+    acceptableAnswers: ["1902م", "1902", "١٩٠٢", "عام 1902", "سنة 1902"],
+    numberAnswer: 1902, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-003', activityId: 'saudi-numbers', category: 'تواريخ الملوك',
+    question: 'كم عدد ملوك السعودية منذ توحيد المملكة حتى الملك سلمان؟',
+    correctAnswer: '7 ملوك',
+    acceptableAnswers: ["7 ملوك", "7", "٧", "سبعة", "سبع"],
+    numberAnswer: 7, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-004', activityId: 'saudi-numbers', category: 'تواريخ الملوك',
+    question: 'في أي عام تولى الملك سلمان الحكم؟',
+    correctAnswer: '2015م',
+    acceptableAnswers: ["2015م", "2015", "٢٠١٥", "عام 2015", "سنة 2015"],
+    numberAnswer: 2015, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-005', activityId: 'saudi-numbers', category: 'أرقام وتواريخ',
+    question: 'في أي عام بدأ تطبيق نظام المناطق الحالي؟',
+    correctAnswer: '1992م',
+    acceptableAnswers: ["1992م", "1992", "١٩٩٢", "عام 1992", "سنة 1992"],
+    numberAnswer: 1992, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-006', activityId: 'saudi-numbers', category: 'تقسيم إداري',
+    question: 'كم منطقة إدارية تضم السعودية؟',
+    correctAnswer: '13 منطقة',
+    acceptableAnswers: ["13 منطقة", "13", "١٣", "ثلاثة عشر", "ثلاث عشرة", "ثلاثتعش"],
+    numberAnswer: 13, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-007', activityId: 'saudi-numbers', category: 'أرقام وتواريخ',
+    question: 'في أي يوم تحتفل السعودية باليوم الوطني؟',
+    correctAnswer: '23 سبتمبر',
+    acceptableAnswers: ["23 سبتمبر", "23", "٢٣", "ثلاثة وعشرون", "ثلاث وعشرين", "23-9", "23/9"],
+    numberAnswer: 23, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-008', activityId: 'saudi-numbers', category: 'أرقام وتواريخ',
+    question: 'ما رقم اليوم الوطني الذي احتفلت به المملكة في 2025؟',
+    correctAnswer: '95',
+    acceptableAnswers: ["95", "٩٥", "خمسة وتسعون", "خمسة وتسعين"],
+    numberAnswer: 95, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-009', activityId: 'saudi-numbers', category: 'أرقام وتواريخ',
+    question: 'في أي عام أصبح اسم البلاد «المملكة العربية السعودية»؟',
+    correctAnswer: '1932م',
+    acceptableAnswers: ["1932م", "1932", "١٩٣٢", "عام 1932", "سنة 1932"],
+    numberAnswer: 1932, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-010', activityId: 'saudi-numbers', category: 'أرقام وتواريخ',
+    question: 'كم عامًا استمر توحيد المملكة منذ استرداد الرياض حتى إعلان المملكة؟',
+    correctAnswer: '30 عامًا تقريبًا',
+    acceptableAnswers: ["30 عامًا تقريبًا", "30 عامًا", "30", "٣٠", "ثلاثون", "ثلاثين"],
+    numberAnswer: 30, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-011', activityId: 'saudi-numbers', category: 'أرقام وتواريخ',
+    question: 'في أي عام بدأ الملك عبدالعزيز رحلة استعادة الرياض؟',
+    correctAnswer: '1902م',
+    acceptableAnswers: ["1902م", "1902", "١٩٠٢", "عام 1902", "سنة 1902"],
+    numberAnswer: 1902, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-012', activityId: 'saudi-numbers', category: 'تواريخ الملوك',
+    question: 'في أي عام توفي الملك عبدالعزيز؟',
+    correctAnswer: '1953م',
+    acceptableAnswers: ["1953م", "1953", "١٩٥٣", "عام 1953", "سنة 1953"],
+    numberAnswer: 1953, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-013', activityId: 'saudi-numbers', category: 'تواريخ الملوك',
+    question: 'في أي عام توفي الملك سعود؟',
+    correctAnswer: '1969م',
+    acceptableAnswers: ["1969م", "1969", "١٩٦٩", "عام 1969", "سنة 1969"],
+    numberAnswer: 1969, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-014', activityId: 'saudi-numbers', category: 'تواريخ الملوك',
+    question: 'في أي عام توفي الملك فيصل؟',
+    correctAnswer: '1975م',
+    acceptableAnswers: ["1975م", "1975", "١٩٧٥", "عام 1975", "سنة 1975"],
+    numberAnswer: 1975, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-015', activityId: 'saudi-numbers', category: 'تواريخ الملوك',
+    question: 'في أي عام توفي الملك خالد؟',
+    correctAnswer: '1982م',
+    acceptableAnswers: ["1982م", "1982", "١٩٨٢", "عام 1982", "سنة 1982"],
+    numberAnswer: 1982, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-016', activityId: 'saudi-numbers', category: 'تواريخ الملوك',
+    question: 'في أي عام توفي الملك فهد؟',
+    correctAnswer: '2005م',
+    acceptableAnswers: ["2005م", "2005", "٢٠٠٥", "عام 2005", "سنة 2005"],
+    numberAnswer: 2005, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-017', activityId: 'saudi-numbers', category: 'تواريخ الملوك',
+    question: 'في أي عام توفي الملك عبدالله؟',
+    correctAnswer: '2015م',
+    acceptableAnswers: ["2015م", "2015", "٢٠١٥", "عام 2015", "سنة 2015"],
+    numberAnswer: 2015, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-018', activityId: 'saudi-numbers', category: 'تواريخ الملوك',
+    question: 'كم سنة استمر حكم الملك فهد تقريبًا؟',
+    correctAnswer: '23 سنة',
+    acceptableAnswers: ["23 سنة", "23", "٢٣", "ثلاثة وعشرون", "ثلاث وعشرين"],
+    numberAnswer: 23, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-019', activityId: 'saudi-numbers', category: 'تواريخ الملوك',
+    question: 'كم سنة استمر حكم الملك عبدالله؟',
+    correctAnswer: '10 سنوات',
+    acceptableAnswers: ["10 سنوات", "10", "١٠", "عشرة", "عشر"],
+    numberAnswer: 10, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-020', activityId: 'saudi-numbers', category: 'مساحات ومناطق',
+    question: 'كم تبلغ مساحة السعودية تقريبًا؟',
+    correctAnswer: 'أكثر من 2 مليون كم²',
+    acceptableAnswers: ["أكثر من 2 مليون كم²", "2 مليون", "2", "٢", "اثنين", "اثنان", "مليونين", "اكثر من مليونين", "أكثر من 2 مليون"],
+    numberAnswer: 2, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-021', activityId: 'saudi-numbers', category: 'تقسيم إداري',
+    question: 'كم منطقة إدارية توجد في السعودية؟',
+    correctAnswer: '13',
+    acceptableAnswers: ["13", "١٣", "ثلاثة عشر", "ثلاث عشرة", "ثلاثتعش"],
+    numberAnswer: 13, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-022', activityId: 'saudi-numbers', category: 'تقسيم إداري',
+    question: 'كم منطقة إدارية تطل على البحر الأحمر؟',
+    correctAnswer: '5 مناطق',
+    acceptableAnswers: ["5 مناطق", "5", "٥", "خمسة", "خمس"],
+    numberAnswer: 5, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-023', activityId: 'saudi-numbers', category: 'مساحات ومناطق',
+    question: 'كم تبلغ مساحة المنطقة الشرقية تقريبًا؟',
+    correctAnswer: '540 ألف كم²',
+    acceptableAnswers: ["540 ألف كم²", "540 ألف", "540", "٥٤٠", "540 الف", "540 الف كم"],
+    numberAnswer: 540, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-024', activityId: 'saudi-numbers', category: 'مساحات ومناطق',
+    question: 'كم تبلغ مساحة منطقة الباحة تقريبًا؟',
+    correctAnswer: '12 ألف كم²',
+    acceptableAnswers: ["12 ألف كم²", "12 ألف", "12", "١٢", "اثنا عشر", "اثني عشر", "اثناعش", "12 الف", "12 الف كم"],
+    numberAnswer: 12, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-025', activityId: 'saudi-numbers', category: 'مساحات ومناطق',
+    question: 'كم تبلغ مساحة منطقة الرياض تقريبًا؟',
+    correctAnswer: '380 ألف كم²',
+    acceptableAnswers: ["380 ألف كم²", "380 ألف", "380", "٣٨٠", "380 الف", "380 الف كم"],
+    numberAnswer: 380, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-026', activityId: 'saudi-numbers', category: 'مساحات ومناطق',
+    question: 'كم تبلغ مساحة منطقة المدينة المنورة تقريبًا؟',
+    correctAnswer: '150 ألف كم²',
+    acceptableAnswers: ["150 ألف كم²", "150 ألف", "150", "١٥٠", "150 الف", "150 الف كم"],
+    numberAnswer: 150, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-027', activityId: 'saudi-numbers', category: 'مساحات ومناطق',
+    question: 'كم تبلغ مساحة منطقة القصيم تقريبًا؟',
+    correctAnswer: '73 ألف كم²',
+    acceptableAnswers: ["73 ألف كم²", "73 ألف", "73", "٧٣", "73 الف", "73 الف كم"],
+    numberAnswer: 73, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-028', activityId: 'saudi-numbers', category: 'مساحات ومناطق',
+    question: 'كم تبلغ مساحة منطقة حائل تقريبًا؟',
+    correctAnswer: '120 ألف كم²',
+    acceptableAnswers: ["120 ألف كم²", "120 ألف", "120", "١٢٠", "120 الف", "120 الف كم"],
+    numberAnswer: 120, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-029', activityId: 'saudi-numbers', category: 'مساحات ومناطق',
+    question: 'كم تبلغ مساحة منطقة عسير تقريبًا؟',
+    correctAnswer: '80 ألف كم²',
+    acceptableAnswers: ["80 ألف كم²", "80 ألف", "80", "٨٠", "80 الف", "80 الف كم"],
+    numberAnswer: 80, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-030', activityId: 'saudi-numbers', category: 'إحصاءات ومعالم',
+    question: 'كم عدد المطارات الدولية والإقليمية في السعودية وفق إحصاءات 2024؟',
+    correctAnswer: '29 مطارًا',
+    acceptableAnswers: ["29 مطارًا", "29", "٢٩", "تسعة وعشرون", "تسع وعشرين"],
+    numberAnswer: 29, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-031', activityId: 'saudi-numbers', category: 'أرقام وتواريخ',
+    question: 'كم موقعًا سعوديًا يوجد في قائمة التراث العالمي لليونسكو؟',
+    correctAnswer: '8',
+    acceptableAnswers: ["8", "٨", "ثمانية", "ثمان"],
+    numberAnswer: 8, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-032', activityId: 'saudi-numbers', category: 'إحصاءات ومعالم',
+    question: 'كم مدفنًا نبطيًا تقريبًا في موقع الحِجر؟',
+    correctAnswer: '111 مدفنًا',
+    acceptableAnswers: ["111 مدفنًا", "111", "١١١", "مائة واحد عشر", "مية واثنعش"],
+    numberAnswer: 111, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-033', activityId: 'saudi-numbers', category: 'تقسيم إداري',
+    question: 'كم محافظة تتبع منطقة الرياض؟',
+    correctAnswer: '22 محافظة',
+    acceptableAnswers: ["22 محافظة", "22", "٢٢", "اثنان وعشرون", "اثنين وعشرين"],
+    numberAnswer: 22, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-034', activityId: 'saudi-numbers', category: 'تقسيم إداري',
+    question: 'كم محافظة تتبع المنطقة الشرقية؟',
+    correctAnswer: '13 محافظة',
+    acceptableAnswers: ["13 محافظة", "13", "١٣", "ثلاثة عشر", "ثلاث عشرة", "ثلاثتعش"],
+    numberAnswer: 13, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-035', activityId: 'saudi-numbers', category: 'تقسيم إداري',
+    question: 'كم محافظة تتبع منطقة القصيم؟',
+    correctAnswer: '13 محافظة',
+    acceptableAnswers: ["13 محافظة", "13", "١٣", "ثلاثة عشر", "ثلاث عشرة", "ثلاثتعش"],
+    numberAnswer: 13, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-036', activityId: 'saudi-numbers', category: 'أرقام وتواريخ',
+    question: 'في أي عام صدر نظام المناطق الذي شكل التقسيم الإداري الحديث؟',
+    correctAnswer: '1992م',
+    acceptableAnswers: ["1992م", "1992", "١٩٩٢", "عام 1992", "سنة 1992"],
+    numberAnswer: 1992, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
+  {
+    id: 'sn-037', activityId: 'saudi-numbers', category: 'أرقام وتواريخ',
+    question: 'في أي عام تأسست الدولة السعودية الأولى؟',
+    correctAnswer: '1727م',
+    acceptableAnswers: ["1727م", "1727", "١٧٢٧", "عام 1727", "سنة 1727"],
+    numberAnswer: 1727, difficulty: 'medium', points: 15, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
+  },
 ];
 
 /**

@@ -31,7 +31,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     badgeColor: 'bg-[#00A859]/20 text-[#00A859] border-[#00A859]/40',
     icon: Trophy,
     image: '/national-day-96/saudi-great-full.png',
-    questionsCount: 0,
+    questionsCount: 78,
     pointsPerCorrect: 10,
     modeDescription: 'السؤال يظهر على الشاشة والإجابة الأولى من تعليقات البث تكسب النقاط مباشرة.'
   },
@@ -44,7 +44,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     badgeColor: 'bg-[#C69214]/20 text-[#C69214] border-[#C69214]/40',
     icon: Binary,
     image: '/national-day-96/saudi-numbers-full.png',
-    questionsCount: 0,
+    questionsCount: 37,
     pointsPerCorrect: 15,
     modeDescription: 'تطبيع الأرقام الذكي (٩٦ / 96 / 1932) يضمن احتساب الإجابة الصحيحة بأي لغة.'
   },
