@@ -402,7 +402,7 @@ export function NationalDayLiveArena({
 
               {/* Media: Image below question */}
               {currentQ.mediaType === 'image' && currentQ.mediaUrl && (
-                <div className="relative w-full max-w-md h-52 rounded-2xl overflow-hidden border-2 border-[#00A859]/60 shadow-2xl animate-in zoom-in-95">
+                <div className="relative w-full max-w-xl h-60 sm:h-72 rounded-2xl overflow-hidden border-2 border-[#00A859]/70 shadow-[0_10px_40px_rgba(0,0,0,0.8)] animate-in zoom-in-95 bg-[#020D06] flex items-center justify-center">
                   <img src={currentQ.mediaUrl} alt="صورة السؤال" className="w-full h-full object-cover" />
                 </div>
               )}

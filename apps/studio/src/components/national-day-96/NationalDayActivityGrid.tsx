@@ -70,7 +70,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
     icon: ImageIcon,
     image: '/national-day-96/landscapes-full.png',
-    questionsCount: 0,
+    questionsCount: 38,
     pointsPerCorrect: 20,
     modeDescription: 'صور عالية الدقة تظهر تدريجياً، وأسرع مشاهد يكتب اسم المعلم يكسب النقاط.'
   },
