@@ -41,9 +41,11 @@ export function NationalDayLeaderboard({ entries, onResetSeason }: Props) {
         {onResetSeason && (
           <button
             onClick={onResetSeason}
-            className="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-500/40 text-slate-300 hover:text-rose-300 text-xs font-bold transition-all cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 hover:border-rose-500/50 text-rose-300 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] active:scale-95"
+            title="تصفير لوحة الصدارة وإعادة تعيين جميع النقاط إلى الصفر"
           >
-            تصفير موسم اليوم الوطني
+            <span>🗑️</span>
+            <span>تصفير موسم اليوم الوطني</span>
           </button>
         )}
       </div>

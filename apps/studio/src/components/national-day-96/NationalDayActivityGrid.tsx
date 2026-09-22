@@ -104,16 +104,16 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
   },
   {
     id: 'challenge-96',
-    title: 'تحدي 96',
-    subtitle: 'جولات السرعة الخاطفة ⚡',
-    tagline: '5 - 10 ثوانٍ حماسية',
-    badge: '07 • سرعة البرق',
-    badgeColor: 'bg-yellow-400/20 text-yellow-300 border-yellow-400/40',
-    icon: Zap,
-    image: '/national-day-96/challenge-96-full.png',
+    title: 'تحدي اللهجات',
+    subtitle: 'اللهجات والمفردات السعودية 🗣️',
+    tagline: 'مفردات ومعاني كلمات مختلف مناطق المملكة',
+    badge: '07 • لهجات ومفردات',
+    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+    icon: Mic,
+    image: '/national-day-96/saudi-dialects-full.png',
     questionsCount: 0,
     pointsPerCorrect: 1,
-    modeDescription: 'جولات خاطفة وسريعة تشتعل فيها التعليقات خلال ثوانٍ معدودة.'
+    modeDescription: 'مسابقة ممتعة في معاني الكلمات والمفردات الشعبية والتراثية لمختلف مناطق المملكة.'
   },
   {
     id: 'saudi-heritage',

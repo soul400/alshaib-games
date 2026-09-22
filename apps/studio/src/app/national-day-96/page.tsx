@@ -56,62 +56,8 @@ const INITIAL_DEDICATIONS: NationalDayDedication[] = [
   }
 ];
 
-// Initial National Day Season Leaderboard Seed
-const INITIAL_LEADERBOARD: NationalDayLeaderboardEntry[] = [
-  {
-    userId: 'u-top-1',
-    username: 'سلطان_الرياض',
-    displayName: 'سلطان بن عبدالعزيز',
-    avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80',
-    nationalPoints: 1250,
-    correctAnswersCount: 42,
-    winsCount: 12,
-    rank: 1,
-    favoriteActivity: 'السعودية العظمى'
-  },
-  {
-    userId: 'u-top-2',
-    username: 'نورة_عسير',
-    displayName: 'نورة الشهراني',
-    avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
-    nationalPoints: 980,
-    correctAnswersCount: 35,
-    winsCount: 9,
-    rank: 2,
-    favoriteActivity: 'صور ربوع بلادي'
-  },
-  {
-    userId: 'u-top-3',
-    username: 'خالد_الشرقية',
-    displayName: 'خالد الغامدي',
-    avatarUrl: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=200&q=80',
-    nationalPoints: 810,
-    correctAnswersCount: 29,
-    winsCount: 7,
-    rank: 3,
-    favoriteActivity: 'أرقام الوطن'
-  },
-  {
-    userId: 'u-top-4',
-    username: 'ريم_جدة',
-    displayName: 'ريم باوزير',
-    avatarUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80',
-    nationalPoints: 640,
-    correctAnswersCount: 22,
-    winsCount: 5,
-    rank: 4
-  },
-  {
-    userId: 'u-top-5',
-    username: 'تركي_العلا',
-    displayName: 'تركي العنزي',
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-    nationalPoints: 520,
-    correctAnswersCount: 18,
-    winsCount: 4,
-    rank: 5
-  }
-];
+// Initial National Day Season Leaderboard Seed (clean empty by default)
+const INITIAL_LEADERBOARD: NationalDayLeaderboardEntry[] = [];
 
 export default function SaudiNationalDay96Page() {
   const { liveComments, tiktokEngine } = useStudioStore();
@@ -126,9 +72,9 @@ export default function SaudiNationalDay96Page() {
   // National Day State
   const [questions, setQuestions] = useState<NationalDayQuestion[]>(NATIONAL_DAY_96_BANK);
   const [dedications, setDedications] = useState<NationalDayDedication[]>(INITIAL_DEDICATIONS);
-  const [leaderboard, setLeaderboard] = useState<NationalDayLeaderboardEntry[]>(INITIAL_LEADERBOARD);
+  const [leaderboard, setLeaderboard] = useState<NationalDayLeaderboardEntry[]>([]);
 
-  // Load custom questions from localStorage on mount
+  // Load custom questions and leaderboard from localStorage on mount
   useEffect(() => {
     try {
       const saved = localStorage.getItem('aep_nd96_custom_questions');
@@ -137,7 +83,16 @@ export default function SaudiNationalDay96Page() {
         if (Array.isArray(parsed) && parsed.length > 0) {
           // Guarantee 1 point for all questions
           setQuestions(parsed.map(q => ({ ...q, points: 1 })));
-          return;
+        }
+      }
+    } catch (_) {}
+
+    try {
+      const savedLb = localStorage.getItem('aep_nd96_leaderboard');
+      if (savedLb !== null) {
+        const parsedLb = JSON.parse(savedLb);
+        if (Array.isArray(parsedLb)) {
+          setLeaderboard(parsedLb);
         }
       }
     } catch (_) {}
@@ -168,9 +123,10 @@ export default function SaudiNationalDay96Page() {
     question: NationalDayQuestion
   ) => {
     setLeaderboard(prev => {
+      let updated: NationalDayLeaderboardEntry[];
       const existing = prev.find(p => p.userId === winner.userId || p.username === winner.username);
       if (existing) {
-        return prev.map(p => {
+        updated = prev.map(p => {
           if (p.userId === winner.userId || p.username === winner.username) {
             return {
               ...p,
@@ -192,9 +148,26 @@ export default function SaudiNationalDay96Page() {
           winsCount: 1,
           rank: prev.length + 1
         };
-        return [...prev, newEntry];
+        updated = [...prev, newEntry];
       }
+      try {
+        localStorage.setItem('aep_nd96_leaderboard', JSON.stringify(updated));
+      } catch (_) {}
+      return updated;
     });
+  };
+
+  // Reset National Day Season Leaderboard to Zero
+  const handleResetSeason = () => {
+    if (typeof window !== 'undefined') {
+      const confirmed = window.confirm('هل أنت متأكد من تصفير لوحة صدارة اليوم الوطني وإعادة كافة النقاط وسجل المتسابقين إلى الصفر؟');
+      if (!confirmed) return;
+    }
+    setLeaderboard([]);
+    try {
+      localStorage.setItem('aep_nd96_leaderboard', JSON.stringify([]));
+    } catch (_) {}
+    soundFX.play('time_up');
   };
 
   // Dedication Handlers
@@ -355,7 +328,7 @@ export default function SaudiNationalDay96Page() {
         {activeTab === 'leaderboard' && (
           <NationalDayLeaderboard
             entries={leaderboard}
-            onResetSeason={() => setLeaderboard(INITIAL_LEADERBOARD)}
+            onResetSeason={handleResetSeason}
           />
         )}
 

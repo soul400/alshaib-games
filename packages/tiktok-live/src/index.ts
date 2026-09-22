@@ -554,11 +554,7 @@ export class TikTokLiveEngine {
   }
 
   private calculatePoints(answerOrder: number): number {
-    if (this.currentEngineType === 'alphabet') {
-      return answerOrder === 1 ? 1 : 0;
-    }
-    const pointsMap: Record<number, number> = { 1: 5, 2: 4, 3: 3, 4: 2, 5: 1 };
-    return pointsMap[answerOrder] || 0;
+    return answerOrder === 1 ? (this.currentQuestionPoints || 1) : 0;
   }
 
   public processComment(comment: TikTokLiveComment): void {
@@ -612,8 +608,8 @@ export class TikTokLiveEngine {
 
         const pointsEarned = this.calculatePoints(answerOrder);
 
-        if (this.currentEngineType === 'alphabet' && answerOrder > 1) return;
-        if (this.currentEngineType !== 'alphabet' && answerOrder > 5) return;
+        // Only the first correct answer earns points and wins the round
+        if (answerOrder > 1) return;
 
         if (pointsEarned > 0) {
           const key = comment.userId || comment.username;
