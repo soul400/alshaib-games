@@ -81,11 +81,20 @@ export default function SaudiNationalDay96Page() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Guarantee 1 point for all questions
-          setQuestions(parsed.map(q => ({ ...q, points: 1 })));
+          // Merge custom questions with default bank to ensure new questions (e.g. 80 dialects) are included
+          const existingIds = new Set(parsed.map(q => q.id));
+          const missingBank = NATIONAL_DAY_96_BANK.filter(q => !existingIds.has(q.id));
+          const merged = [...parsed, ...missingBank].map(q => ({ ...q, points: 1 }));
+          setQuestions(merged);
+        } else {
+          setQuestions(NATIONAL_DAY_96_BANK.map(q => ({ ...q, points: 1 })));
         }
+      } else {
+        setQuestions(NATIONAL_DAY_96_BANK.map(q => ({ ...q, points: 1 })));
       }
-    } catch (_) {}
+    } catch (_) {
+      setQuestions(NATIONAL_DAY_96_BANK.map(q => ({ ...q, points: 1 })));
+    }
 
     try {
       const savedLb = localStorage.getItem('aep_nd96_leaderboard');

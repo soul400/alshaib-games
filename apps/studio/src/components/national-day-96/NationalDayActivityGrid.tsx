@@ -111,7 +111,7 @@ export const NATIONAL_DAY_ACTIVITIES: ActivityCardInfo[] = [
     badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
     icon: Mic,
     image: '/national-day-96/saudi-dialects-full.png',
-    questionsCount: 0,
+    questionsCount: 80,
     pointsPerCorrect: 1,
     modeDescription: 'مسابقة ممتعة في معاني الكلمات والمفردات الشعبية والتراثية لمختلف مناطق المملكة.'
   },

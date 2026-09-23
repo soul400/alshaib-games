@@ -1013,14 +1013,24 @@ export function NationalDayLiveArena({
           ) : (
             /* 🏆 STANDARD QUESTION LAYOUT */
             <div className="flex flex-col items-center justify-center gap-4 w-full">
+              {/* 📍 Region / Category Badge directly ABOVE question */}
+              {currentQ.category && (
+                <div className="px-5 py-1.5 rounded-full bg-gradient-to-r from-[#006C35]/80 via-[#0A3D1E]/90 to-[#006C35]/80 border-2 border-[#FFE79A]/60 shadow-[0_0_25px_rgba(0,168,89,0.5)] flex items-center gap-2 animate-in zoom-in-95">
+                  <span className="text-sm">📍</span>
+                  <span className="text-sm sm:text-base font-black text-[#FFE79A] font-mono tracking-wide drop-shadow">
+                    {currentQ.category}
+                  </span>
+                </div>
+              )}
+
               {/* Question Text */}
               <h2 className="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-[#E2D4B7] to-[#FFE79A] leading-relaxed drop-shadow-[0_4px_15px_rgba(0,0,0,0.8)]">
                 {currentQ.question}
               </h2>
 
-              {/* Media: Image below question */}
-              {currentQ.mediaType === 'image' && currentQ.mediaUrl && (
-                <div className="relative w-full max-w-xl h-60 sm:h-72 rounded-2xl overflow-hidden border-2 border-[#00A859]/70 shadow-[0_10px_40px_rgba(0,0,0,0.8)] animate-in zoom-in-95 bg-[#020D06] flex items-center justify-center">
+              {/* 📸 Media: Image directly BELOW question */}
+              {Boolean(currentQ.mediaUrl) && (
+                <div className="relative w-full max-w-xl h-56 sm:h-72 rounded-2xl overflow-hidden border-2 border-[#00A859]/70 shadow-[0_10px_40px_rgba(0,0,0,0.8)] animate-in zoom-in-95 bg-[#020D06] flex items-center justify-center my-2">
                   <img src={currentQ.mediaUrl} alt="صورة السؤال" className="w-full h-full object-cover" />
                 </div>
               )}

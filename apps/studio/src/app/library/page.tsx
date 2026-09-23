@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
-import { GAME_ENGINE_SECTIONS, importContentFromRawData, generateAIQuestions, WHAT_DO_THEY_SAY_BANK } from '@aep/content-library';
-import { AnyQuestion, ImportReport, EngineType, ImageTransformStyle, WhatDoTheySayAnswer } from '@aep/types';
+import { GAME_ENGINE_SECTIONS, importContentFromRawData, generateAIQuestions, WHAT_DO_THEY_SAY_BANK, NATIONAL_DAY_96_BANK } from '@aep/content-library';
+import { AnyQuestion, ImportReport, EngineType, ImageTransformStyle, WhatDoTheySayAnswer, NationalDayQuestion, NationalDay96ActivityId } from '@aep/types';
 import { getImageStyleCSS } from '@aep/game-engines';
 import { 
   Database, FileSpreadsheet, Wand2, Upload, CheckCircle2, 
   BrainCircuit, Grid, Image as ImageIcon, Video, Volume2, 
   Shuffle, Smile, UserCheck, Plus, Trash2, FileUp, Music, FileCheck, Sparkles, HelpCircle,
-  Edit2, Save, X, Layers
+  Edit2, Save, X, Layers, Flag, MapPin, Search, Edit3, Link2, ChevronLeft
 } from 'lucide-react';
 
 import { saveQuestionsToStorage as persistQuestions, loadQuestionsFromStorage } from '../../utils/aepStorage';
@@ -30,8 +30,25 @@ const IMAGE_EFFECTS_LIST: { id: ImageTransformStyle; label: string }[] = [
 
 export default function LibraryPage() {
   const [questions, setQuestions] = useState<AnyQuestion[]>([]);
-  const [activeTab, setActiveTab] = useState<'sections' | 'questions' | 'add' | 'import' | 'ai'>('sections');
+  const [activeTab, setActiveTab] = useState<'sections' | 'questions' | 'national-day' | 'add' | 'import' | 'ai'>('sections');
   const [selectedEngineFilter, setSelectedEngineFilter] = useState<EngineType | 'all'>('all');
+
+  // 🇸🇦 Saudi National Day 96 State in Library
+  const [ndQuestions, setNdQuestions] = useState<NationalDayQuestion[]>([]);
+  const [selectedNdActivity, setSelectedNdActivity] = useState<string>('challenge-96');
+  const [ndRegionFilter, setNdRegionFilter] = useState<string>('all');
+  const [ndSearchQuery, setNdSearchQuery] = useState<string>('');
+
+  // National Day Add / Edit Modal State
+  const [isNdModalOpen, setIsNdModalOpen] = useState<boolean>(false);
+  const [editingNdQuestion, setEditingNdQuestion] = useState<NationalDayQuestion | null>(null);
+  const [modalQText, setModalQText] = useState<string>('');
+  const [modalQRegion, setModalQRegion] = useState<string>('المنطقة الشمالية');
+  const [modalQAnswer, setModalQAnswer] = useState<string>('');
+  const [modalQSynonyms, setModalQSynonyms] = useState<string>('');
+  const [modalQActivity, setModalQActivity] = useState<NationalDay96ActivityId>('challenge-96');
+  const [modalQMediaUrl, setModalQMediaUrl] = useState<string>('');
+  const ndFileInputRef = React.useRef<HTMLInputElement>(null);
   
   // Custom Question Form State
   const [newTitle, setNewTitle] = useState('');
@@ -79,6 +96,21 @@ export default function LibraryPage() {
     }).catch(err => {
       console.warn('Failed to load questions:', err);
     });
+
+    // Load National Day Questions
+    try {
+      const savedNd = localStorage.getItem('aep_nd96_custom_questions');
+      if (savedNd) {
+        const parsed = JSON.parse(savedNd);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const existingIds = new Set(parsed.map(q => q.id));
+          const missingBank = NATIONAL_DAY_96_BANK.filter(q => !existingIds.has(q.id));
+          setNdQuestions([...parsed, ...missingBank]);
+          return;
+        }
+      }
+    } catch (_) {}
+    setNdQuestions(NATIONAL_DAY_96_BANK);
   }, []);
 
   // Save questions to IndexedDB & localStorage whenever updated
@@ -87,8 +119,105 @@ export default function LibraryPage() {
     persistQuestions(updatedQuestions);
   };
 
+  // Save National Day questions to state and localStorage
+  const saveNdQuestions = (updated: NationalDayQuestion[]) => {
+    setNdQuestions(updated);
+    try {
+      localStorage.setItem('aep_nd96_custom_questions', JSON.stringify(updated));
+    } catch (_) {}
+  };
+
+  const handleOpenAddNdModal = () => {
+    setEditingNdQuestion(null);
+    setModalQText('');
+    setModalQRegion(selectedNdActivity === 'challenge-96' ? 'المنطقة الشمالية' : 'عام');
+    setModalQAnswer('');
+    setModalQSynonyms('');
+    setModalQActivity(selectedNdActivity as NationalDay96ActivityId);
+    setModalQMediaUrl('');
+    setIsNdModalOpen(true);
+  };
+
+  const handleOpenEditNdModal = (q: NationalDayQuestion) => {
+    setEditingNdQuestion(q);
+    setModalQText(q.question);
+    setModalQRegion(q.category);
+    setModalQAnswer(q.correctAnswer);
+    setModalQSynonyms((q.acceptableAnswers || []).filter(a => a !== q.correctAnswer).join(' ، '));
+    setModalQActivity(q.activityId);
+    setModalQMediaUrl(q.mediaUrl || '');
+    setIsNdModalOpen(true);
+  };
+
+  const handleSaveNdModal = () => {
+    if (!modalQText.trim() || !modalQAnswer.trim()) return;
+
+    const altList = modalQSynonyms
+      ? modalQSynonyms.split(/[,،؛;]/).map(s => s.trim()).filter(Boolean)
+      : [];
+    const allAcceptable = Array.from(new Set([modalQAnswer.trim(), ...altList]));
+
+    if (editingNdQuestion) {
+      const updated = ndQuestions.map(q => {
+        if (q.id === editingNdQuestion.id) {
+          return {
+            ...q,
+            question: modalQText.trim(),
+            category: modalQRegion.trim(),
+            correctAnswer: modalQAnswer.trim(),
+            acceptableAnswers: allAcceptable,
+            activityId: modalQActivity,
+            mediaUrl: modalQMediaUrl.trim() || undefined,
+            mediaType: modalQMediaUrl.trim() ? ('image' as const) : undefined
+          };
+        }
+        return q;
+      });
+      saveNdQuestions(updated);
+    } else {
+      const newEntry: NationalDayQuestion = {
+        id: `nd96-q-${Date.now()}`,
+        activityId: modalQActivity,
+        category: modalQRegion.trim() || 'عام',
+        question: modalQText.trim(),
+        correctAnswer: modalQAnswer.trim(),
+        acceptableAnswers: allAcceptable,
+        difficulty: 'medium',
+        points: 1,
+        timeLimitSeconds: 15,
+        mediaUrl: modalQMediaUrl.trim() || undefined,
+        mediaType: modalQMediaUrl.trim() ? ('image' as const) : undefined,
+        status: 'ACTIVE',
+        usedCount: 0,
+        createdAt: Date.now()
+      };
+      saveNdQuestions([newEntry, ...ndQuestions]);
+    }
+
+    setIsNdModalOpen(false);
+  };
+
+  const handleDeleteNdQuestion = (id: string) => {
+    const updated = ndQuestions.filter(q => q.id !== id);
+    saveNdQuestions(updated);
+  };
+
+  const handleNdImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const dataUrl = evt.target?.result as string;
+      if (dataUrl) {
+        setModalQMediaUrl(dataUrl);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   const getIconComponent = (iconName: string) => {
     switch (iconName) {
+      case 'Flag': return <Flag className="w-6 h-6 text-[#FFE79A]" />;
       case 'BrainCircuit': return <BrainCircuit className="w-6 h-6" />;
       case 'Grid': return <Grid className="w-6 h-6" />;
       case 'Image': return <ImageIcon className="w-6 h-6" />;
@@ -461,6 +590,20 @@ export default function LibraryPage() {
             الأقسام الثمانية
           </button>
           <button
+            onClick={() => setActiveTab('national-day')}
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 cursor-pointer ${
+              activeTab === 'national-day' 
+                ? 'bg-gradient-to-r from-[#006C35] to-[#00A859] text-white shadow-[0_0_20px_rgba(0,168,89,0.5)] border border-[#FFE79A]/50' 
+                : 'glass-panel text-[#FFE79A] border border-[#00A859]/40 hover:bg-[#006C35]/20'
+            }`}
+          >
+            <Flag className="w-4 h-4 text-[#FFE79A]" />
+            <span>فعاليات اليوم الوطني 96</span>
+            <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-black/50 text-emerald-300 font-mono font-bold">
+              {ndQuestions.length}
+            </span>
+          </button>
+          <button
             onClick={() => setActiveTab('questions')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
               activeTab === 'questions' ? 'bg-emerald-500 text-slate-950 shadow-md' : 'glass-panel text-slate-300'
@@ -499,7 +642,9 @@ export default function LibraryPage() {
       {activeTab === 'sections' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {GAME_ENGINE_SECTIONS.map((sec) => {
-            const secQuestionsCount = questions.filter(q => q.engineType === sec.id).length;
+            const secQuestionsCount = sec.id === 'national-day-96'
+              ? ndQuestions.length
+              : questions.filter(q => q.engineType === sec.id).length;
 
             return (
               <div key={sec.id} className="p-6 rounded-3xl glass-panel border border-white/10 flex flex-col justify-between gap-4">
@@ -531,10 +676,14 @@ export default function LibraryPage() {
 
                   <button
                     onClick={() => {
+                      if (sec.id === 'national-day-96') {
+                        setActiveTab('national-day');
+                        return;
+                      }
                       setSelectedEngineFilter(sec.id);
                       setActiveTab('questions');
                     }}
-                    className="mt-2 w-full py-2 rounded-xl bg-white/10 text-cyan-300 font-bold hover:bg-white/20 transition-all text-center"
+                    className="mt-2 w-full py-2 rounded-xl bg-white/10 text-cyan-300 font-bold hover:bg-white/20 transition-all text-center cursor-pointer"
                   >
                     استعراض أسئلة هذا القسم ➔
                   </button>
@@ -544,6 +693,413 @@ export default function LibraryPage() {
           })}
         </div>
       )}
+
+      {/* Tab: 🇸🇦 بنك فعاليات اليوم الوطني 96 */}
+      {activeTab === 'national-day' && (() => {
+        const ND_ACTIVITIES_LIST = [
+          { id: 'challenge-96', title: 'تحدي اللهجات 🗣️', icon: '🗣️' },
+          { id: 'saudi-great', title: 'السعودية العظمى 🏆', icon: '🏆' },
+          { id: 'saudi-numbers', title: 'أرقام الوطن 🔢', icon: '🔢' },
+          { id: 'landscapes', title: 'صور ربوع بلادي 📸', icon: '📸' },
+          { id: 'national-map', title: 'خريطة الوطن 🗺️', icon: '🗺️' },
+          { id: 'saudi-heritage', title: 'تراثنا الأصيل 🐎', icon: '🐎' },
+          { id: 'saudi-screen', title: 'السعودية على الشاشة 🎬', icon: '🎬' },
+          { id: 'national-voice', title: 'صوت الوطن 🎤', icon: '🎤' },
+        ];
+
+        const filteredNdQuestions = ndQuestions.filter(q => {
+          const matchesActivity = selectedNdActivity === 'all' || q.activityId === selectedNdActivity;
+          const matchesRegion = ndRegionFilter === 'all' || q.category === ndRegionFilter;
+          const matchesSearch = !ndSearchQuery ||
+            q.question.toLowerCase().includes(ndSearchQuery.toLowerCase()) ||
+            q.correctAnswer.toLowerCase().includes(ndSearchQuery.toLowerCase()) ||
+            q.category.toLowerCase().includes(ndSearchQuery.toLowerCase()) ||
+            (q.acceptableAnswers && q.acceptableAnswers.some(a => a.toLowerCase().includes(ndSearchQuery.toLowerCase())));
+          return matchesActivity && matchesRegion && matchesSearch;
+        });
+
+        const currentActivityName = ND_ACTIVITIES_LIST.find(a => a.id === selectedNdActivity)?.title || 'المسابقة';
+
+        return (
+          <div className="flex flex-col gap-6 w-full animate-in fade-in duration-300">
+            {/* Top Banner */}
+            <div className="p-6 rounded-3xl bg-gradient-to-r from-[#031D0F] via-[#052915] to-[#031D0F] border-2 border-[#00A859]/60 shadow-[0_10px_40px_rgba(0,168,89,0.3)] flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#C69214] via-[#FFE79A] to-[#C69214] flex items-center justify-center text-slate-950 font-black shadow-[0_0_30px_rgba(198,146,20,0.6)]">
+                  <Flag className="w-7 h-7" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#00A859]/20 text-[#00A859] border border-[#00A859]/40 font-mono">
+                      NATIONAL DAY 96 QUESTION BANK
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#C69214]/20 text-[#FFE79A] border border-[#C69214]/40">
+                      إجمالي {ndQuestions.length} سؤال
+                    </span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-white mt-1">
+                    بنك أسئلة وتحديات فعاليات اليوم الوطني 96 🇸🇦
+                  </h3>
+                  <p className="text-xs text-[#E2D4B7]/80">
+                    تصفح وتعديل أسئلة مسابقات اليوم الوطني، تعديل الكلمات والمعاني، وإرفاق الصور لكل سؤال لتظهر مباشرة في البث.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleOpenAddNdModal}
+                  className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#006C35] to-[#00A859] text-white font-black text-xs flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer border border-[#FFE79A]/30"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>+ إضافة سؤال جديد للمسابقة</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Sub-Filters: Activities Bar */}
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-[#E2D4B7]">اختر المسابقة لاستعراض وتعديل أسئلتها:</span>
+              </div>
+              <div className="flex items-center gap-2 overflow-x-auto pb-2">
+                {ND_ACTIVITIES_LIST.map(act => {
+                  const count = ndQuestions.filter(q => q.activityId === act.id).length;
+                  const isSelected = selectedNdActivity === act.id;
+
+                  return (
+                    <button
+                      key={act.id}
+                      onClick={() => {
+                        setSelectedNdActivity(act.id);
+                        setNdRegionFilter('all');
+                      }}
+                      className={`flex-shrink-0 px-4 py-2 rounded-2xl text-xs font-black border transition-all flex items-center gap-2 cursor-pointer ${
+                        isSelected
+                          ? 'bg-gradient-to-r from-[#006C35] to-[#00A859] text-white border-[#FFE79A] shadow-[0_0_20px_rgba(0,168,89,0.5)] scale-105'
+                          : 'bg-black/40 text-slate-300 border-white/10 hover:border-white/25 hover:text-white'
+                      }`}
+                    >
+                      <span>{act.title}</span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
+                        isSelected ? 'bg-black/30 text-[#FFE79A]' : 'bg-white/5 text-slate-400'
+                      }`}>
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Dialects Region Filter (if challenge-96 is selected) */}
+            {selectedNdActivity === 'challenge-96' && (
+              <div className="p-4 rounded-2xl bg-[#04190D] border border-[#006C35]/50 flex flex-wrap items-center justify-between gap-3 shadow-md">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">📍</span>
+                  <span className="text-xs font-black text-white">تصفية حسب المنطقة واللهجة:</span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  {[
+                    { id: 'all', label: 'كافة المناطق', count: ndQuestions.filter(q => q.activityId === 'challenge-96').length },
+                    { id: 'المنطقة الشمالية', label: '📍 الشمالية', count: ndQuestions.filter(q => q.activityId === 'challenge-96' && q.category === 'المنطقة الشمالية').length },
+                    { id: 'المنطقة الجنوبية', label: '📍 الجنوبية', count: ndQuestions.filter(q => q.activityId === 'challenge-96' && q.category === 'المنطقة الجنوبية').length },
+                    { id: 'المنطقة الغربية', label: '📍 الغربية', count: ndQuestions.filter(q => q.activityId === 'challenge-96' && q.category === 'المنطقة الغربية').length },
+                    { id: 'المنطقة الشرقية', label: '📍 الشرقية', count: ndQuestions.filter(q => q.activityId === 'challenge-96' && q.category === 'المنطقة الشرقية').length }
+                  ].map(r => (
+                    <button
+                      key={r.id}
+                      onClick={() => setNdRegionFilter(r.id)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                        ndRegionFilter === r.id
+                          ? 'bg-[#00A859] text-slate-950 border-white font-black shadow-md'
+                          : 'bg-black/40 text-slate-300 border-white/10 hover:border-white/20'
+                      }`}
+                    >
+                      {r.label} ({r.count})
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Search & Actions Bar */}
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div className="relative flex-1 min-w-[240px] max-w-md">
+                <Search className="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="ابحث عن كلمة، سؤال، إجابة، أو تصنيف..."
+                  value={ndSearchQuery}
+                  onChange={e => setNdSearchQuery(e.target.value)}
+                  className="w-full pr-10 pl-4 py-2.5 rounded-2xl bg-[#04190D] border border-white/10 text-white text-xs font-bold outline-none focus:border-[#00A859] shadow-inner"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-[#E2D4B7] font-bold">
+                  المعروض: <strong className="text-white font-mono">{filteredNdQuestions.length}</strong> سؤال في {currentActivityName}
+                </span>
+              </div>
+            </div>
+
+            {/* Questions Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {filteredNdQuestions.map(q => (
+                <div
+                  key={q.id}
+                  className="p-5 rounded-3xl bg-[#051C0E]/90 border border-[#006C35]/50 shadow-xl flex flex-col justify-between gap-4 hover:border-[#00A859] transition-all group"
+                >
+                  <div className="flex flex-col gap-2.5">
+                    {/* Card Header with Region / Category Badge */}
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="px-3 py-1 rounded-full text-xs font-black bg-[#004D25] text-[#FFE79A] border border-[#00A859]/40 flex items-center gap-1 shadow-sm">
+                          <span>📍</span>
+                          <span>{q.category}</span>
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/5 text-slate-300">
+                          +{q.points} نقطة
+                        </span>
+                      </div>
+
+                      {q.mediaUrl && (
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center gap-1">
+                          <ImageIcon className="w-3 h-3" />
+                          <span>صورة مرفقة</span>
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Question Text */}
+                    <h4 className="text-base sm:text-lg font-black text-white leading-relaxed">
+                      {q.question}
+                    </h4>
+
+                    {/* Image Preview if Attached */}
+                    {q.mediaUrl && (
+                      <div className="relative w-full h-36 rounded-2xl overflow-hidden border border-[#00A859]/40 bg-black/60 shadow-md">
+                        <img src={q.mediaUrl} alt="صورة السؤال" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+
+                    {/* Answers Box */}
+                    <div className="p-3 rounded-2xl bg-black/40 border border-white/5 flex flex-col gap-1 text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[#00A859] font-black">✓ الجواب النموذجي:</span>
+                        <span className="text-white font-bold">{q.correctAnswer}</span>
+                      </div>
+                      {q.acceptableAnswers && q.acceptableAnswers.length > 1 && (
+                        <div className="flex items-center gap-2 flex-wrap text-[11px] text-slate-300">
+                          <span className="text-slate-400">المرادفات المقبولة:</span>
+                          <span>{q.acceptableAnswers.filter(a => a !== q.correctAnswer).join(' ، ')}</span>
+                        </div>
+                      )}
+                      {q.explanation && (
+                        <div className="text-[11px] text-[#E2D4B7]/70 mt-1 border-t border-white/5 pt-1">
+                          {q.explanation}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Card Actions */}
+                  <div className="flex items-center justify-between border-t border-white/10 pt-3">
+                    <button
+                      onClick={() => handleOpenEditNdModal(q)}
+                      className="px-3.5 py-1.5 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/40 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>تعديل السؤال والصورة</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleDeleteNdQuestion(q.id)}
+                      className="p-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition-all cursor-pointer"
+                      title="حذف السؤال"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+              {filteredNdQuestions.length === 0 && (
+                <div className="col-span-full py-16 text-center text-slate-400 flex flex-col items-center justify-center gap-3 bg-[#04190D] rounded-3xl border border-white/10">
+                  <Database className="w-10 h-10 text-slate-600" />
+                  <span className="text-sm font-bold">لا توجد أسئلة تطابق البحث أو التصفية الحالية</span>
+                  <button
+                    onClick={handleOpenAddNdModal}
+                    className="px-4 py-2 rounded-xl bg-[#006C35] text-white text-xs font-bold"
+                  >
+                    + إضافة سؤال جديد الآن
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* 🌟 EDIT / ADD NATIONAL DAY QUESTION MODAL */}
+            {isNdModalOpen && (
+              <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+                <div className="relative w-full max-w-2xl rounded-3xl bg-[#041E10] border-2 border-[#00A859] p-6 sm:p-8 flex flex-col gap-5 shadow-[0_0_80px_rgba(0,168,89,0.4)] text-white max-h-[90vh] overflow-y-auto">
+                  
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#006C35] text-[#FFE79A] flex items-center justify-center font-black">
+                        <Flag className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-black text-white">
+                          {editingNdQuestion ? 'تعديل سؤال اليوم الوطني' : 'إضافة سؤال جديد لليوم الوطني'}
+                        </h3>
+                        <span className="text-xs text-[#E2D4B7]/70">تعديل الكلمة، المعنى، المنطقة، وإرفاق الصورة</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setIsNdModalOpen(false)}
+                      className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <div className="flex flex-col gap-4 text-xs">
+                    {/* Activity & Region */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="font-bold text-[#E2D4B7]">المسابقة الوطنية:</label>
+                        <select
+                          value={modalQActivity}
+                          onChange={e => setModalQActivity(e.target.value as any)}
+                          className="p-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-bold outline-none focus:border-[#00A859]"
+                        >
+                          {ND_ACTIVITIES_LIST.map(a => (
+                            <option key={a.id} value={a.id}>{a.title}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="font-bold text-[#E2D4B7]">المنطقة / التصنيف (يظهر فوق السؤال):</label>
+                        <input
+                          type="text"
+                          value={modalQRegion}
+                          onChange={e => setModalQRegion(e.target.value)}
+                          placeholder="المنطقة الشمالية، الجنوبية، الغربية، الشرقية..."
+                          className="p-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-bold outline-none focus:border-[#00A859]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Question Text */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="font-bold text-[#E2D4B7]">نص السؤال:</label>
+                      <input
+                        type="text"
+                        value={modalQText}
+                        onChange={e => setModalQText(e.target.value)}
+                        placeholder='مثال: ما معنى هذه الكلمة: "مشوين"؟'
+                        className="p-3 rounded-xl bg-black/60 border border-white/15 text-white text-sm font-black outline-none focus:border-[#00A859]"
+                      />
+                    </div>
+
+                    {/* Answers */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="font-bold text-[#00A859]">الإجابة الصحيحة النموذجية:</label>
+                        <input
+                          type="text"
+                          value={modalQAnswer}
+                          onChange={e => setModalQAnswer(e.target.value)}
+                          placeholder="مثال: بعد شوي"
+                          className="p-2.5 rounded-xl bg-black/60 border border-emerald-500/50 text-emerald-300 font-bold outline-none"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="font-bold text-slate-300">المرادفات المقبولة (فصل بفاصلة):</label>
+                        <input
+                          type="text"
+                          value={modalQSynonyms}
+                          onChange={e => setModalQSynonyms(e.target.value)}
+                          placeholder="مثال: بعد قليل، عقب شوي"
+                          className="p-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-bold outline-none focus:border-[#00A859]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Image Attachment (File upload OR URL) */}
+                    <div className="p-4 rounded-2xl bg-black/40 border border-white/10 flex flex-col gap-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[#FFE79A] flex items-center gap-1.5">
+                          <ImageIcon className="w-4 h-4" />
+                          <span>إرفاق صورة توضيحية مع السؤال (تظهر تحت السؤال أثناء المسابقة):</span>
+                        </span>
+                        {modalQMediaUrl && (
+                          <button
+                            onClick={() => setModalQMediaUrl('')}
+                            className="text-rose-400 hover:text-rose-300 text-xs font-bold"
+                          >
+                            إزالة الصورة
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input
+                          type="text"
+                          value={modalQMediaUrl}
+                          onChange={e => setModalQMediaUrl(e.target.value)}
+                          placeholder="أدخل رابط الصورة (URL)..."
+                          className="p-2.5 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-mono outline-none focus:border-[#00A859]"
+                        />
+
+                        <label className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/20 text-slate-300 hover:text-white font-bold flex items-center justify-center gap-2 cursor-pointer transition-all">
+                          <Upload className="w-4 h-4 text-[#00A859]" />
+                          <span>اختر صورة من جهازك</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            ref={ndFileInputRef}
+                            onChange={handleNdImageFileUpload}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+
+                      {/* Live Image Preview */}
+                      {modalQMediaUrl && (
+                        <div className="relative w-full h-40 rounded-xl overflow-hidden border border-[#00A859]/50 bg-black/80 flex items-center justify-center">
+                          <img src={modalQMediaUrl} alt="معاينة الصورة" className="w-full h-full object-contain" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Modal Actions */}
+                  <div className="flex items-center justify-end gap-3 border-t border-white/10 pt-4">
+                    <button
+                      onClick={() => setIsNdModalOpen(false)}
+                      className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 text-xs font-bold cursor-pointer"
+                    >
+                      إلغاء
+                    </button>
+                    <button
+                      onClick={handleSaveNdModal}
+                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#006C35] to-[#00A859] text-white font-black text-xs shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer border border-[#FFE79A]/30"
+                    >
+                      حفظ السؤال في البنك
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+          </div>
+        );
+      })()}
 
       {/* Tab 2: Add Custom Question with Media File Upload */}
       {activeTab === 'add' && (

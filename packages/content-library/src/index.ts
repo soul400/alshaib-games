@@ -56,6 +56,18 @@ export interface GameEngineSectionInfo {
  */
 export const GAME_ENGINE_SECTIONS: GameEngineSectionInfo[] = [
   {
+    id: 'national-day-96' as any,
+    title: 'فعاليات اليوم الوطني 96 🇸🇦',
+    titleEn: 'Saudi National Day 96',
+    description: 'بنك أسئلة وتحديات فعاليات اليوم الوطني 96: تحدي اللهجات (80 سؤال)، السعودية العظمى، أرقام الوطن، صور ربوع بلادي، والمزيد!',
+    icon: 'Flag',
+    category: 'مناسبات ووطني',
+    questionsCount: NATIONAL_DAY_96_BANK.length,
+    avgPoints: 1,
+    recommendedDifficulty: 'medium',
+    badgeColor: 'from-[#006C35] via-[#00A859] to-[#C69214]'
+  },
+  {
     id: 'viewer-race',
     title: 'سباق المشاهدين 🏇',
     titleEn: 'AL-SHAIB Viewer Race Grand Prix',
