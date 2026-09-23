@@ -1,4 +1,4 @@
-import { NationalDayQuestion } from '@aep/types';
+﻿import { NationalDayQuestion } from '@aep/types';
 import { isAnswerMatch } from '@aep/game-engines';
 
 /**
@@ -829,7 +829,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'المتحف الوطني السعودي',
     acceptableAnswers: ["المتحف الوطني السعودي"],
-    mediaUrl: '/national-day-96/landscapes/ls-001.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-001.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -837,7 +837,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'باب مكة - سور جدة',
     acceptableAnswers: ["باب مكة - سور جدة", "باب مكة", "سور جدة", "باب مكه - سور جده", "باب مكه", "سور جده"],
-    mediaUrl: '/national-day-96/landscapes/ls-002.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-002.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -845,7 +845,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'برج مجدول',
     acceptableAnswers: ["برج مجدول", "مجدول", "Majdoul Tower"],
-    mediaUrl: '/national-day-96/landscapes/ls-003.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-003.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -853,7 +853,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'بوليفارد وورلد',
     acceptableAnswers: ["بوليفارد وورلد", "بوليفارد", "Boulevard", "Boulevard World"],
-    mediaUrl: '/national-day-96/landscapes/ls-004.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-004.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -861,7 +861,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'بيت نصيف',
     acceptableAnswers: ["بيت نصيف", "نصيف"],
-    mediaUrl: '/national-day-96/landscapes/ls-005.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-005.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -869,7 +869,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'تروجينا',
     acceptableAnswers: ["تروجينا", "Trojena", "نيوم"],
-    mediaUrl: '/national-day-96/landscapes/ls-006.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-006.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -877,7 +877,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'جبل القارة',
     acceptableAnswers: ["جبل القارة", "القارة", "جبل القاره", "القاره", "الأحساء"],
-    mediaUrl: '/national-day-96/landscapes/ls-007.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-007.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -885,7 +885,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'جبل طويق',
     acceptableAnswers: ["جبل طويق", "طويق"],
-    mediaUrl: '/national-day-96/landscapes/ls-008.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-008.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -893,7 +893,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'جدة التاريخية - البلد',
     acceptableAnswers: ["جدة التاريخية - البلد", "جدة التاريخية", "البلد", "جده التاريخيه - البلد", "جده التاريخيه"],
-    mediaUrl: '/national-day-96/landscapes/ls-009.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-009.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -901,7 +901,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'جزر فرسان',
     acceptableAnswers: ["جزر فرسان", "فرسان", "جزيرة فرسان", "جازان"],
-    mediaUrl: '/national-day-96/landscapes/ls-010.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-010.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -909,7 +909,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'جزيرة شورى',
     acceptableAnswers: ["جزيرة شورى", "شورى", "جزيره شورى", "جزيرة شوري", "شوري"],
-    mediaUrl: '/national-day-96/landscapes/ls-011.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-011.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -917,7 +917,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'حي البيجيري',
     acceptableAnswers: ["حي البيجيري", "البيجيري", "البجيري", "حي البجيري", "مطل البجيري", "الدرعية"],
-    mediaUrl: '/national-day-96/landscapes/ls-012.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-012.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -925,7 +925,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'حي طريف',
     acceptableAnswers: ["حي طريف", "طريف", "حي الطريف", "الدرعية"],
-    mediaUrl: '/national-day-96/landscapes/ls-013.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-013.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -933,7 +933,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'ذا لاين',
     acceptableAnswers: ["ذا لاين", "The Line", "لاين", "نيوم"],
-    mediaUrl: '/national-day-96/landscapes/ls-014.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-014.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -941,7 +941,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'سندالة',
     acceptableAnswers: ["سندالة", "سنداله", "Sindalah", "نيوم"],
-    mediaUrl: '/national-day-96/landscapes/ls-015.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-015.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -949,7 +949,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'سوق عكاظ',
     acceptableAnswers: ["سوق عكاظ", "عكاظ"],
-    mediaUrl: '/national-day-96/landscapes/ls-016.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-016.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -957,7 +957,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'صخرة الفيل',
     acceptableAnswers: ["صخرة الفيل", "الفيل", "صخره الفيل", "جبل الفيل"],
-    mediaUrl: '/national-day-96/landscapes/ls-017.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-017.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -965,7 +965,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قاعة مرايا',
     acceptableAnswers: ["قاعة مرايا", "مرايا", "قاعه مرايا", "مسرح مرايا", "العلا"],
-    mediaUrl: '/national-day-96/landscapes/ls-018.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-018.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -973,7 +973,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قرية الفاو الأثرية',
     acceptableAnswers: ["قرية الفاو الأثرية", "الفاو الأثرية", "قريه الفاو الأثريه", "قرية الفاو الاثرية", "الفاو الأثريه", "الفاو الاثرية"],
-    mediaUrl: '/national-day-96/landscapes/ls-019.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-019.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -981,7 +981,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قرية المفتاحة',
     acceptableAnswers: ["قرية المفتاحة", "المفتاحة", "قريه المفتاحه", "المفتاحه", "ابها"],
-    mediaUrl: '/national-day-96/landscapes/ls-020.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-020.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -989,7 +989,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قرية رجال ألمع',
     acceptableAnswers: ["قرية رجال ألمع", "رجال ألمع", "قريه رجال ألمع", "قرية رجال المع", "رجال المع", "المع"],
-    mediaUrl: '/national-day-96/landscapes/ls-021.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-021.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -997,7 +997,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قصر القشلة',
     acceptableAnswers: ["قصر القشلة", "القشلة", "قصر القشله", "القشله"],
-    mediaUrl: '/national-day-96/landscapes/ls-022.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-022.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1005,7 +1005,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قصر المربع',
     acceptableAnswers: ["قصر المربع", "المربع"],
-    mediaUrl: '/national-day-96/landscapes/ls-023.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-023.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1013,7 +1013,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قصر المصمك',
     acceptableAnswers: ["قصر المصمك", "المصمك", "حصن المصمك"],
-    mediaUrl: '/national-day-96/landscapes/ls-024.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-024.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1021,7 +1021,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قصر خزام',
     acceptableAnswers: ["قصر خزام", "خزام"],
-    mediaUrl: '/national-day-96/landscapes/ls-025.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-025.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1029,7 +1029,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قصر سلوى',
     acceptableAnswers: ["قصر سلوى", "سلوى", "قصر سلوي", "سلوي"],
-    mediaUrl: '/national-day-96/landscapes/ls-026.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-026.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1037,7 +1037,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قصر شبرا',
     acceptableAnswers: ["قصر شبرا", "شبرا"],
-    mediaUrl: '/national-day-96/landscapes/ls-027.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-027.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1045,7 +1045,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قلعة أعيرف',
     acceptableAnswers: ["قلعة أعيرف", "أعيرف", "قلعه أعيرف", "قلعة اعيرف", "اعيرف"],
-    mediaUrl: '/national-day-96/landscapes/ls-028.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-028.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1053,7 +1053,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قلعة زعبل',
     acceptableAnswers: ["قلعة زعبل", "زعبل", "قلعه زعبل"],
-    mediaUrl: '/national-day-96/landscapes/ls-029.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-029.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1061,7 +1061,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'قلعة مارد',
     acceptableAnswers: ["قلعة مارد", "مارد", "قلعه مارد"],
-    mediaUrl: '/national-day-96/landscapes/ls-030.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-030.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1069,7 +1069,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'مدائن صالح',
     acceptableAnswers: ["مدائن صالح", "الحجر", "الحِجر", "العلا"],
-    mediaUrl: '/national-day-96/landscapes/ls-031.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-031.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1077,7 +1077,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'مدينة الألعاب المائية - أكواباريا',
     acceptableAnswers: ["مدينة الألعاب المائية - أكواباريا", "مدينة الألعاب المائية", "الألعاب المائية", "أكواباريا", "مدينه الألعاب المائيه - أكواباريا", "مدينة الالعاب المائية - اكواباريا", "مدينه الألعاب المائيه", "مدينة الالعاب المائية", "الألعاب المائيه", "الالعاب المائية", "اكواباريا"],
-    mediaUrl: '/national-day-96/landscapes/ls-032.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-032.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1085,7 +1085,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'مدينة الملك عبدالله الاقتصادية',
     acceptableAnswers: ["مدينة الملك عبدالله الاقتصادية", "الملك عبدالله الاقتصادية", "مدينه الملك عبدالله الاقتصاديه", "مدينة الملك عبداللة الاقتصادية", "الملك عبدالله الاقتصاديه", "الملك عبداللة الاقتصادية"],
-    mediaUrl: '/national-day-96/landscapes/ls-033.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-033.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1093,7 +1093,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'مركز إثراء',
     acceptableAnswers: ["مركز إثراء", "إثراء", "مركز اثراء", "اثراء", "مركز الملك عبدالعزيز الثقافي"],
-    mediaUrl: '/national-day-96/landscapes/ls-034.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-034.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1101,7 +1101,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'منتجع شيبارة',
     acceptableAnswers: ["منتجع شيبارة", "شيبارة", "منتجع شيباره", "شيباره", "البحر الاحمر"],
-    mediaUrl: '/national-day-96/landscapes/ls-035.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-035.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1109,7 +1109,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'منطقة ذا جروفز',
     acceptableAnswers: ["منطقة ذا جروفز", "ذا جروفز", "منطقه ذا جروفز"],
-    mediaUrl: '/national-day-96/landscapes/ls-036.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-036.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1117,7 +1117,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'منطقة سمحان',
     acceptableAnswers: ["منطقة سمحان", "سمحان", "منطقه سمحان"],
-    mediaUrl: '/national-day-96/landscapes/ls-037.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-037.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
   {
@@ -1125,7 +1125,7 @@ export const NATIONAL_DAY_96_BANK: NationalDayQuestion[] = [
     question: 'ما اسم هذا المعلم أو الموقع الشهير في الصورة؟ 📸',
     correctAnswer: 'نادي جدة لليخوت',
     acceptableAnswers: ["نادي جدة لليخوت", "جدة لليخوت", "نادي جده لليخوت", "جده لليخوت"],
-    mediaUrl: '/national-day-96/landscapes/ls-038.jpeg', mediaType: 'image',
+    mediaUrl: '/national-day-96/landscapes/land-038.jpeg', mediaType: 'image',
     difficulty: 'medium', points: 1, timeLimitSeconds: 15, status: 'ACTIVE', usedCount: 0, createdAt: Date.now()
   },
 
